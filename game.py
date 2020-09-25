@@ -17,9 +17,10 @@ class Card:
     """
     Card Object, storing value and number of Hornochsen
     """
-    def __init__(self, value, ochsen):
+    def __init__(self, value: int, ochsen: int, player = None):
         self._value = value
         self._ochsen = ochsen
+        self._player = None
 
     def __repr__(self):  # pragma: nocover
         return f"[Card {self._value}]"
@@ -33,8 +34,17 @@ class Card:
     def __eq__(self, other):
         return self._value == other._value
 
+    def value(self):
+        return self._value
+
     def ochsen(self):
         return self._ochsen
+
+    def assign_player(self, player):  # tried to do player: Player but chucked error code "undefined name player"
+        self._player = player
+
+    def player(self):
+        return self._player
 
 
 class Player:
@@ -64,8 +74,8 @@ class Player:
     def hand(self) -> List[Card]:
         return self._hand
 
-    def deal_hand(self, hand: List[Card]) -> None:
-        self._hand = hand
+    def deal_hand(self, card: Card) -> None:
+        self._hand.append(card)
 
     def select_card(self, card: Card) -> None:
         self._hand.remove(card)
@@ -76,6 +86,9 @@ class Player:
             return False
         else:
             return True
+
+    def eat_points(self, points: int):
+        self._points += points
 
 
 class Game:
@@ -91,7 +104,7 @@ class Game:
         self._player_list = []  # [ Player, ...]
         self._players = {}  # {player id : Player, ...}
 
-        self._stacks = ([], [], [], [])  # [ Card ]
+        self._stacks = [[], [], [], []]  # [ Card ]
         self._state = "waiting"
 
     def get_state(self) -> str:
@@ -157,10 +170,14 @@ class Game:
         Deals each player 10 cards and adds one card to each stack
         """
         for player in self._player_list:
-            player.deal_hand([deck.pop() for _ in range(10)])
+            for _ in range(10):
+                crnt_card = deck.pop()
+                player.deal_hand(crnt_card)
+                crnt_card.assign_player(player)
 
         for stack in self._stacks:
             stack.append(deck.pop())
+        self._stacks.sort(key = lambda stack: stack[0].value())
 
     def get_hand(self, player_id: int) -> List[Card]:
         """
@@ -171,7 +188,7 @@ class Game:
         player = self._players[player_id]
         return player.hand()
 
-    def select_card(self, player_id: int, card: Card):
+    def select_card(self, player_id: int, card: Card) -> None:
         if player_id not in self._players:
             raise ValueError("This player does not exist")
 
@@ -183,12 +200,61 @@ class Game:
         self._state = "Selecting Cards"
         player.select_card(card)
 
+        # when everyone has selected a card, we move onto the round (game.enter_round())
         if all([p.is_card_selected() for p in self._player_list]):
             self._state = "All Cards Selected"
             self.enter_round()
 
     def enter_round(self):
         """
+        TODO when going online, add API that asks how many & which selected cards
         TODO sort selected cards and play them onto stacks and award points and all that jazz
         """
         self._state = "Round in Progress"
+        slct_card_stack = sorted(self.get_selected_cards())
+
+        for card in slct_card_stack:
+            # If the card is the lowest card, we first have to replace a stack with it
+            if self.is_lowest_card(card):
+                # do the shuffle dance
+                pass
+
+            # Closest stack is identified and card appended to it
+            crnt_stack = self.find_closest_stack(card)
+            crnt_stack_index = self._stacks.index(crnt_stack)
+            crnt_stack.append(card)
+
+            # If the stack now has 6 cards, player has to eat it
+            if len(crnt_stack) == 6:
+                new_first_card = crnt_stack.pop()
+                crnt_player = new_first_card.player()
+                crnt_player.eat_points(crnt_stack, crnt_player)
+                self._stacks.remove(crnt_stack)
+                self._stacks.insert(crnt_stack_index, list(new_first_card))
+
+            # TODO: THIS IS NOT RIGHT TIM NEEDS TO FIX AT LEAST THE LAMBDA STUFF
+            if self._stacks != self._stacks.sort(key = lambda stack: stack.value()):
+                assert ValueError("Stacks are not correctly sorted anymore")
+
+            # TODO: TEST THE SHIT OUT OF EVERYTHING
+
+    def get_selected_cards(self) -> List[Card]:
+        slct_card_stack = [p.get_selected_cards() for p in self._player_list]
+        return slct_card_stack
+
+    def is_lowest_card(self, card: Card) -> bool:
+        # Checks the lowest stack's latest card's value against crnt card's value
+        return self._stacks[0][-1].value() > card.value()
+
+    def find_closest_stack(self, card: Card) -> List[Card]:
+        for stack in reversed(self._stacks):
+            if card.value() > stack[-1].value():
+                return stack
+        assert ValueError(f"Card is lower than all stacks. This shouldn't happen. Card: {card}, Stacks: {self._stacks}")
+
+    def eat_points(self, crnt_stack, crnt_player) -> None:  # crnt_stack: List(Card) chucked error
+        points = sum([card.ochsen() for card in crnt_stack])
+        crnt_player.eat_points(points)
+
+
+
