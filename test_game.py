@@ -264,9 +264,9 @@ class TestGame(unittest.TestCase):
         p2 = g1.get_player_list()[1]
         p3 = g1.get_player_list()[2]
 
-        p1.deal_hand([Card(1, 1), Card(11, 1), Card(14, 1), Card(17, 1), Card(20, 1), Card(51, 1), Card(101, 1)])
-        p2.deal_hand([Card(2, 1), Card(12, 1), Card(15, 1), Card(18, 1), Card(30, 1), Card(52, 1), Card(102, 1)])
-        p3.deal_hand([Card(3, 1), Card(13, 1), Card(16, 1), Card(19, 1), Card(31, 1), Card(53, 1), Card(103, 1)])
+        p1.deal_hand([Card(1, 1), Card(11, 1), Card(14, 1), Card(17, 1), Card(20, 1)])
+        p2.deal_hand([Card(2, 1), Card(12, 1), Card(15, 1), Card(18, 1), Card(30, 1)])
+        p3.deal_hand([Card(3, 1), Card(13, 1), Card(16, 1), Card(19, 1), Card(31, 1)])
 
         return g1
 
@@ -276,7 +276,7 @@ class TestGame(unittest.TestCase):
         p2 = g1.get_player_list()[1]
         p3 = g1.get_player_list()[2]
 
-        # Round 1: All players play a card. No points eaten, no stacks changed
+        # ROUND 1: All players play a card. No points eaten, no stacks changed
         g1.select_card(p1.id(), Card(11, 1))
         g1.select_card(p2.id(), Card(12, 1))
         g1.select_card(p3.id(), Card(13, 1))
@@ -293,7 +293,7 @@ class TestGame(unittest.TestCase):
         self.assertFalse(all([p.is_card_selected() for p in g1.get_player_list()]))
         self.assertEqual(g1.get_state(), "Between Rounds")
 
-        # Round 2: All players play. Player 2 eats Stack 1.
+        # ROUND 2: All players play. Player 2 eats Stack 1.
         # Expected: [()]
         g1.select_card(p1.id(), Card(14, 1))
         g1.select_card(p2.id(), Card(15, 1))
@@ -319,7 +319,7 @@ class TestGame(unittest.TestCase):
                 continue
             self.assertEqual(player.points(), 0)
 
-        # Round 3: All players play, one plays the lowest card
+        # ROUND 3: All players play, one plays the lowest card
         # p1 should eat 1 point and Card 25 should be replaced
         # after: p1: 1 point, p2: 5 points, p3: 0 points
         # after: stack 1: Card(1), Card(3) stack 2: Card(15), Card(16), Card(18), Stack 3: Card(50), Stack 4: Card(100)
@@ -330,23 +330,57 @@ class TestGame(unittest.TestCase):
         print('END')
 
             # did the stacks get replaced and added to correctly?
-        for i, stack in enumerate(g1.get_stacks()):
-            if i == 0:
-                self.assertEqual(len(stack), 2, f"{stack}")
-                self.assertListEqual(stack, [Card(1, 1), Card(3, 1)])
-            elif i == 1:
-                self.assertEqual(len(stack), 3)
-            elif i == 2:
-                self.assertEqual(stack[0].value(), 50)
-            else:
-                self.assertEqual(len(stack), 1)
+        self.assertEqual(len(g1.get_stacks()[0]), 2, f"{stack}")
+        self.assertListEqual(g1.get_stacks()[0], [Card(1, 1), Card(3, 1)])
+        self.assertEqual(len(g1.get_stacks()[1]), 3)
+        self.assertListEqual(g1.get_stacks()[2], [Card(50, 1)])
+        self.assertEqual(len(g1.get_stacks()[3]), 1)
 
             # did player 1 eat a point?
         self.assertEqual(p1.points(), 1)
         self.assertEqual(p2.points(), 5)
         self.assertEqual(p3.points(), 0)
 
-        # Round 4: Sanity check - play lowest card and keep adding to stacks
-        g1.select_card(p1.id(), Card(1, 1))
-        g1.select_card(p1.id(), Card(2, 1))
-        g1.select_card(p1.id(), Card(1, 1))
+        # ROUND 4: Sanity check - play another low card and keep adding to stacks
+        # Player 2 should eat 1 point and Stack(Card(50)) replaced
+        # after: [Card 2], [Card(1), Card(3), Card(17)], [Card(15), Card(16), Card(18), Card(19)], [Card 100]
+        g1.select_card(p1.id(), Card(17, 1))
+        g1.select_card(p2.id(), Card(2, 1))
+        g1.select_card(p3.id(), Card(19, 1))
+
+            # did the stacks get replaced and added to correctlY?
+        self.assertListEqual(g1.get_stacks()[0], [Card(2, 1)])
+        self.assertListEqual(g1.get_stacks()[1], [Card(1, 1), Card(3, 1), Card(17, 1)])
+        self.assertListEqual(g1.get_stacks()[2], [Card(15, 1), Card(16, 1), Card(18, 1), Card(19, 1)])
+        self.assertListEqual(g1.get_stacks()[3], [Card(100, 1)])
+
+            # Did player 2 eat 1 point?
+        self.assertEqual(p1.points(), 1)
+        self.assertEqual(p2.points(), 6)
+        self.assertEqual(p3.points(), 0)
+
+        # ROUND 5: Sanity check continues, end of game reached
+        # Player 2 should eat 5 points to 11
+        # after: [Card(2)], [Card(1), Card(3), Card(17)], [Card(30), Card(31)], [Card(100)]
+        g1.select_card(p1.id(), Card(20, 1))
+        g1.select_card(p2.id(), Card(30, 1))
+        g1.select_card(p3.id(), Card(31, 1))
+
+            # did the stacks get replaced correctly?
+        self.assertListEqual(g1.get_stacks()[0], [Card(2, 1)])
+        self.assertListEqual(g1.get_stacks()[1], [Card(1, 1), Card(3, 1), Card(17, 1)])
+        self.assertListEqual(g1.get_stacks()[2], [Card(30, 1), Card(31, 1)])
+        self.assertListEqual(g1.get_stacks()[3], [Card(100, 1)])
+
+            # Did player 2 eat 5 points?
+        self.assertEqual(p1.points(), 1)
+        self.assertEqual(p2.points(), 11)
+        self.assertEqual(p3.points(), 0)
+
+            # Are all hands empty now?
+        self.assertListEqual(p1.hand(), [])
+        self.assertListEqual(p2.hand(), [])
+        self.assertListEqual(p3.hand(), [])
+
+            # Has the game ended correctly?
+        self.assertEqual(g1.get_state(), "Tallying Points")

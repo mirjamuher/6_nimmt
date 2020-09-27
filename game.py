@@ -215,6 +215,11 @@ class Game:
         """
         self._state = "Between Rounds"
 
+        if any([player.hand() == [] for player in self._player_objects]):
+            if not all([player.hand() == [] for player in self._player_objects]):  # pragma: nocover
+                raise ValueError("Some players have cards, others don't. This shouldn't happen.")
+            self.tally_points()
+
     def select_card(self, player_id: int, card: Card) -> None:
         if player_id not in self._players:
             raise ValueError("This player does not exist")
@@ -308,5 +313,7 @@ class Game:
         points = sum([card.ochsen() for card in crnt_stack])
         crnt_player.eat_points(points)
 
-
+    def tally_points(self):
+        self._state = "Tallying Points"
+        pass
 
