@@ -3,14 +3,13 @@ from unittest.mock import patch
 
 from game import Card, Game, Player
 
-# TODO: Tim, where do constants go?
-TEST_ID = 000000
-TEST_STARTPOINT = 2
-CARD_STARTSET = [Card(1, 1), Card(10,5), Card(100, 3)]
-TEST_PLAYER = Player("Miri", TEST_ID, TEST_STARTPOINT)
-
 
 class TestCard(unittest.TestCase):
+    TEST_ID = 000000
+    TEST_STARTPOINT = 2
+    CARD_STARTSET = [Card(1, 1), Card(10,5), Card(100, 3)]
+    TEST_PLAYER = Player("Miri", TEST_ID, TEST_STARTPOINT)
+
     def test_equal(self):
         c1 = Card(4, 1)
         c2 = Card(4, 1)
@@ -38,36 +37,51 @@ class TestCard(unittest.TestCase):
 
     def test_player(self):
         c = Card(4, 1)
-        c.assign_player(TEST_PLAYER)
-        self.assertEqual(c.player(), TEST_PLAYER)
+        c.assign_player(self.TEST_PLAYER)
+        self.assertEqual(c.player(), self.TEST_PLAYER)
 
 
 class TestPlayer(unittest.TestCase):
+    TEST_ID = 000000
+    TEST_STARTPOINT = 2
+    CARD_STARTSET = [Card(1, 1), Card(10,5), Card(100, 3)]
+    TEST_PLAYER = Player("Miri", TEST_ID, TEST_STARTPOINT)
+
     def test_attributes(self):
-        p1 = TEST_PLAYER
+        p1 = self.TEST_PLAYER
         self.assertEqual(p1.name(), 'Miri')
-        self.assertEqual(p1.id(), TEST_ID)
-        self.assertEqual(p1.no(), TEST_STARTPOINT)
+        self.assertEqual(p1.id(), self.TEST_ID)
+        self.assertEqual(p1.no(), self.TEST_STARTPOINT)
         self.assertEqual(p1.points(), 0)
         self.assertEqual(p1.hand(), [])
         self.assertFalse(p1.is_card_selected())
 
     def test_hand(self):
-        p1 = TEST_PLAYER
-        for card in CARD_STARTSET:
+        p1 = self.TEST_PLAYER
+        for card in self.CARD_STARTSET:
             p1.deal_hand(card)
-        self.assertTrue(p1.hand(), CARD_STARTSET)
+        self.assertTrue(p1.hand(), self.CARD_STARTSET)
         p1.select_card(Card(10,5))
         self.assertTrue(p1.hand(), [Card(1, 1), Card(100, 3)])
         self.assertTrue(p1.is_card_selected())
 
     def test_eat_points(self):
         TEST_POINTS = 5
-        p1 = TEST_PLAYER
+        p1 = self.TEST_PLAYER
         p1.eat_points(TEST_POINTS)
         self.assertEqual(p1.points(), TEST_POINTS)
         p1.eat_points(TEST_POINTS)
         self.assertEqual(p1.points(), 2 * TEST_POINTS)
+
+    def test_clean_hand(self):
+        p1 = self.TEST_PLAYER
+        p1.deal_hand(self.CARD_STARTSET)
+        self.assertEqual(p1.hand(), self.CARD_STARTSET)
+        p1.select_card(Card(1, 1))
+        self.assertEqual(p1.get_selected_card(), Card(1, 1))
+        p1.clean_hand()
+        self.assertEqual(p1.hand(), [])
+        self.assertIsNone(p1.get_selected_card())
 
 
 class TestGame(unittest.TestCase):
@@ -123,9 +137,10 @@ class TestGame(unittest.TestCase):
             return g1
 
     def test_game_start(self):
-        g1 = self._setup_game()
-        g1.game_start()
-        self.assertEqual("dealing", g1.get_state())
+        with patch.object(Game, 'waiting'):
+            g1 = self._setup_game()
+            g1.game_start()
+            self.assertEqual("dealing", g1.get_state())
 
     def test_create_deck(self):
         g1 = self._setup_game()
@@ -146,7 +161,7 @@ class TestGame(unittest.TestCase):
         g1 = self._setup_and_deal_cards()
         all_set = set()
         no_of_cards = 0
-        for player, hand in g1.get_player_hands().items():
+        for _, hand in g1.get_player_hands().items():
             check_hand = set(hand)
             self.assertEqual(10, len(hand))
             self.assertEqual(10, len(check_hand))
@@ -270,7 +285,8 @@ class TestGame(unittest.TestCase):
 
         return g1
 
-    def test_enter_round(self):
+    @patch.object(Game, 'between_games')
+    def test_enter_round(self, mocked_beween_games):
         g1 = self._setup_game_controlled_variables()
         p1 = g1.get_player_list()[0]
         p2 = g1.get_player_list()[1]
@@ -280,6 +296,7 @@ class TestGame(unittest.TestCase):
         g1.select_card(p1.id(), Card(11, 1))
         g1.select_card(p2.id(), Card(12, 1))
         g1.select_card(p3.id(), Card(13, 1))
+        mocked_beween_games.assert_not_called()
 
             # are all stacks appended correctly?
         for i, stack in enumerate(g1.get_stacks()):
@@ -298,6 +315,7 @@ class TestGame(unittest.TestCase):
         g1.select_card(p1.id(), Card(14, 1))
         g1.select_card(p2.id(), Card(15, 1))
         g1.select_card(p3.id(), Card(16, 1))
+        mocked_beween_games.assert_not_called()
 
             # are all stacks appended correctly?
         for i, stack in enumerate(g1.get_stacks()):
@@ -323,11 +341,10 @@ class TestGame(unittest.TestCase):
         # p1 should eat 1 point and Card 25 should be replaced
         # after: p1: 1 point, p2: 5 points, p3: 0 points
         # after: stack 1: Card(1), Card(3) stack 2: Card(15), Card(16), Card(18), Stack 3: Card(50), Stack 4: Card(100)
-        print('BEGIN 1')
         g1.select_card(p1.id(), Card(1, 1))
         g1.select_card(p2.id(), Card(18, 1))
         g1.select_card(p3.id(), Card(3, 1))
-        print('END')
+        mocked_beween_games.assert_not_called()
 
             # did the stacks get replaced and added to correctly?
         self.assertEqual(len(g1.get_stacks()[0]), 2, f"{stack}")
@@ -347,6 +364,7 @@ class TestGame(unittest.TestCase):
         g1.select_card(p1.id(), Card(17, 1))
         g1.select_card(p2.id(), Card(2, 1))
         g1.select_card(p3.id(), Card(19, 1))
+        mocked_beween_games.assert_not_called()
 
             # did the stacks get replaced and added to correctlY?
         self.assertListEqual(g1.get_stacks()[0], [Card(2, 1)])
@@ -358,13 +376,14 @@ class TestGame(unittest.TestCase):
         self.assertEqual(p1.points(), 1)
         self.assertEqual(p2.points(), 6)
         self.assertEqual(p3.points(), 0)
-
-        # ROUND 5: Sanity check continues, end of game reached
+#
+        # LAST ROUND: Sanity check continues, end of game reached
         # Player 2 should eat 5 points to 11
         # after: [Card(2)], [Card(1), Card(3), Card(17)], [Card(30), Card(31)], [Card(100)]
         g1.select_card(p1.id(), Card(20, 1))
         g1.select_card(p2.id(), Card(30, 1))
         g1.select_card(p3.id(), Card(31, 1))
+        mocked_beween_games.assert_called_once_with()
 
             # did the stacks get replaced correctly?
         self.assertListEqual(g1.get_stacks()[0], [Card(2, 1)])
@@ -383,4 +402,47 @@ class TestGame(unittest.TestCase):
         self.assertListEqual(p3.hand(), [])
 
             # Has the game ended correctly?
-        self.assertEqual(g1.get_state(), "Tallying Points")
+        self.assertEqual(g1.get_state(), "Between Rounds")
+
+    def test_get_points(self):
+        g1 = self._setup_game_controlled_variables()
+        p1 = g1.get_player_list()[0]
+        p2 = g1.get_player_list()[1]
+        p3 = g1.get_player_list()[2]
+
+        p1.eat_points(5)
+        p2.eat_points(10)
+        p3.eat_points(15)
+
+        points_list = g1.get_points()
+        self.assertEqual(points_list, [(p1, 5), (p2, 10), (p3, 15)])
+
+    @patch.object(Game, "game_start")
+    def test_between_games(self, mocked_game_start):
+        g1 = self._setup_game_controlled_variables()
+        p1 = g1.get_player_list()[0]
+        p2 = g1.get_player_list()[1]
+        p3 = g1.get_player_list()[2]
+
+        # V1: no player has >= 100 points, next round commences
+        p1.eat_points(99)
+        g1.between_games()
+        self.assertEqual(g1.get_stacks(), [[], [], [], []])
+        self.assertEqual(p1.hand(), [])
+        mocked_game_start.assert_called_once_with()
+
+        # V2: one player has 100 points, end of game called
+        p1.eat_points(1)
+        g1.between_games()
+        self.assertEqual(g1.get_state(), 'End of Game')
+
+        # V3: multiple player have > 100 points, end of game called
+        p1._points = 0
+        p1.eat_points(5)
+        p2.eat_points(101)
+        p3.eat_points(150)
+
+        points_list = g1.get_points()
+        self.assertEqual(points_list, [(p1, 5), (p2, 101), (p3, 150)])
+        g1.between_games()
+        self.assertEqual(g1.get_state(), 'End of Game')

@@ -2,7 +2,7 @@
 Step 0: Setting it up
 """
 import random
-from typing import List, Dict, Optional, Union
+from typing import List, Dict, Optional, Union, Tuple
 
 
 BASE_DECK = {
@@ -78,6 +78,10 @@ class Player:
     def hand(self) -> List[Card]:
         return self._hand
 
+    def clean_hand(self):
+        self._hand = []
+        self._selected_card = None
+
     def deal_hand(self, card: Union[Card, List[Card]]) -> None:
         if isinstance(card, Card):
             self._hand.append(card)
@@ -144,6 +148,10 @@ class Game:
     def get_player_list(self):
         return self._player_objects
 
+    def get_points(self) -> List[Tuple[Player, int]]:
+        player_points = [(p, p.points()) for p in self._player_objects]
+        return sorted(player_points, key = lambda pair: (pair[1], pair[0].no()))
+
     def add_player(self, player_name: str) -> Player:
         # Need to make each player, including p1 enter their name and thus call this API
         new_id = self.create_player_id()
@@ -200,6 +208,8 @@ class Game:
             stack.append(deck.pop())
         self._stacks.sort(key = lambda stack: stack[0].value())
 
+        self.waiting()
+
     def get_hand(self, player_id: int) -> List[Card]:
         """
         TODO: Once Cards have been dealt, each client will ask for their cards
@@ -215,10 +225,11 @@ class Game:
         """
         self._state = "Between Rounds"
 
+        # If all players have empty hands, we continue to
         if any([player.hand() == [] for player in self._player_objects]):
             if not all([player.hand() == [] for player in self._player_objects]):  # pragma: nocover
                 raise ValueError("Some players have cards, others don't. This shouldn't happen.")
-            self.tally_points()
+            self.between_games()
 
     def select_card(self, player_id: int, card: Card) -> None:
         if player_id not in self._players:
@@ -313,7 +324,23 @@ class Game:
         points = sum([card.ochsen() for card in crnt_stack])
         crnt_player.eat_points(points)
 
-    def tally_points(self):
-        self._state = "Tallying Points"
-        pass
+    def between_games(self):
+        # TODO: Set up for starting player to chose how many points to play to. Default: 100
+        self._state = "Between Games"
+        point_list = self.get_points()
 
+        # If one player has reached 100 points, the game is done
+        if any(points >= 100 for _, points in point_list):
+            self.end_of_game(point_list)
+        else:
+            self.clean_slate()
+            self.game_start()
+
+    def clean_slate(self):
+        self._stacks = [[], [], [], []]
+        for player in self._player_objects:
+            player.clean_hand()
+
+    def end_of_game(self, point_list: List[Tuple[Player, int]]):
+        # TODO: Announce winner, confetti, all that jazz
+        self._state = "End of Game"
