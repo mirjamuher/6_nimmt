@@ -13,6 +13,38 @@ BASE_DECK = {
 }
 
 
+class GameManager:
+    """
+    Keeps track of all games that the server is running
+    """
+    def __init__(self):
+        self._games = {}   # {game_id : Game Object}
+
+    def create_game(self) -> "Game":
+        game_id = self.create_game_id()
+        game = Game(game_id)
+        self._games[game_id] = game
+        return game
+
+    def create_game_id(self) -> int:
+        while True:
+            game_id = random.randint(100000, 999999)
+            if game_id not in self._games:
+                return game_id
+
+    def get_games(self) -> Dict[int, "Game"]:
+        return self._games
+
+    def get_game(self, game_id: int) -> Optional["Game"]:
+        return self._games.get(game_id)
+
+    def delete_game(self, game_id: int) -> bool:
+        """
+        Deletes game associated with game_id. If Game doesn't exist, returns False
+        """
+        return self._games.pop(game_id, None) is not None
+
+
 class Card:
     """
     Card Object, storing value and number of Hornochsen
@@ -60,6 +92,7 @@ class Player:
         self._id = player_id
         self._no = no
         self._points = 0
+        self._avatar = "unknown.jpg"
         self._hand = []
         self._selected_card = None
 
@@ -77,6 +110,15 @@ class Player:
 
     def hand(self) -> List[Card]:
         return self._hand
+
+    def to_json(self):
+        return {
+            "player_name": self._name,
+            "player_id": self._id,
+            "player_no": self._no,
+            "points": self._points,
+            "avatar": self._avatar,
+        }
 
     def clean_hand(self):
         self._hand = []
@@ -125,13 +167,18 @@ class Game:
     _players: Dict[int, Player]
     _stacks: List[List[Card]]
     _state: str
+    _game_id: int
 
-    def __init__(self):
+    def __init__(self, game_id: int):
+        self._game_id = game_id
         self._player_objects: List[Player] = []  # [ Player, ...]
         self._players = {}  # {player id : Player, ...}
 
         self._stacks = [[], [], [], []]  # [ Card ]
         self._state = "waiting"
+
+    def get_id(self) -> int:
+        return self._game_id
 
     def get_state(self) -> str:
         return self._state
@@ -147,6 +194,9 @@ class Game:
 
     def get_player_list(self):
         return self._player_objects
+
+    def get_players(self):
+        return self._players
 
     def get_points(self) -> List[Tuple[Player, int]]:
         player_points = [(p, p.points()) for p in self._player_objects]
@@ -344,3 +394,5 @@ class Game:
     def end_of_game(self, point_list: List[Tuple[Player, int]]):
         # TODO: Announce winner, confetti, all that jazz
         self._state = "End of Game"
+
+

@@ -85,8 +85,10 @@ class TestPlayer(unittest.TestCase):
 
 
 class TestGame(unittest.TestCase):
+    RC = 111111  # Room Code
+
     def test_game_setup_state(self):
-        g1 = Game()
+        g1 = Game(self.RC)
         self.assertEqual(0, g1.get_nplayers())
         self.assertEqual("waiting", g1.get_state())
 
@@ -94,7 +96,7 @@ class TestGame(unittest.TestCase):
         """
         Test a basic setup with two players, different names
         """
-        g1 = Game()
+        g1 = Game(self.RC)
         player_set = set()
         tim_id = g1.add_player("Tim")
         player_set.add(tim_id)
@@ -108,7 +110,7 @@ class TestGame(unittest.TestCase):
         """
         Test a complicated setup with two players, same names
         """
-        g1 = Game()
+        g1 = Game(self.RC)
         player_set = set()
         p1_id = g1.add_player("Elijah")
         player_set.add(p1_id)
@@ -126,7 +128,7 @@ class TestGame(unittest.TestCase):
         with patch.object(Game, 'create_player_id') as mocked_create_player_id:
             mocked_create_player_id.side_effect = fake_player_ids
 
-            g1 = Game()
+            g1 = Game(self.RC)
             for name in player_names:
                 g1.add_player(name)
 
