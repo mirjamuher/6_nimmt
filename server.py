@@ -58,7 +58,7 @@ def join_game(game_id: int):
     """
     # Validation Process
     game = game_manager.get_game(game_id)
-    if not game:  #if game exists
+    if not game:
         return jsonify({"error":"Invalid Room Number"}), 404
 
     payload = request.get_json()
