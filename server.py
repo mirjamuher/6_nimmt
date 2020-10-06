@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 import game
 
 app = Flask(__name__)
@@ -7,7 +7,7 @@ game_manager = game.GameManager()
 
 @app.route('/')
 def landing_page():
-    return 'Elijah Landing Page HTML'
+    return render_template('skeleton/landing_page.html')
 
 
 # When the player clicks "Create Room" they call the api/game and then the returned game_id
