@@ -4,11 +4,22 @@ import game
 app = Flask(__name__)
 game_manager = game.GameManager()
 
-
+"""
+HTML VIEWS - speak html
+"""
 @app.route('/')
 def landing_page():
     return render_template('skeleton/landing_page.html')
 
+@app.route('/waiting_room/<int:game_id>/<int:player_id>')
+def waiting_room(game_id: int, player_id: int):
+    # TODO: JAVASCRIPT: when button is pressed calls /api/game and then redirects here
+    return render_template('skeleton/waiting_room.html')
+
+
+"""
+API VIEWS - speak json
+"""
 
 # When the player clicks "Create Room" they call the api/game and then the returned game_id
 # is used to route them to /waiting_room/<game_id>
@@ -73,10 +84,7 @@ def join_game(game_id: int):
     return jsonify({"player_id":player_id})
 
 
-@app.route('/waiting_room/<int:game_id>')
-def waiting_room(game_id: int):
-    # TODO: JAVASCRIPT: when button is pressed calls /api/game and then redirects here
-    return 'Elijah Waiting Room HTML'
+
 
 
 @app.route('/api/game/<int:game_id>/player/<int:player_id>', methods=["GET"])

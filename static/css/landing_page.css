@@ -1,0 +1,28 @@
+body {
+    text-align: center;
+}
+
+button {
+    border: 2px solid black;
+    border-radius: 20px;
+    display: inline block;
+    padding: 15px;
+    font-size: 15pt;
+}
+
+#startButton {
+    background-color: burlywood;
+}
+
+#joinButton {
+    background-color: cornflowerblue;
+}
+
+.hidden {
+    display: none;
+}
+
+
+label {
+    font-size: 12pt;
+}
