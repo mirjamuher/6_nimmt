@@ -8,11 +8,10 @@
     </head>
 
     <body data-game-id="{{ game.get_id() }}">
-        <h1> Welcome {{ player.name() }}! <br> We are waiting for everyone to join. You can start the game whenever you are ready. </h1>
-        <section id="players">
+        <h1> Welcome {{ player.name() }}! <br> Your friends can join this game by entering room {{ game.get_id() }}. <br> You can start the game whenever you are ready. </h1>
+        <section>
             <h2> These friends are already logged in: </h2>
-
-
+            <p id=playerTable></p>
         </section>
 
         <button id="StartButton">Start Game!</button> <!-- have JavaScript ask for a popup are you sure here-->

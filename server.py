@@ -7,15 +7,14 @@ game_manager = game.GameManager()
 """
 HTML VIEWS - speak html
 """
+# Landing Page
 @app.route('/')
 def landing_page():
     return render_template('skeleton/landing_page.html')
 
-
+# Waiting Room
 @app.route('/waiting_room/<int:game_id>/<int:player_id>')
 def waiting_room(game_id: int, player_id: int):
-    # TODO: JAVASCRIPT: when button is pressed calls /api/game and then redirects here
-
     # Validating Process
     game = game_manager.get_game(game_id)
     if not game:

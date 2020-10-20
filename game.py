@@ -178,7 +178,7 @@ class Game:
         self._game_id = game_id
         self._player_objects: List[Player] = []  # [ Player, ...]
         self._players = {}  # {player id : Player, ...}
-        self._all_avatars = glob.glob("static/images/test_avatars/*")
+        self._all_avatars = ['/' + path for path in glob.glob("static/images/test_avatars/*")]
 
         self._stacks = [[], [], [], []]  # [ Card ]
         self._state = "waiting"
@@ -231,7 +231,7 @@ class Game:
                 return new_id
 
     def assign_avatar(self) -> str:
-        self._all_avatars = random.shuffle(self._all_avatars)
+        self._all_avatars = random.sample(self._all_avatars, k=len(self._all_avatars))
         return self._all_avatars.pop()
 
     def game_start(self) -> None:
