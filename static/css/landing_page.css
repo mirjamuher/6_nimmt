@@ -22,6 +22,10 @@ button {
     display: none;
 }
 
+.backbutton {
+    font-size: 10pt;
+    padding: 5px;
+}
 
 label {
     font-size: 12pt;

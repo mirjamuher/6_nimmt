@@ -41,7 +41,7 @@ def create_game():
     # Validation Process
     payload = request.get_json()
     p1_name = payload.get("p1_name")
-    if p1_name is None or not isinstance(p1_name, str):
+    if not p1_name or not isinstance(p1_name, str):
         return jsonify({"error":"Invalid player name"}), 401
 
     # Create Game & Player
@@ -74,7 +74,7 @@ def join_game(game_id: int):
 
     payload = request.get_json()
     player_name = payload.get("player_name")
-    if player_name is None or not isinstance(player_name, str):
+    if not player_name or not isinstance(player_name, str):
         return jsonify({"error":"Invalid player name"}), 401
 
     # Add player & get information
