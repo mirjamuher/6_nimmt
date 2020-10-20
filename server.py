@@ -11,10 +11,18 @@ HTML VIEWS - speak html
 def landing_page():
     return render_template('skeleton/landing_page.html')
 
+
 @app.route('/waiting_room/<int:game_id>/<int:player_id>')
 def waiting_room(game_id: int, player_id: int):
     # TODO: JAVASCRIPT: when button is pressed calls /api/game and then redirects here
-    return render_template('skeleton/waiting_room.html')
+
+    # Validating Process
+    game = game_manager.get_game(game_id)
+    if not game:
+        return "This game doesn't exist", 404
+    game = game_manager.get_game(game_id)
+    player = game.get_players()[player_id]
+    return render_template('skeleton/waiting_room.html', game=game, player=player)
 
 
 """
@@ -84,8 +92,24 @@ def join_game(game_id: int):
     return jsonify({"player_id":player_id})
 
 
+@app.route('/api/game/<int:game_id>', methods=["GET"])
+def get_game_information(game_id: int):
+    """
+    Response:
+    {
+        "id": game id,
+        "players": [player data as per API below],
+        "state": game state string,
+    }
+    """
+    # TODO: 1) implement to_json in Game
+    # Validating Process
+    game = game_manager.get_game(game_id)
+    if not game:
+        return jsonify({"error":"Room Not Found"}), 404
 
-
+    # Return information
+    return jsonify(game.to_json())
 
 @app.route('/api/game/<int:game_id>/player/<int:player_id>', methods=["GET"])
 def get_player_information(game_id: int, player_id: int):

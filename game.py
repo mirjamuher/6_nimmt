@@ -2,6 +2,7 @@
 Step 0: Setting it up
 """
 import random
+import glob
 from typing import List, Dict, Optional, Union, Tuple
 
 
@@ -87,12 +88,12 @@ class Player:
     """
     Player class keeps track of id, name, hand, points
     """
-    def __init__(self, player_name, player_id, no):
+    def __init__(self, player_name, player_id, no, avatar):
         self._name = player_name
         self._id = player_id
         self._no = no
         self._points = 0
-        self._avatar = "unknown.jpg"
+        self._avatar = avatar
         self._hand = []
         self._selected_card = None
 
@@ -110,6 +111,9 @@ class Player:
 
     def hand(self) -> List[Card]:
         return self._hand
+
+    def avatar(self) -> str:
+        return self._avatar
 
     def to_json(self):
         return {
@@ -168,11 +172,13 @@ class Game:
     _stacks: List[List[Card]]
     _state: str
     _game_id: int
+    _avatars: list
 
     def __init__(self, game_id: int):
         self._game_id = game_id
         self._player_objects: List[Player] = []  # [ Player, ...]
         self._players = {}  # {player id : Player, ...}
+        self._all_avatars = glob.glob("static/images/test_avatars/*")
 
         self._stacks = [[], [], [], []]  # [ Card ]
         self._state = "waiting"
@@ -198,6 +204,13 @@ class Game:
     def get_players(self):
         return self._players
 
+    def to_json(self):
+        return {
+            "id": self._game_id,
+            "players": [player.to_json() for player in self._player_objects],
+            "state": self._state,
+        }
+
     def get_points(self) -> List[Tuple[Player, int]]:
         player_points = [(p, p.points()) for p in self._player_objects]
         return sorted(player_points, key = lambda pair: (pair[1], pair[0].no()))
@@ -205,7 +218,8 @@ class Game:
     def add_player(self, player_name: str) -> Player:
         # Need to make each player, including p1 enter their name and thus call this API
         new_id = self.create_player_id()
-        new_player = Player(player_name, new_id, len(self._players) + 1)
+        avatar = self.assign_avatar()
+        new_player = Player(player_name, new_id, len(self._players) + 1, avatar)
         self._player_objects.append(new_player)
         self._players[new_id] = new_player
         return new_player
@@ -215,6 +229,10 @@ class Game:
             new_id = random.randint(100000, 999999)
             if new_id not in self._players:
                 return new_id
+
+    def assign_avatar(self) -> str:
+        self._all_avatars = random.shuffle(self._all_avatars)
+        return self._all_avatars.pop()
 
     def game_start(self) -> None:
         """

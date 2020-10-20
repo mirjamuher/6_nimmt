@@ -7,8 +7,16 @@
         <title>Test Waiting Room</title>
     </head>
 
-    <body>
-        <p> This will be populated later </p>
+    <body data-game-id="{{ game.get_id() }}">
+        <h1> Welcome {{ player.name() }}! <br> We are waiting for everyone to join. You can start the game whenever you are ready. </h1>
+        <section id="players">
+            <h2> These friends are already logged in: </h2>
+
+
+        </section>
+
+        <button id="StartButton">Start Game!</button> <!-- have JavaScript ask for a popup are you sure here-->
+
 
         <!-- JavaScript -->
         <script src="/static/js/waiting_room.js"></script>
