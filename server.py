@@ -5,6 +5,12 @@ app = Flask(__name__)
 game_manager = game.GameManager()
 
 """
+TODO:
+1) implement (`/game/${gameID}/${playerID}`)
+"""
+
+
+"""
 HTML VIEWS - speak html
 """
 # Landing Page
@@ -23,6 +29,11 @@ def waiting_room(game_id: int, player_id: int):
     player = game.get_players()[player_id]
     return render_template('skeleton/waiting_room.html', game=game, player=player)
 
+# Play Room
+@app.route('/game/<int:game_id>/<int:player_id>')
+def play_room(game_id: int, player_id: int):
+    # TODO: Make Game Room
+    return "This room is being set up next", 404
 
 """
 API VIEWS - speak json
@@ -90,6 +101,20 @@ def join_game(game_id: int):
 
     return jsonify({"player_id":player_id})
 
+# Moves game state from "waiting" to "dealing", thus starting the game for everyone
+@app.route('/api/game/<int:game_id>/start', methods=["POST"])
+def start_game(game_id: int):
+
+    # Validation Process
+    game = game_manager.get_game(game_id)
+    if not game:
+        return jsonify({"error":"Invalid Room Number"}), 404
+
+    # Activating game.game_start()
+    game.game_start()
+
+    # Return Information
+    return jsonify(game.to_json())
 
 @app.route('/api/game/<int:game_id>', methods=["GET"])
 def get_game_information(game_id: int):
@@ -97,7 +122,7 @@ def get_game_information(game_id: int):
     Response:
     {
         "id": game id,
-        "players": [player data as per API below],
+        "players": [player data as per API get_player_information],
         "state": game state string,
     }
     """
@@ -133,6 +158,7 @@ def get_player_information(game_id: int, player_id: int):
 
     # Return information
     return jsonify(player.to_json())
+
 
 
 

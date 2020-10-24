@@ -66,6 +66,7 @@ function setupPage() {
     elStartForm.addEventListener("submit", function(event) {
         event.preventDefault();
         const playerName = document.querySelector("#p1Name").value;
+        document.querySelector("#startGameForm input[type='submit']").disabled = true;
         startNewGame(playerName);
     });
 
@@ -89,12 +90,11 @@ function setupPage() {
 
     elJoinGameForm.addEventListener("submit", function(event) {
         event.preventDefault();
+        document.querySelector("#joinGameForm input[type='submit']").disabled = true;
         const playerName = document.querySelector("#playerName").value;
         const roomNumber = document.querySelector("#roomNumber").value;
         joinGame(playerName, roomNumber);
     });
-
-
 }
 
 
