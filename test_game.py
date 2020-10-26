@@ -52,7 +52,7 @@ class TestPlayer(unittest.TestCase):
         self.assertEqual(p1.name(), 'Miri')
         self.assertEqual(p1.id(), self.TEST_ID)
         self.assertEqual(p1.no(), self.TEST_STARTPOINT)
-        self.assertEqual(p1.points(), 0)
+        self.assertEqual(p1.total_points(), 0)
         self.assertEqual(p1.hand(), [])
         self.assertFalse(p1.is_card_selected())
 
@@ -69,9 +69,9 @@ class TestPlayer(unittest.TestCase):
         TEST_POINTS = 5
         p1 = self.TEST_PLAYER
         p1.eat_points(TEST_POINTS)
-        self.assertEqual(p1.points(), TEST_POINTS)
+        self.assertEqual(p1.total_points(), TEST_POINTS)
         p1.eat_points(TEST_POINTS)
-        self.assertEqual(p1.points(), 2 * TEST_POINTS)
+        self.assertEqual(p1.total_points(), 2 * TEST_POINTS)
 
     def test_clean_hand(self):
         p1 = self.TEST_PLAYER

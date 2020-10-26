@@ -7,6 +7,7 @@ game_manager = game.GameManager()
 """
 TODO:
 1) implement (`/game/${gameID}/${playerID}`)
+2) Have error messages return html pages
 """
 
 
@@ -24,16 +25,28 @@ def waiting_room(game_id: int, player_id: int):
     # Validating Process
     game = game_manager.get_game(game_id)
     if not game:
-        return "This game doesn't exist", 404
-    game = game_manager.get_game(game_id)
-    player = game.get_players()[player_id]
+        return "Game Not Found", 404
+
+    player = game.get_players().get(player_id)
+    if not player:
+        return "Player Not Found", 404
+
     return render_template('skeleton/waiting_room.html', game=game, player=player)
 
 # Play Room
 @app.route('/game/<int:game_id>/<int:player_id>')
 def play_room(game_id: int, player_id: int):
-    # TODO: Make Game Room
-    return "This room is being set up next", 404
+
+    # Validating Process
+    game = game_manager.get_game(game_id)
+    if not game:
+        return "Game Not Found", 404
+
+    player = game.get_players().get(player_id)
+    if not player:
+        return "Player Not Found", 404
+
+    return render_template('skeleton/game_room.html', game=game, player=player)
 
 """
 API VIEWS - speak json
@@ -143,7 +156,8 @@ def get_player_information(game_id: int, player_id: int):
         "player_name": str of player name
         "player_id": int of player id
         "player_no": int of player number
-        "points": int of player points
+        "current_points" : self._current_points,
+        "total_points": int of player points
         "avatar": filename of player avatar
     }
     """
@@ -160,8 +174,16 @@ def get_player_information(game_id: int, player_id: int):
     return jsonify(player.to_json())
 
 
+"""
+API Views for game_room
+"""
 
 
-
-
-
+"""
+TEST GAME
+"""
+TEST_GAME = game_manager.create_game(game_id=123456)
+TEST_GAME.add_player("Miri", player_id=1)
+TEST_GAME.add_player("Tim", player_id=2)
+TEST_GAME.add_player("Elijah", player_id=3)
+TEST_GAME.game_start()

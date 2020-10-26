@@ -21,8 +21,9 @@ class GameManager:
     def __init__(self):
         self._games = {}   # {game_id : Game Object}
 
-    def create_game(self) -> "Game":
-        game_id = self.create_game_id()
+    def create_game(self, *, game_id: Optional[int] = None) -> "Game":
+        if game_id is None:
+            game_id = self.create_game_id()
         game = Game(game_id)
         self._games[game_id] = game
         return game
@@ -92,7 +93,8 @@ class Player:
         self._name = player_name
         self._id = player_id
         self._no = no
-        self._points = 0
+        self._current_points = 0
+        self._total_points = 0
         self._avatar = avatar
         self._hand = []
         self._selected_card = None
@@ -106,8 +108,11 @@ class Player:
     def no(self) -> int:
         return self._no
 
-    def points(self) -> int:
-        return self._points
+    def current_points(self) -> int:
+        return self._current_points
+
+    def total_points(self) -> int:
+        return self._total_points
 
     def hand(self) -> List[Card]:
         return self._hand
@@ -120,7 +125,8 @@ class Player:
             "player_name": self._name,
             "player_id": self._id,
             "player_no": self._no,
-            "points": self._points,
+            "current_points" : self._current_points,
+            "total_points": self._total_points,
             "avatar": self._avatar,
         }
 
@@ -155,7 +161,11 @@ class Player:
         self._selected_card = None
 
     def eat_points(self, points: int) -> None:
-        self._points += points
+        self._current_points += points
+
+    def merge_points(self) -> None:
+        self._total_points += self._current_points
+        self._current_points = 0
 
 
 class Game:
@@ -212,16 +222,17 @@ class Game:
         }
 
     def get_points(self) -> List[Tuple[Player, int]]:
-        player_points = [(p, p.points()) for p in self._player_objects]
+        player_points = [(p, p.total_points()) for p in self._player_objects]
         return sorted(player_points, key = lambda pair: (pair[1], pair[0].no()))
 
-    def add_player(self, player_name: str) -> Player:
+    def add_player(self, player_name: str, *, player_id: Optional[int] = None) -> Player:
         # Need to make each player, including p1 enter their name and thus call this API
-        new_id = self.create_player_id()
+        if player_id is None:
+            player_id = self.create_player_id()
         avatar = self.assign_avatar()
-        new_player = Player(player_name, new_id, len(self._players) + 1, avatar)
+        new_player = Player(player_name, player_id, len(self._players) + 1, avatar)
         self._player_objects.append(new_player)
-        self._players[new_id] = new_player
+        self._players[player_id] = new_player
         return new_player
 
     def create_player_id(self) -> int:
@@ -395,6 +406,8 @@ class Game:
     def between_games(self):
         # TODO: Set up for starting player to chose how many points to play to. Default: 100
         self._state = "Between Games"
+        for player in self._player_objects:
+            player.merge_points()
         point_list = self.get_points()
 
         # If one player has reached 100 points, the game is done

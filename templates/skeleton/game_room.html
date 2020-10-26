@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <!-- CSS -->
+    <link rel="stylesheet" href="/static/css/game_room.css">
+    <title>Test Game Room</title>
+  </head>
+
+  <body data-game-id="{{ game.get_id() }}" data-player-id="{{ player.id() }}">
+
+    <section id="playerOverview">
+        <table>
+            <tr>
+            {% for player in game.get_player_list()[0:5] %}
+                <td data-player-id="{{ player.id() }}">
+                    <img src="{{ player.avatar() }}" height=64 width=64>
+                    <span class = "currentPoints"> 0 </span>
+                    <br> {{ player.name() }} <span class = "totalPoints"> {{ player.points() }} </span>
+                </td>
+            {% endfor %}
+            </tr>
+            {% if game.get_player_list()|length > 5 %}
+                <tr>
+                {% for player in game.get_player_list()[5:] %}
+                    <td data-player-id="{{ player.id() }}">
+                        <img src="{{ player.avatar() }}" height=64 width=64>
+                        <span class = "currentPoints"> 0 </span>
+                        <br> {{ player.name() }} <span class = "totalPoints"> {{ player.points() }} </span>
+                    </td>
+                {% endfor %}
+                </tr>
+            {% endif %}
+        </table>
+    </section>
+
+    <section id="stacks">
+    </section>
+
+    <section id="hand">
+    </section>
+
+    <!-- JavaScript -->
+    <script src="/static/js/game_room.js"></script>
+</body>
+</html>
