@@ -182,8 +182,13 @@ API Views for game_room
 """
 TEST GAME
 """
+# Setup Game
 TEST_GAME = game_manager.create_game(game_id=123456)
 TEST_GAME.add_player("Miri", player_id=1)
 TEST_GAME.add_player("Tim", player_id=2)
 TEST_GAME.add_player("Elijah", player_id=3)
 TEST_GAME.game_start()
+
+# Test updating of current_points
+miri = TEST_GAME.get_players()[1]
+miri.eat_points(5)

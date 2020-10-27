@@ -16,7 +16,7 @@
                 <td data-player-id="{{ player.id() }}">
                     <img src="{{ player.avatar() }}" height=64 width=64>
                     <span class = "currentPoints"> 0 </span>
-                    <br> {{ player.name() }} <span class = "totalPoints"> {{ player.points() }} </span>
+                    <br> {{ player.name() }} <span class = "totalPoints"> {{ player.total_points() }} </span>
                 </td>
             {% endfor %}
             </tr>
@@ -26,7 +26,7 @@
                     <td data-player-id="{{ player.id() }}">
                         <img src="{{ player.avatar() }}" height=64 width=64>
                         <span class = "currentPoints"> 0 </span>
-                        <br> {{ player.name() }} <span class = "totalPoints"> {{ player.points() }} </span>
+                        <br> {{ player.name() }} <span class = "totalPoints"> {{ player.total_points() }} </span>
                     </td>
                 {% endfor %}
                 </tr>

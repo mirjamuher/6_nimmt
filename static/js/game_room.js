@@ -2,7 +2,7 @@ function setupPage() {
     const gameID = document.body.getAttribute("data-game-id");
     const playerID = document.body.getAttribute("data-player-id");
 
-    setInterval(function() {updatePoints(gameID)}, 10*1000);
+    setInterval(function() {updatePoints(gameID)}, 10*1000); //Temporary fix; later update when cards played
 
 
 };
@@ -25,7 +25,7 @@ async function updatePoints(gameID) {
         }]
     */
 
-    const response = await fetch(`/api/game/${game_id}`);
+    const response = await fetch(`/api/game/${gameID}`);
     if (!response.ok) {
         alert("API didn't work, shouldn't happen");
         return;
@@ -33,8 +33,14 @@ async function updatePoints(gameID) {
 
     const responseJson = await response.json();
 
-    // TODO: take out of responseJson the current points of each player and update table in html through data-player-id
-};
+    for (const player of responseJson["players"]) {
+        const playerID = player["player_id"];
+        const crntPoints = player["current_points"];
 
+        document.querySelector(`td[data-player-id='${playerID}'] .currentPoints`).textContent = crntPoints;
+    }
+}
+
+// TODO: Start on Hand Content of HTML & Javascript
 
 document.addEventListener("DOMContentLoaded", setupPage);
