@@ -1,8 +1,10 @@
+# TEST URL: http://127.0.0.1:5000/game/123456/1
+
 from flask import Flask, jsonify, request, render_template
-import game
+from game import GameManager, Card, PlayerAlreadyPlayedError
 
 app = Flask(__name__)
-game_manager = game.GameManager()
+game_manager = GameManager()
 
 """
 TODO:
@@ -48,10 +50,10 @@ def play_room(game_id: int, player_id: int):
 
     return render_template('skeleton/game_room.html', game=game, player=player)
 
+
 """
 API VIEWS - speak json
 """
-
 # When the player clicks "Create Room" they call the api/game and then the returned game_id
 # is used to route them to /waiting_room/<game_id>
 @app.route('/api/game', methods=["POST"])
@@ -73,7 +75,7 @@ def create_game():
     payload = request.get_json()
     p1_name = payload.get("p1_name")
     if not p1_name or not isinstance(p1_name, str):
-        return jsonify({"error":"Invalid player name"}), 401
+        return jsonify({"error":"Invalid player name"}), 400
 
     # Create Game & Player
     game = game_manager.create_game()
@@ -178,11 +180,50 @@ def get_player_information(game_id: int, player_id: int):
 API Views for game_room
 """
 
+@app.route('/api/game/<int:game_id>/player/<int:player_id>/card_selected', methods=["PUT"])
+def player_chooses_card(game_id: int, player_id: int):
+    """
+    Request:
+    {
+        "selected_card" : int of card number
+    }
+    """
+    # Validating Process
+    game = game_manager.get_game(game_id)
+    if not game:
+        return jsonify({"error":"Room Not Found"}), 404
+
+    player = game.get_players().get(player_id)
+    if not player:
+        return jsonify({"error":"Player Not Found"}), 404
+
+    # Validation of Card
+    payload = request.get_json()
+    card_number = payload.get("selected_card")
+    if not card_number or not isinstance(card_number, str):
+        return jsonify({"error":"No Card Selected"}), 400
+    if int(card_number) > 104 or int(card_number) < 1:
+        return jsonify({"error":"Invalid Card Number"}), 400
+
+    selected_card = Card(int(card_number), player)
+    if not player.is_card_in_hand(selected_card):
+        return jsonify({"error":"Selected Card is not in Player's Hand"}), 400
+
+    # feed information into game.py
+    try:
+        game.select_card(player_id, selected_card)
+    except PlayerAlreadyPlayedError as e:
+        return jsonify({"error": str(e)}), 400
+    return jsonify({}), 201
+
+
 
 """
 TEST GAME
 """
 # Setup Game
+import random
+random.seed(0)
 TEST_GAME = game_manager.create_game(game_id=123456)
 TEST_GAME.add_player("Miri", player_id=1)
 TEST_GAME.add_player("Tim", player_id=2)

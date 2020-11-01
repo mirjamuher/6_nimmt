@@ -1,0 +1,41 @@
+*{box-sizing: border-box;}
+
+#playerOverview, #stacks, #hand {
+    padding: 20px 0;
+}
+
+.hidden {
+    display: none;
+}
+
+.card {
+    border: 2px solid black;
+    display: inline-block;
+    margin: 15px 5px;
+    width: 80px;
+    height: 120px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+.card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.cardValue {
+    font-size: 30px;
+}
+
+.ochsenValue {
+    font-size: 15px;
+}
+
+.chosenCard {
+    border: 5px solid rgb(255, 253, 137);
+}
+
+#handCards.lockedIn .chosenCard {
+    border: 5px solid grey;
+}
+#handCards.lockedIn .card:hover {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}

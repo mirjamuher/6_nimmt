@@ -35,9 +35,22 @@
     </section>
 
     <section id="stacks">
+        Deck goes here
     </section>
 
     <section id="hand">
+        <div id="handCards">
+        {% for card in player.hand() %}
+            <div class="card" data-card-value="{{ card.value() }}">
+                <span class="cardValue"> {{ card.value() }} </span> <br>
+                <span class="cardOchsen"> {{ card.ochsen() }} </span>
+            </div>
+        {% endfor %}
+        </div>
+        <form id="confirmCardForm" class="hidden">
+            Do you want to confirm card <span id=chosenCardValue> </span>?
+            <input type="submit" value="Yes">
+        </form>
     </section>
 
     <!-- JavaScript -->

@@ -13,6 +13,13 @@ BASE_DECK = {
     7: [55],
 }
 
+INVERTED_BASE_DECK = {}
+for ochsen_value, card_value_list in BASE_DECK.items():
+    for card_value in card_value_list:
+        INVERTED_BASE_DECK[card_value] = ochsen_value
+for i in range(1, 105):
+    INVERTED_BASE_DECK.setdefault(i, 1)
+
 
 class GameManager:
     """
@@ -55,9 +62,13 @@ class Card:
     _ochsen: int
     _player: Optional['Player']
 
-    def __init__(self, value: int, ochsen: int, player: Optional['Player'] = None):
+    def __init__(self, value: int, player: Optional['Player'] = None): # TODO: parameter ochsen removed, fix Testcode
+        if not isinstance(value, int):
+            raise ValueError("Cardvalue should be an int")
+        if player is not None and not isinstance(player, Player):
+            raise ValueError("Player should be a Player object")
         self._value = value
-        self._ochsen = ochsen
+        self._ochsen = INVERTED_BASE_DECK[self._value]
         self._player = None
 
     def __repr__(self):  # pragma: nocover
@@ -115,7 +126,7 @@ class Player:
         return self._total_points
 
     def hand(self) -> List[Card]:
-        return self._hand
+        return sorted(self._hand)
 
     def avatar(self) -> str:
         return self._avatar
@@ -125,10 +136,13 @@ class Player:
             "player_name": self._name,
             "player_id": self._id,
             "player_no": self._no,
-            "current_points" : self._current_points,
+            "current_points": self._current_points,
             "total_points": self._total_points,
             "avatar": self._avatar,
         }
+
+    def is_card_in_hand(self, card):
+        return card in self._hand
 
     def clean_hand(self):
         self._hand = []
@@ -259,18 +273,9 @@ class Game:
         Creates DECK full of Card-Objects
         Creates Set of 1-104 and thus assigns Card objects with just one Ochse
         """
-        all_numbers = set([x for x in range(1, 105)])
-        crnt_set = set()
         deck = []
-
-        for ochsen, number_list in BASE_DECK.items():
-            for number in number_list:
-                deck.append(Card(number, ochsen))
-                crnt_set.add(number)
-
-        for i in (all_numbers - crnt_set):
-            deck.append(Card(i, 1))
-
+        for card_number in INVERTED_BASE_DECK:
+            deck.append(Card(card_number))
         random.shuffle(deck)
         return(deck)
 
@@ -304,7 +309,7 @@ class Game:
         """
         self._state = "Between Rounds"
 
-        # If all players have empty hands, we continue to
+        # If all players have empty hands, we continue to .between_games()
         if any([player.hand() == [] for player in self._player_objects]):
             if not all([player.hand() == [] for player in self._player_objects]):  # pragma: nocover
                 raise ValueError("Some players have cards, others don't. This shouldn't happen.")
@@ -317,7 +322,7 @@ class Game:
         player = self._players[player_id]
 
         if player.is_card_selected():
-            raise ValueError("This player has already played. Your choice is final.")
+            raise PlayerAlreadyPlayedError("This player has already played a card")
 
         self._state = "Selecting Cards"
         player.select_card(card)
@@ -427,3 +432,9 @@ class Game:
         self._state = "End of Game"
 
 
+class PlayerAlreadyPlayedError(Exception):
+    """
+    This is a specific excpetion
+    This is an exception indicating that the player already played a card
+    To prevent generic ValueError
+    """
