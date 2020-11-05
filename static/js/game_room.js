@@ -69,14 +69,36 @@ async function updatePointsPopulateStacks(gameID) {
     const stackData = responseJson["stacks"];
     const table = document.querySelector('#stacks table');
 
+    // Pulls out each card per stack and adds it to the stack table on page
     for (let col=0; col<stackData.length; col++) {
         let currentStack = stackData[col];
+
         for (let row=0; row<currentStack.length; row++) {
             let currentCard = currentStack[row];
             const cardValue = currentCard["value"];
             const ochsen = currentCard["ochsen"];
+            const elCurrentCell = table.querySelector(`tr:nth-child(${row+1}) td:nth-child(${col+1})`)
 
-            table.querySelector(`tr:nth-child(${row+1}) td:nth-child(${col+1})`).textContent = cardValue
+            // Create Element Div, nestle in it new created Elements span with value and ochsen
+            const elNewCard = document.createElement("div");
+            elNewCard.classList.add("card");
+
+            const elCardValue = document.createElement("span");
+            elCardValue.classList.add("cardValue");
+            elCardValue.textContent = cardValue;
+
+            const elBr = document.createElement("br");
+            elCardValue.appendChild(elBr);
+
+            const elCardOchsen = document.createElement("span");
+            elCardOchsen.classList.add("cardOchsen");
+            elCardOchsen.textContent = ochsen;
+
+            elNewCard.appendChild(elCardValue);
+            elNewCard.appendChild(elCardOchsen);
+
+            elCurrentCell.innerHTML = "";
+            elCurrentCell.appendChild(elNewCard);
         }
     }
 
