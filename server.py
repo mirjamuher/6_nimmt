@@ -134,12 +134,15 @@ def start_game(game_id: int):
 @app.route('/api/game/<int:game_id>', methods=["GET"])
 def get_game_information(game_id: int):
     """
+    ZF: Returns information about every game; player info can get extracted
     Response:
     {
         "id": game id,
         "players": [player data as per API get_player_information],
         "state": game state string,
+        "stacks": [[Card, Optional[Card],...][-"-][-"-][-"-]],
     }
+    # Card: {"value": cardvalue, "ochsen": ochsen}
     """
     # TODO: 1) implement to_json in Game
     # Validating Process
@@ -153,6 +156,7 @@ def get_game_information(game_id: int):
 @app.route('/api/game/<int:game_id>/player/<int:player_id>', methods=["GET"])
 def get_player_information(game_id: int, player_id: int):
     """
+    ZF: Returns information about the individual player
     Response:
     {
         "player_name": str of player name
@@ -183,6 +187,7 @@ API Views for game_room
 @app.route('/api/game/<int:game_id>/player/<int:player_id>/card_selected', methods=["PUT"])
 def player_chooses_card(game_id: int, player_id: int):
     """
+    ZF: Player's chosen card gets send to server
     Request:
     {
         "selected_card" : int of card number

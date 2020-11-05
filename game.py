@@ -89,6 +89,12 @@ class Card:
     def ochsen(self):
         return self._ochsen
 
+    def to_json(self):
+        return {
+            "value": self._value,
+            "ochsen": self._ochsen,
+        }
+
     def assign_player(self, player: 'Player') -> None:
         self._player = player
 
@@ -233,6 +239,7 @@ class Game:
             "id": self._game_id,
             "players": [player.to_json() for player in self._player_objects],
             "state": self._state,
+            "stacks": [[card.to_json() for card in stack] for stack in self._stacks],
         }
 
     def get_points(self) -> List[Tuple[Player, int]]:

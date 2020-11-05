@@ -9,6 +9,7 @@
 
   <body data-game-id="{{ game.get_id() }}" data-player-id="{{ player.id() }}">
 
+    <!-- Point Table -->
     <section id="playerOverview">
         <table>
             <tr>
@@ -34,10 +35,20 @@
         </table>
     </section>
 
+    <!-- Stacks -->
     <section id="stacks">
-        Deck goes here
+        <table>
+            {% for i in range(6) %}
+                <tr>
+                    {% for j in range(4) %}
+                    <td> here </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
     </section>
 
+    <!-- Player's Hand -->
     <section id="hand">
         <div id="handCards">
         {% for card in player.hand() %}

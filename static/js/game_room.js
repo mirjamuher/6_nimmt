@@ -17,8 +17,8 @@ function setupPage() {
     const playerID = document.body.getAttribute("data-player-id");
     const elConfirmCardForm = document.querySelector("#confirmCardForm");
 
-
-    setInterval(function() {updatePoints(gameID)}, 100*1000); //Temporary fix; later update when cards played
+    // TODO: Populate Stacks has to be done with an initial fetch!
+    setInterval(function() {updatePointsPopulateStacks(gameID)}, 10*1000); //Temporary fix; later update when cards played
 
     for (const elCard of document.querySelectorAll(".card")) {
         elCard.addEventListener("click", chooseCard); // Shows chosen card and lets player confirm action
@@ -30,14 +30,17 @@ function setupPage() {
 };
 
 
-async function updatePoints(gameID) {
+async function updatePointsPopulateStacks(gameID) {
     /*
     Response:
     {
         "id": game id,
         "players": [player data as per API get_player_information],
         "state": game state string,
+        "stacks": [[Card, Optional[Card],...][-"-][-"-][-"-]],
     }
+    # Card: {"value": cardvalue, "ochsen": ochsen}
+
         [{
             "player_name": str of player name
             "player_id": int of player id
@@ -62,11 +65,27 @@ async function updatePoints(gameID) {
 
         document.querySelector(`td[data-player-id='${playerID}'] .currentPoints`).textContent = crntPoints;
     }
+
+    const stackData = responseJson["stacks"];
+    const table = document.querySelector('#stacks table');
+
+    for (let col=0; col<stackData.length; col++) {
+        let currentStack = stackData[col];
+        for (let row=0; row<currentStack.length; row++) {
+            let currentCard = currentStack[row];
+            const cardValue = currentCard["value"];
+            const ochsen = currentCard["ochsen"];
+
+            table.querySelector(`tr:nth-child(${row+1}) td:nth-child(${col+1})`).textContent = cardValue
+        }
+    }
+
 }
 
 // Function Collection
 
 function chooseCard(event) {
+    // Allows player to chose a Card
     const elCard = event.target;
     const elConfirmCardForm = document.querySelector("#confirmCardForm");
 
@@ -129,5 +148,6 @@ async function submitConfirmCardForm(event, gameID, playerID) {
 
     globalState = GameState.WAITING_FOR_EVERYONE_TO_CONFIRM;
 }
+
 
 document.addEventListener("DOMContentLoaded", setupPage);
