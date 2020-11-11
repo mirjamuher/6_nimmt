@@ -209,6 +209,7 @@ class Game:
         self._player_objects: List[Player] = []  # [ Player, ...]
         self._players = {}  # {player id : Player, ...}
         self._all_avatars = ['/' + path for path in glob.glob("static/images/test_avatars/*")]
+        self._round_notations = []
 
         self._stacks = [[], [], [], []]  # [ Card ]
         self._state = "waiting"
@@ -245,6 +246,9 @@ class Game:
     def get_points(self) -> List[Tuple[Player, int]]:
         player_points = [(p, p.total_points()) for p in self._player_objects]
         return sorted(player_points, key = lambda pair: (pair[1], pair[0].no()))
+
+    def get_last_notation(self):
+        return self._round_notations[-1]
 
     def add_player(self, player_name: str, *, player_id: Optional[int] = None) -> Player:
         # Need to make each player, including p1 enter their name and thus call this API
@@ -347,10 +351,17 @@ class Game:
         self._state = "Round in Progress"
         slct_card_stack = sorted(self.get_selected_cards())
 
+        # Create and populate GameNotation for this round
+        round_notation = GameNotation(self, len(self._round_notations)+1, sorted(self.get_selected_cards()))
+        self._round_notations.append(round_notation)
+
+
         for card in slct_card_stack:
+            # Testing
             print('*' * 80)
             print('Processing card', card)
             print('_stacks is', self._stacks)
+            crnt_player = card.player()
 
             if self.is_lowest_card(card):
                 # If the card is the lowest card, we first have to replace a stack with it
@@ -361,34 +372,41 @@ class Game:
                     if ochsen < min_ochsen:
                         min_ochsen = ochsen
                         min_stack = stack
-                crnt_player = card.player()
                 crnt_player.eat_points(min_ochsen)
                 self._stacks.remove(min_stack)
                 crnt_stack = [card]
                 self._stacks.insert(0, crnt_stack)
                 print('lowest card has been replaced. stacks are now', self._stacks)
+                
+                #Add information to Round Notation for Json
+                round_notation.add_play(crnt_player, card, min_stack, crnt_stack, True) #player, card played, old stack, new stack, stack replaced Y/N
 
             else:
                 # Closest stack is identified and card appended to it
-                crnt_stack = self.find_closest_stack(card)
-                crnt_stack_index = self._stacks.index(crnt_stack)
-                crnt_stack.append(card)
-                print('added to stack index', crnt_stack_index, 'stacks are now', self._stacks)
+                old_stack = self.find_closest_stack(card)
+                old_stack_index = self._stacks.index(old_stack)
+                crnt_stack = old_stack + [card]
+                print('added to stack index', old_stack_index, 'stacks are now', self._stacks)
+                stack_replaced = False
 
-            # If the stack now has 6 cards, player has to eat it
-            if len(crnt_stack) == 6:
-                print('stack is too large. eating')
-                new_first_card = crnt_stack.pop()
-                crnt_player = new_first_card.player()
-                self.eat_points(crnt_stack, crnt_player)
-                self._stacks.remove(crnt_stack)
-                self._stacks.insert(crnt_stack_index, [new_first_card])
-                print('stacks are now', self._stacks)
+                # If the stack now has 6 cards, player has to eat it
+                if len(crnt_stack) == 6:
+                    print('stack is too large. eating')
+                    new_first_card = crnt_stack.pop()
+                    crnt_stack = [new_first_card]
+                    crnt_player = new_first_card.player()
+                    self.eat_points(crnt_stack, crnt_player)
+                    print('stacks are now', self._stacks)
+                    stack_replaced = True
+            
+                self._stacks.remove(old_stack)
+                self._stacks.insert(old_stack_index, crnt_stack)
+
+                #Add information to Round Notator for Json
+                round_notation.add_play(crnt_player, card, old_stack, crnt_stack, stack_replaced)
 
             if self._stacks != sorted(self._stacks, key = lambda stack: stack[-1].value()):  # pragma: nocover
                 raise ValueError("Stacks are not correctly sorted anymore")
-
-            # TODO: TEST THE SHIT OUT OF EVERYTHING
 
         for p in self._player_objects:
             p.clear_selected_card()
@@ -437,6 +455,39 @@ class Game:
     def end_of_game(self, point_list: List[Tuple[Player, int]]):
         # TODO: Announce winner, confetti, all that jazz
         self._state = "End of Game"
+
+class GameNotation:
+    """
+    Keeps track of all cards played, points eaten and stack movements
+    throughout one game
+
+    Info needed:
+    1) What cards where played by what player (included in the card class)
+    2) in what order where they applied to the stacks?
+    3) How did the stacks move?
+    4) Who ate how many points and how many points do they have now? (Class Player)
+
+    Then: to_json all Info
+    """
+    def __init__(self, game, round_no, selected_cards):
+        # Given Variables
+        self._game = game
+        self._round = round_no
+        self._played_cards = selected_cards #List[Cards] for a check
+        self._plays = [] #List(Dictionary(all moves made by a player this round))
+
+    def add_play(self, player, card, old_stack, new_stack, stack_replaced):
+        self._plays.append({
+            "round_number": self._round,
+            "player": player,
+            "played_card": card,
+            "old_stack": old_stack,
+            "new_stack": new_stack,
+            "stack_replaced": stack_replaced #if False, then it was just appended
+        })
+
+    def to_json(self):
+        return self._plays #returns a List of Json Dictionaries 
 
 
 class PlayerAlreadyPlayedError(Exception):

@@ -18,7 +18,7 @@ function setupPage() {
     const elConfirmCardForm = document.querySelector("#confirmCardForm");
 
     // TODO: Populate Stacks has to be done with an initial fetch!
-    setInterval(function() {updatePointsPopulateStacks(gameID)}, 10*1000); //Temporary fix; later update when cards played
+    setInterval(function() {updatePointsPopulateStacks(gameID)}, 1*1000); //Temporary fix; later update when cards played
 
     for (const elCard of document.querySelectorAll(".card")) {
         elCard.addEventListener("click", chooseCard); // Shows chosen card and lets player confirm action
@@ -82,6 +82,7 @@ async function updatePointsPopulateStacks(gameID) {
             // Create Element Div, nestle in it new created Elements span with value and ochsen
             const elNewCard = document.createElement("div");
             elNewCard.classList.add("card");
+            elNewCard.classList.add("noHover");
 
             const elCardValue = document.createElement("span");
             elCardValue.classList.add("cardValue");

@@ -221,6 +221,44 @@ def player_chooses_card(game_id: int, player_id: int):
         return jsonify({"error": str(e)}), 400
     return jsonify({}), 201
 
+@app.route('/api/game/<int:game_id>/player/<int:player_id>/roundstate', methods=["GET"])
+def finish_round(game_id: int, player_id: int):
+    """
+    ZF: Players poll for round_state. If 'Between Rounds', update client with new stack info
+    Response:{
+    "everyone_played": Boolean
+    "data": none or List({
+                "round_number": self._round,
+                "player": player,
+                "played_card": card,
+                "points_eaten": points_eaten,
+                "old_stack": old_stack,
+                "new_stack": new_stack,
+                "stack_replaced": stack_replaced #if False, then it was just appended
+    })
+    }
+    """
+    # Validating Process
+    game = game_manager.get_game(game_id)
+    if not game:
+        return jsonify({"error":"Room Not Found"}), 404
+
+    player = game.get_players().get(player_id)
+    if not player:
+        return jsonify({"error":"Player Not Found"}), 404
+
+    # Checking Gamestate
+    if game.get_state() == "Between Rounds":
+        data = game.get_last_notation()
+        return jsonify({
+            "everyone_played": True,
+            "data": data,
+        })
+    else:
+        return jsonify({
+            "everyone_played": False,
+            "data": None
+        })
 
 
 """
