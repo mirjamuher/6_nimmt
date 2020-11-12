@@ -231,7 +231,6 @@ def finish_round(game_id: int, player_id: int):
                 "round_number": self._round,
                 "player": player,
                 "played_card": card,
-                "points_eaten": points_eaten,
                 "old_stack": old_stack,
                 "new_stack": new_stack,
                 "stack_replaced": stack_replaced #if False, then it was just appended
