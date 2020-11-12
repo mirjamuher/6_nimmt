@@ -14,8 +14,8 @@ let periodicTimerID = 0;
 
 // GOAL: call API with data None or Data Some. If Some, call function that updates points & stacks
 // I need a first population of points & stacks --> DONE
-// Constant Polling: Has everyone played yet?
-// Now I need to discover if data is. If it is, that needs to call a stack update
+// Constant Polling: Has everyone played yet? --> DONE
+// Now I need to discover if data is. If it is, that needs to call a stack update --> DONE
 
 function setupPage() {
     const gameID = document.body.getAttribute("data-game-id");
@@ -123,7 +123,6 @@ async function updatePointsAndStacks(gameID) {
     elChosenCard = document.querySelector(".chosenCard");
     elChosenCard.classList.remove("chosenCard");
     elChosenCard.classList.add("hidden");
-    //TODO: make sure card is not selectable anymore!
 
     // Stops polling
     clearInterval(periodicTimerID);
@@ -242,12 +241,31 @@ async function submitConfirmCardForm(event, gameID, playerID) {
     // Add "waiting for other players" div
     elWaitingDiv = document.querySelector("#waitingForOthers");
     elWaitingDiv.classList.remove("hidden");
+    
+    globalState = GameState.WAITING_FOR_EVERYONE_TO_CONFIRM;
 
     // Poll every n seconds to see if other players have played
-    periodicTimerID = setInterval(function() {updatePointsAndStacks(gameID)}, 5*1000);
+    periodicTimerID = setInterval(function() {getRoundNotation(gameID)}, 5*1000);
+}
 
+async function getRoundNotation(gameID) {
 
-    globalState = GameState.WAITING_FOR_EVERYONE_TO_CONFIRM;
+    const response = await fetch(`/api/game/${gameID}/roundstate`);
+    if (!response.ok) {
+        alert("API roundstate didn't work. Is Game ID correct?");
+    }
+
+    const responseJson = await response.json();
+
+    if (!responseJson["everyone_played"]) {
+        return;
+    }
+
+    const data = responseJson["data"];
+    // TODO - use this to do animation. Maybe feed it to updatePointsandStacks?
+
+    //Call the Update Points and Stacks function (above)
+    updatePointsAndStacks(gameID);
 }
 
 

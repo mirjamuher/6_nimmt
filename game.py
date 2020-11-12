@@ -474,16 +474,16 @@ class GameNotation:
         self._game = game
         self._round = round_no
         self._played_cards = selected_cards #List[Cards] for a check
-        self._plays = [] #List(Dictionary(all moves made by a player this round))
+        self._plays = [] #List(Dictionary(JSON of all moves made by a player this round))
 
     def add_play(self, player, card, old_stack, new_stack, stack_replaced):
         self._plays.append({
             "round_number": self._round,
-            "player": player,
-            "played_card": card,
-            "old_stack": old_stack,
-            "new_stack": new_stack,
-            "stack_replaced": stack_replaced #if False, then it was just appended
+            "player": player.to_json(),
+            "played_card": card.to_json(),
+            "old_stack": [card.to_json() for card in old_stack],
+            "new_stack": [card.to_json() for card in new_stack],
+            "stack_replaced": stack_replaced #Boolean
         })
 
     def to_json(self):
