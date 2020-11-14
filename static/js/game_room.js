@@ -85,97 +85,6 @@ async function initialPopulateStacks(gameID) {
     }
 }
 
-
-async function updatePointsAndStacks(gameID) {
-    /*
-    Response:
-    {
-        "id": game id,
-        "players": [player data as per API get_player_information],
-        "state": game state string,
-        "stacks": [[Card, Optional[Card],...][-"-][-"-][-"-]],
-    }
-    # Card: {"value": cardvalue, "ochsen": ochsen}
-
-        [{
-            "player_name": str of player name
-            "player_id": int of player id
-            "player_no": int of player number
-            "current_points" : self._current_points,
-            "total_points": int of player points
-            "avatar": filename of player avatar
-        }]
-    */
-
-    const response = await fetch(`/api/game/${gameID}`);
-    if (!response.ok) {
-        alert("API didn't work. Does Game ID exist?");
-        return;
-    }
-
-    const responseJson = await response.json();
-
-    // Removes "Waiting for others" Div
-    elWaitingDiv = document.querySelector("#waitingForOthers");
-    elWaitingDiv.classList.add("hidden");
-
-    // Remove Chosen Card
-    elChosenCard = document.querySelector(".chosenCard");
-    elChosenCard.classList.remove("chosenCard");
-    elChosenCard.classList.add("hidden");
-
-    // Stops polling
-    clearInterval(periodicTimerID);
-
-    // Updates Player Points; TODO: Add Animation of points going up
-    for (const player of responseJson["players"]) {
-        const playerID = player["player_id"];
-        const crntPoints = player["current_points"];
-
-        document.querySelector(`td[data-player-id='${playerID}'] .currentPoints`).textContent = crntPoints;
-    }
-
-    const stackData = responseJson["stacks"];
-    const table = document.querySelector('#stacks table');
-
-    // Pulls out each card per stack and adds it to the stack table on page; TODO: animation
-    for (let col=0; col<stackData.length; col++) {
-        let currentStack = stackData[col];
-
-        for (let row=0; row<currentStack.length; row++) {
-            let currentCard = currentStack[row];
-            const cardValue = currentCard["value"];
-            const ochsen = currentCard["ochsen"];
-            const elCurrentCell = table.querySelector(`tr:nth-child(${row+1}) td:nth-child(${col+1})`)
-
-            // Create Element Div, nestle in it new created Elements span with value and ochsen
-            const elNewCard = document.createElement("div");
-            elNewCard.classList.add("card");
-            elNewCard.classList.add("noHover");
-
-            const elCardValue = document.createElement("span");
-            elCardValue.classList.add("cardValue");
-            elCardValue.textContent = cardValue;
-
-            const elBr = document.createElement("br");
-            elCardValue.appendChild(elBr);
-
-            const elCardOchsen = document.createElement("span");
-            elCardOchsen.classList.add("cardOchsen");
-            elCardOchsen.textContent = ochsen;
-
-            elNewCard.appendChild(elCardValue);
-            elNewCard.appendChild(elCardOchsen);
-
-            elCurrentCell.innerHTML = "";
-            elCurrentCell.appendChild(elNewCard);
-        }
-    }
-
-
-
-}
-
 function chooseCard(event) {
     // Allows player to chose a Card
     const elCard = event.target;
@@ -249,6 +158,18 @@ async function submitConfirmCardForm(event, gameID, playerID) {
 }
 
 async function getRoundNotation(gameID) {
+    /*
+    Response:{
+        "everyone_played": Boolean
+        "data": none or List({
+                    "round_number": self._round,
+                    "player": player JSON,
+                    "played_card": card JSON,
+                    "old_stack": [card JSON, card JSON, ...],
+                    "new_stack": [card JSON, card JSON, ...],
+                    "stack_replaced": stack_replaced #if False, then it was just appended
+        })
+    */
 
     const response = await fetch(`/api/game/${gameID}/roundstate`);
     if (!response.ok) {
@@ -257,16 +178,113 @@ async function getRoundNotation(gameID) {
 
     const responseJson = await response.json();
 
+    // if everyone has played we get data and continue. Otherwise, back to polling.
     if (!responseJson["everyone_played"]) {
         return;
     }
 
+    globalState = GameState.DISPLAY_PLAYED_ROUND
     const data = responseJson["data"];
     // TODO - use this to do animation. Maybe feed it to updatePointsandStacks?
 
-    //Call the Update Points and Stacks function (above)
     updatePointsAndStacks(gameID);
 }
 
+async function updatePointsAndStacks(gameID) {
+    /*
+    Response:
+    {
+        "id": game id,
+        "players": [player data as per API get_player_information],
+        "state": game state string,
+        "stacks": [[Card, Optional[Card],...][-"-][-"-][-"-]],
+    }
+    # Card: {"value": cardvalue, "ochsen": ochsen}
+
+        [{
+            "player_name": str of player name
+            "player_id": int of player id
+            "player_no": int of player number
+            "current_points" : self._current_points,
+            "total_points": int of player points
+            "avatar": filename of player avatar
+        }]
+    */
+
+    const response = await fetch(`/api/game/${gameID}`);
+    if (!response.ok) {
+        alert("API didn't work. Does Game ID exist?");
+        return;
+    }
+
+    const responseJson = await response.json();
+
+    // Removes "Waiting for others" Div
+    elWaitingDiv = document.querySelector("#waitingForOthers");
+    elWaitingDiv.classList.add("hidden");
+
+    // Remove Chosen Card
+    elChosenCard = document.querySelector(".chosenCard");
+    elChosenCard.classList.remove("chosenCard");
+    elChosenCard.classList.add("hidden");
+
+    // Stops polling
+    clearInterval(periodicTimerID);
+
+    // Updates Player Points; TODO: Add Animation of points going up
+    for (const player of responseJson["players"]) {
+        const playerID = player["player_id"];
+        const crntPoints = player["current_points"];
+
+        document.querySelector(`td[data-player-id='${playerID}'] .currentPoints`).textContent = crntPoints;
+    }
+
+    const stackData = responseJson["stacks"];
+    const table = document.querySelector('#stacks table');
+
+    // Pulls out each card per stack and adds it to the stack table on page; TODO: animation
+    for (let col=0; col<stackData.length; col++) {
+        let currentStack = stackData[col];
+
+        //for (let row=0; row<currentStack.length; row++) { Trying something new
+        for (let row=0; row<6; row++) {
+            let currentCard = currentStack[row];
+
+            // if this card doesn't exist, overwrite cell with empty
+            if (!currentCard) {
+                table.querySelector(`tr:nth-child(${row+1}) td:nth-child(${col+1})`).innerHTML = '';
+                continue;
+            }
+
+            const cardValue = currentCard["value"];
+            const ochsen = currentCard["ochsen"];
+            const elCurrentCell = table.querySelector(`tr:nth-child(${row+1}) td:nth-child(${col+1})`)
+
+            // Create Element Div, nestle in it new created Elements span with value and ochsen
+            const elNewCard = document.createElement("div");
+            elNewCard.classList.add("card");
+            elNewCard.classList.add("noHover");
+
+            const elCardValue = document.createElement("span");
+            elCardValue.classList.add("cardValue");
+            elCardValue.textContent = cardValue;
+
+            const elBr = document.createElement("br");
+            elCardValue.appendChild(elBr);
+
+            const elCardOchsen = document.createElement("span");
+            elCardOchsen.classList.add("cardOchsen");
+            elCardOchsen.textContent = ochsen;
+
+            elNewCard.appendChild(elCardValue);
+            elNewCard.appendChild(elCardOchsen);
+
+            elCurrentCell.innerHTML = "";
+            elCurrentCell.appendChild(elNewCard);
+        }
+    }
+    // Now players can play again.
+    globalState = GameState.WAITING_TO_CHOOSE_CARD;
+}
 
 document.addEventListener("DOMContentLoaded", setupPage);
