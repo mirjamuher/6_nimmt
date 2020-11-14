@@ -40,6 +40,10 @@ class GameManager:
             if game_id not in self._games:
                 return game_id
 
+        #TODO: create time_stamp of last interaction on each Game.
+        #When creating new Game, check all Game Objects and clean anything
+        #that hasn't been interacted with for x hours
+
     def get_games(self) -> Dict[int, "Game"]:
         return self._games
 
@@ -360,7 +364,6 @@ class Game:
         round_notation = GameNotation(self, len(self._round_notations)+1, sorted(self.get_selected_cards()))
         self._round_notations.append(round_notation)
 
-
         for card in slct_card_stack:
             # Testing
             print('*' * 80)
@@ -445,13 +448,17 @@ class Game:
         for player in self._player_objects:
             player.merge_points()
         point_list = self.get_total_points()
+        self.clean_slate()
 
         # If one player has reached 100 points, the game is done
         if any(points >= 100 for _, points in point_list):
             self.end_of_game(point_list)
+        """
+        Client has to set this in motion
         else:
             self.clean_slate()
             self.game_start()
+        """
 
     def clean_slate(self):
         self._stacks = [[], [], [], []]

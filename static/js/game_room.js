@@ -10,25 +10,24 @@ const GameState = {
 let globalState = GameState.GAME_SETUP;
 let periodicTimerID = 0;
 
+let GAME_ID = -1;
+let PLAYER_ID = -1;
+
+
 // Game
 
-// GOAL: call API with data None or Data Some. If Some, call function that updates points & stacks
-// I need a first population of points & stacks --> DONE
-// Constant Polling: Has everyone played yet? --> DONE
-// Now I need to discover if data is. If it is, that needs to call a stack update --> DONE
-
 function setupPage() {
-    const gameID = document.body.getAttribute("data-game-id");
-    const playerID = document.body.getAttribute("data-player-id");
+    GAME_ID = document.body.getAttribute("data-game-id");
+    PLAYER_ID = document.body.getAttribute("data-player-id");
     const elConfirmCardForm = document.querySelector("#confirmCardForm");
 
-    initialPopulateStacks(gameID);
+    initialPopulateStacks();
 
     for (const elCard of document.querySelectorAll(".card")) {
         elCard.addEventListener("click", chooseCard); // Shows chosen card and lets player confirm action
     }
 
-    elConfirmCardForm.addEventListener("submit", function(event) {submitConfirmCardForm(event, gameID, playerID)});
+    elConfirmCardForm.addEventListener("submit", function(event) {submitConfirmCardForm(event)});
 
     globalState = GameState.WAITING_TO_CHOOSE_CARD;
 };
@@ -36,7 +35,7 @@ function setupPage() {
 
 // Function Collection
 
-async function initialPopulateStacks(gameID) {
+async function initialPopulateStacks() {
     /*
     Response:
     {
@@ -48,7 +47,7 @@ async function initialPopulateStacks(gameID) {
     # Card: {"value": cardvalue, "ochsen": ochsen}
     */
 
-    const response = await fetch(`/api/game/${gameID}`);
+    const response = await fetch(`/api/game/${GAME_ID}`);
     if (!response.ok) {
         alert("API didn't work. Does Game ID exist?");
         return;
@@ -118,7 +117,7 @@ function chooseCard(event) {
 }
 
 
-async function submitConfirmCardForm(event, gameID, playerID) {
+async function submitConfirmCardForm(event) {
     // Sending confirmed card info to the server, then game freezes and we wait
     event.preventDefault();
     const elConfirmCardForm = document.querySelector("#confirmCardForm");
@@ -128,7 +127,7 @@ async function submitConfirmCardForm(event, gameID, playerID) {
 
     const data = { "selected_card" : chosenCardValue };
 
-    const response = await fetch(`/api/game/${gameID}/player/${playerID}/card_selected`, {
+    const response = await fetch(`/api/game/${GAME_ID}/player/${PLAYER_ID}/card_selected`, {
         method: 'PUT',
         headers: {
             'Content-Type' : 'application/json',
@@ -152,10 +151,10 @@ async function submitConfirmCardForm(event, gameID, playerID) {
     globalState = GameState.WAITING_FOR_EVERYONE_TO_CONFIRM;
 
     // Poll every n seconds to see if other players have played
-    periodicTimerID = setInterval(function() {getRoundNotation(gameID)}, 5*1000);
+    periodicTimerID = setInterval(function() {getRoundNotation()}, 5*1000);
 }
 
-async function getRoundNotation(gameID) {
+async function getRoundNotation() {
     /*
     Response:{
         "everyone_played": Boolean
@@ -169,7 +168,7 @@ async function getRoundNotation(gameID) {
         })
     */
 
-    const response = await fetch(`/api/game/${gameID}/roundstate`);
+    const response = await fetch(`/api/game/${GAME_ID}/roundstate`);
     if (!response.ok) {
         alert("API roundstate didn't work. Is Game ID correct?");
     }
@@ -185,10 +184,10 @@ async function getRoundNotation(gameID) {
     const data = responseJson["data"];
     // TODO - use this to do animation. Maybe feed it to updatePointsandStacks?
 
-    updatePointsAndStacks(gameID);
+    updatePointsAndStacks();
 }
 
-async function updatePointsAndStacks(gameID) {
+async function updatePointsAndStacks() {
     /*
     Response:
     {
@@ -209,7 +208,7 @@ async function updatePointsAndStacks(gameID) {
         }]
     */
 
-    const response = await fetch(`/api/game/${gameID}`);
+    const response = await fetch(`/api/game/${GAME_ID}`);
     if (!response.ok) {
         alert("API didn't work. Does Game ID exist?");
         return;
@@ -231,10 +230,10 @@ async function updatePointsAndStacks(gameID) {
 
     // Updates Player Points; TODO: Add Animation of points going up
     for (const player of responseJson["players"]) {
-        const playerID = player["player_id"];
+        const PLAYER_ID = player["player_id"];
         const crntPoints = player["current_points"];
 
-        document.querySelector(`td[data-player-id='${playerID}'] .currentPoints`).textContent = crntPoints;
+        document.querySelector(`td[data-player-id='${PLAYER_ID}'] .currentPoints`).textContent = crntPoints;
     }
 
     const stackData = responseJson["stacks"];
@@ -281,8 +280,16 @@ async function updatePointsAndStacks(gameID) {
             elCurrentCell.appendChild(elNewCard);
         }
     }
-    // Now players can play again.
-    globalState = GameState.WAITING_TO_CHOOSE_CARD;
+
+    const serverState = responseJson["state"];
+
+    if (serverState === "Between Games") {
+        location.assign(`/inbetween_rounds/${GAME_ID}/${PLAYER_ID}`);
+    } else {
+        // Now players can play again.
+        globalState = GameState.WAITING_TO_CHOOSE_CARD;
+    }
+
 }
 
 document.addEventListener("DOMContentLoaded", setupPage);

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <!-- CSS -->
+        <link rel="stylesheet" href="/static/css/inbetween_games.css">
+        <title>Test Waiting Room</title>
+    </head>
+
+    <body data-player-id="{{ player.id() }}">
+        <h1>
+            Great Game {{ player.name() }}! <br>
+            You can keep playing until one of you reaches TODO ADD POINTS points.<br> <!-- TODO: Implement point choosing mechanic -->
+            Click the button below when you are ready to start the next game.
+        </h1>
+        <section>
+            <h2> These are everyone's points: </h2>
+            <p id="pointTable">
+                {% for player in game.get_player_list() %}
+                    <div>
+                        <img class="playerAvatar" src="{{ player.avatar() }}" alt="{{ player.name() }}'s avatar" width="64" height="64">
+                        <div class="playerName"> {{ player.name() }} </div> <br>
+                        <div class="playerPoints"> {{ player.total_points() }} </div>
+                    </div>
+                {% endfor %}
+            </p>
+            <!-- Extra: Can I transfer prev t.points, crnt t.points and gained points and animate? -->
+        </section>
+
+        <button id="startButton">Start the next round!</button> <!-- have JavaScript ask for a popup are you sure here-->
+
+        <!-- JavaScript -->
+        <script src="/static/js/inbetween_games.js"></script>
+    </body>
+</html>

@@ -50,6 +50,20 @@ def play_room(game_id: int, player_id: int):
 
     return render_template('skeleton/game_room.html', game=game, player=player)
 
+# Inbetween Games Room
+@app.route('/inbetween_rounds/<int:game_id>/<int:player_id>')
+def inbetween_games(game_id: int, player_id: int):
+    # Validation Process
+    game = game_manager.get_game(game_id)
+    if not game:
+        return "Game Not Found", 404
+
+    player = game.get_players().get(player_id)
+    if not player:
+        return "Player Not Found", 404
+
+    return render_template('skeleton/inbetween_games.html', game=game, player=player)
+
 
 """
 API VIEWS - speak json
@@ -243,7 +257,7 @@ def get_round_notation(game_id: int):
         return jsonify({"error":"Room Not Found"}), 404
 
     # Checking Gamestate
-    if game.get_state() == "Between Rounds":
+    if game.get_state() in ("Between Rounds", "Between Games"):
         data = game.get_last_notation()
         return jsonify({
             "everyone_played": True,
@@ -252,7 +266,7 @@ def get_round_notation(game_id: int):
     else:
         return jsonify({
             "everyone_played": False,
-            "data": None
+            "data": None,
         })
 
 
@@ -268,6 +282,15 @@ TEST_GAME.add_player("Tim", player_id=2)
 TEST_GAME.add_player("Elijah", player_id=3)
 TEST_GAME.game_start()
 
-# Test updating of current_points
-miri = TEST_GAME.get_players()[1]
-miri.eat_points(5)
+# Get Card information from players
+player_hands = TEST_GAME.get_player_hands()
+miri_hand = player_hands[1]
+tim_hand = player_hands[2]
+elijah_hand = player_hands[3]
+
+# Move Game to Endstage
+
+for i in range(9):
+    TEST_GAME.select_card(1, miri_hand.pop())
+    TEST_GAME.select_card(2, tim_hand.pop())
+    TEST_GAME.select_card(3, elijah_hand.pop())

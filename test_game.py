@@ -79,7 +79,7 @@ class TestPlayer(unittest.TestCase):
 
     def test_clean_hand(self):
         p1 = self.TEST_PLAYER
-        p1.deal_hand(self.CARD_STARTSET)a
+        p1.deal_hand(self.CARD_STARTSET)
         self.assertEqual(p1.hand(), self.CARD_STARTSET)
         p1.select_card(Card(1))
         self.assertEqual(p1.get_selected_card(), Card(1))
