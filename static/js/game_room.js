@@ -45,20 +45,18 @@ async function initialPopulateStacks(gameID) {
         "state": game state string,
         "stacks": [[Card, Optional[Card],...][-"-][-"-][-"-]],
     }
-    # Card: {"value": cardvalue, "ochsen": ochsen} 
+    # Card: {"value": cardvalue, "ochsen": ochsen}
     */
 
     const response = await fetch(`/api/game/${gameID}`);
     if (!response.ok) {
         alert("API didn't work. Does Game ID exist?");
-        return;   
+        return;
     }
 
     const responseJson = await response.json();
     const stackData = responseJson["stacks"];
     const elTable = document.querySelector('#stacks table');
-
-    //const elCurrentCell = table.querySelector(`tr:nth-child(${row+1}) td:nth-child(${col+1})`)
 
     for (let col = 0; col<stackData.length; col++) {
         const elCurrentCell = elTable.querySelector(`tr:nth-child(1) td:nth-child(${col+1})`)
@@ -150,7 +148,7 @@ async function submitConfirmCardForm(event, gameID, playerID) {
     // Add "waiting for other players" div
     elWaitingDiv = document.querySelector("#waitingForOthers");
     elWaitingDiv.classList.remove("hidden");
-    
+
     globalState = GameState.WAITING_FOR_EVERYONE_TO_CONFIRM;
 
     // Poll every n seconds to see if other players have played

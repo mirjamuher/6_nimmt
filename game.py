@@ -20,7 +20,6 @@ for ochsen_value, card_value_list in BASE_DECK.items():
 for i in range(1, 105):
     INVERTED_BASE_DECK.setdefault(i, 1)
 
-
 class GameManager:
     """
     Keeps track of all games that the server is running
@@ -243,7 +242,13 @@ class Game:
             "stacks": [[card.to_json() for card in stack] for stack in self._stacks],
         }
 
-    def get_points(self) -> List[Tuple[Player, int]]:
+    def get_current_points(self) -> List[Tuple[Player, int]]:
+        # Returns points eaten during current round
+        player_points = [(p, p.current_points()) for p in self._player_objects]
+        return sorted(player_points, key = lambda pair: (pair[1], pair[0].no()))
+
+    def get_total_points(self) -> List[Tuple[Player, int]]:
+        # Returns total points of player (after merge with current points)
         player_points = [(p, p.total_points()) for p in self._player_objects]
         return sorted(player_points, key = lambda pair: (pair[1], pair[0].no()))
 
@@ -372,12 +377,13 @@ class Game:
                     if ochsen < min_ochsen:
                         min_ochsen = ochsen
                         min_stack = stack
+                print(f"Player should eat points of {min_stack} which is in reversed card deck {INVERTED_BASE_DECK[card.value()]} Player ate: {min_ochsen}")
                 crnt_player.eat_points(min_ochsen)
                 self._stacks.remove(min_stack)
                 crnt_stack = [card]
                 self._stacks.insert(0, crnt_stack)
                 print('lowest card has been replaced. stacks are now', self._stacks)
-                
+
                 #Add information to Round Notation for Json
                 round_notation.add_play(crnt_player, card, min_stack, crnt_stack, True) #player, card played, old stack, new stack, stack replaced Y/N
 
@@ -393,12 +399,12 @@ class Game:
                 if len(crnt_stack) == 6:
                     print('stack is too large. eating')
                     new_first_card = crnt_stack.pop()
-                    crnt_stack = [new_first_card]
-                    crnt_player = new_first_card.player()
                     self.eat_points(crnt_stack, crnt_player)
+                    print(f"Player should eat points of {crnt_stack} which is in reversed card deck {sum([INVERTED_BASE_DECK[card.value()] for card in crnt_stack])}")
+                    crnt_stack = [new_first_card]
                     print('stacks are now', self._stacks)
                     stack_replaced = True
-            
+
                 self._stacks.remove(old_stack)
                 self._stacks.insert(old_stack_index, crnt_stack)
 
@@ -418,7 +424,7 @@ class Game:
         return slct_card_stack
 
     def is_lowest_card(self, card: Card) -> bool:
-        # Checks the lowest stack's latest card's value against crnt card's value
+        """Checks the lowest stack's latest card's value against crnt card's value"""
         return self._stacks[0][-1].value() > card.value()
 
     def find_closest_stack(self, card: Card) -> List[Card]:
@@ -438,7 +444,7 @@ class Game:
         self._state = "Between Games"
         for player in self._player_objects:
             player.merge_points()
-        point_list = self.get_points()
+        point_list = self.get_total_points()
 
         # If one player has reached 100 points, the game is done
         if any(points >= 100 for _, points in point_list):
@@ -487,7 +493,7 @@ class GameNotation:
         })
 
     def to_json(self):
-        return self._plays #returns a List of Json Dictionaries 
+        return self._plays #returns a List of Json Dictionaries
 
 
 class PlayerAlreadyPlayedError(Exception):
