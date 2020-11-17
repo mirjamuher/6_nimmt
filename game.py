@@ -115,6 +115,7 @@ class Player:
         self._name = player_name
         self._id = player_id
         self._no = no
+        self._points_of_last_round = 0
         self._current_points = 0
         self._total_points = 0
         self._avatar = avatar
@@ -129,6 +130,9 @@ class Player:
 
     def no(self) -> int:
         return self._no
+
+    def points_of_last_round(self) -> int:
+        return self._points_of_last_round
 
     def current_points(self) -> int:
         return self._current_points
@@ -190,6 +194,7 @@ class Player:
 
     def merge_points(self) -> None:
         self._total_points += self._current_points
+        self._points_of_last_round = self._current_points
         self._current_points = 0
 
 

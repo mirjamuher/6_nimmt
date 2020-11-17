@@ -25,6 +25,11 @@ function setupPage() {
 
 async function getGameInfo(gameID, playerID) {
     const response = await fetch(`/api/game/${gameID}`);
+    if (!response.ok) {
+        alert("API didn't work. Is the game ID correct?");
+        return;
+    }
+
     const jsonData = await response.json();
 
     const gameState = jsonData['state'];
