@@ -16,10 +16,13 @@ TODO:
 """
 HTML VIEWS - speak html
 """
+
+
 # Landing Page
 @app.route('/')
 def landing_page():
     return render_template('skeleton/landing_page.html')
+
 
 # Waiting Room
 @app.route('/waiting_room/<int:game_id>/<int:player_id>')
@@ -35,6 +38,7 @@ def waiting_room(game_id: int, player_id: int):
 
     return render_template('skeleton/waiting_room.html', game=game, player=player)
 
+
 # Play Room
 @app.route('/game/<int:game_id>/<int:player_id>')
 def play_room(game_id: int, player_id: int):
@@ -49,6 +53,7 @@ def play_room(game_id: int, player_id: int):
         return "Player Not Found", 404
 
     return render_template('skeleton/game_room.html', game=game, player=player)
+
 
 # Inbetween Games Room
 @app.route('/inbetween_rounds/<int:game_id>/<int:player_id>')
@@ -68,6 +73,8 @@ def inbetween_games(game_id: int, player_id: int):
 """
 API VIEWS - speak json
 """
+
+
 # When the player clicks "Create Room" they call the api/game and then the returned game_id
 # is used to route them to /waiting_room/<game_id>
 @app.route('/api/game', methods=["POST"])
@@ -130,6 +137,7 @@ def join_game(game_id: int):
 
     return jsonify({"player_id":player_id})
 
+
 # Moves game state from "waiting" to "dealing", thus starting the game for everyone
 @app.route('/api/game/<int:game_id>/start', methods=["POST"])
 def start_game(game_id: int):
@@ -144,6 +152,7 @@ def start_game(game_id: int):
 
     # Return Information
     return jsonify(game.to_json())
+
 
 @app.route('/api/game/<int:game_id>', methods=["GET"])
 def get_game_information(game_id: int):
@@ -166,6 +175,7 @@ def get_game_information(game_id: int):
 
     # Return information
     return jsonify(game.to_json())
+
 
 @app.route('/api/game/<int:game_id>/player/<int:player_id>', methods=["GET"])
 def get_player_information(game_id: int, player_id: int):
@@ -197,6 +207,7 @@ def get_player_information(game_id: int, player_id: int):
 """
 API Views for game_room
 """
+
 
 @app.route('/api/game/<int:game_id>/player/<int:player_id>/card_selected', methods=["PUT"])
 def player_chooses_card(game_id: int, player_id: int):
@@ -234,6 +245,7 @@ def player_chooses_card(game_id: int, player_id: int):
     except PlayerAlreadyPlayedError as e:
         return jsonify({"error": str(e)}), 400
     return jsonify({}), 201
+
 
 @app.route('/api/game/<int:game_id>/roundstate', methods=["GET"])
 def get_round_notation(game_id: int):
@@ -274,9 +286,10 @@ def get_round_notation(game_id: int):
 TEST GAME
 """
 # Setup Game
-import random
+import random  # noQA: E402
 random.seed(0)
 TEST_GAME = game_manager.create_game(game_id=123456)
+TEST_GAME.set_point_goal(100)
 TEST_GAME.add_player("Miri", player_id=1)
 TEST_GAME.add_player("Tim", player_id=2)
 TEST_GAME.add_player("Elijah", player_id=3)

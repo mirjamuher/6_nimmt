@@ -1,6 +1,11 @@
-async function startNewGame(playerName) {
-    const data = { "p1_name" : playerName };
+async function startNewGame(formData) {
+    // Converts the FormData object to a dictionary, so we can JSONify it.
+    const data = {};
+    for (const pair of formData) {
+        data[pair[0]] = pair[1];
+    }
 
+    // Post the JSON-safe data to the API.
     const response = await fetch('/api/game', {
         method: 'POST',
         headers: {
@@ -21,8 +26,12 @@ async function startNewGame(playerName) {
     }
 };
 
-async function joinGame(playerName, roomNumber) {
-    const data = { "player_name" : playerName };
+async function joinGame(formData) {
+    // Converts the FormData object to a dictionary, so we can JSONify it.
+    const data = {};
+    for (const pair of formData) {
+        data[pair[0]] = pair[1];
+    }
 
     const response = await fetch(`/api/game/${roomNumber}/player`, {
         method: 'POST',
@@ -65,9 +74,9 @@ function setupPage() {
 
     elStartForm.addEventListener("submit", function(event) {
         event.preventDefault();
-        const playerName = document.querySelector("#p1Name").value;
+        const data = new FormData(event.target);
         document.querySelector("#startGameForm input[type='submit']").disabled = true;
-        startNewGame(playerName);
+        startNewGame(data);
     });
 
     elBackButton1.addEventListener("click", function(event) {
@@ -91,9 +100,8 @@ function setupPage() {
     elJoinGameForm.addEventListener("submit", function(event) {
         event.preventDefault();
         document.querySelector("#joinGameForm input[type='submit']").disabled = true;
-        const playerName = document.querySelector("#playerName").value;
-        const roomNumber = document.querySelector("#roomNumber").value;
-        joinGame(playerName, roomNumber);
+        const formData = new FormData(event.target);
+        joinGame(formData);
     });
 }
 

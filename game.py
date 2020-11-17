@@ -20,6 +20,7 @@ for ochsen_value, card_value_list in BASE_DECK.items():
 for i in range(1, 105):
     INVERTED_BASE_DECK.setdefault(i, 1)
 
+
 class GameManager:
     """
     Keeps track of all games that the server is running
@@ -39,10 +40,11 @@ class GameManager:
             game_id = random.randint(100000, 999999)
             if game_id not in self._games:
                 return game_id
-
-        #TODO: create time_stamp of last interaction on each Game.
-        #When creating new Game, check all Game Objects and clean anything
-        #that hasn't been interacted with for x hours
+        """
+        TODO: create time_stamp of last interaction on each Game.
+        When creating new Game, check all Game Objects and clean anything
+        that hasn't been interacted with for x hours
+        """
 
     def get_games(self) -> Dict[int, "Game"]:
         return self._games
@@ -65,7 +67,7 @@ class Card:
     _ochsen: int
     _player: Optional['Player']
 
-    def __init__(self, value: int, player: Optional['Player'] = None): # TODO: parameter ochsen removed, fix Testcode
+    def __init__(self, value: int, player: Optional['Player'] = None):  # TODO: parameter ochsen removed, fix Testcode
         if not isinstance(value, int):
             raise ValueError("Cardvalue should be an int")
         if player is not None and not isinstance(player, Player):
@@ -206,12 +208,15 @@ class Game:
     _state: str
     _game_id: int
     _avatars: list
+    _point_goal: int
+    _round_notations: List["GameNotation"]
 
     def __init__(self, game_id: int):
         self._game_id = game_id
         self._player_objects: List[Player] = []  # [ Player, ...]
         self._players = {}  # {player id : Player, ...}
         self._all_avatars = ['/' + path for path in glob.glob("static/images/test_avatars/*")]
+        self._point_goal = 0
         self._round_notations = []
 
         self._stacks = [[], [], [], []]  # [ Card ]
@@ -278,6 +283,13 @@ class Game:
     def assign_avatar(self) -> str:
         self._all_avatars = random.sample(self._all_avatars, k=len(self._all_avatars))
         return self._all_avatars.pop()
+
+    def set_point_goal(self, point_goal: int) -> int:
+        self._point_goal = point_goal
+        return self._point_goal
+
+    def get_point_goal(self) -> int:
+        return self._point_goal
 
     def game_start(self) -> None:
         """
@@ -361,7 +373,7 @@ class Game:
         slct_card_stack = sorted(self.get_selected_cards())
 
         # Create and populate GameNotation for this round
-        round_notation = GameNotation(self, len(self._round_notations)+1, sorted(self.get_selected_cards()))
+        round_notation = GameNotation(self, len(self._round_notations) + 1, sorted(self.get_selected_cards()))
         self._round_notations.append(round_notation)
 
         for card in slct_card_stack:
@@ -387,8 +399,8 @@ class Game:
                 self._stacks.insert(0, crnt_stack)
                 print('lowest card has been replaced. stacks are now', self._stacks)
 
-                #Add information to Round Notation for Json
-                round_notation.add_play(crnt_player, card, min_stack, crnt_stack, True) #player, card played, old stack, new stack, stack replaced Y/N
+                # Add information to Round Notation for Json
+                round_notation.add_play(crnt_player, card, min_stack, crnt_stack, True)  # player, card played, old stack, new stack, stack replaced Y/N
 
             else:
                 # Closest stack is identified and card appended to it
@@ -411,7 +423,7 @@ class Game:
                 self._stacks.remove(old_stack)
                 self._stacks.insert(old_stack_index, crnt_stack)
 
-                #Add information to Round Notator for Json
+                # Add information to Round Notator for Json
                 round_notation.add_play(crnt_player, card, old_stack, crnt_stack, stack_replaced)
 
             if self._stacks != sorted(self._stacks, key = lambda stack: stack[-1].value()):  # pragma: nocover
@@ -451,7 +463,7 @@ class Game:
         self.clean_slate()
 
         # If one player has reached 100 points, the game is done
-        if any(points >= 100 for _, points in point_list):
+        if any(points >= self.get_point_goal() for _, points in point_list):
             self.end_of_game(point_list)
         """
         Client has to set this in motion
@@ -468,6 +480,7 @@ class Game:
     def end_of_game(self, point_list: List[Tuple[Player, int]]):
         # TODO: Announce winner, confetti, all that jazz
         self._state = "End of Game"
+
 
 class GameNotation:
     """
@@ -486,8 +499,8 @@ class GameNotation:
         # Given Variables
         self._game = game
         self._round = round_no
-        self._played_cards = selected_cards #List[Cards] for a check
-        self._plays = [] #List(Dictionary(JSON of all moves made by a player this round))
+        self._played_cards = selected_cards  # List[Cards] for a check
+        self._plays = []  # List(Dictionary(JSON of all moves made by a player this round))
 
     def add_play(self, player, card, old_stack, new_stack, stack_replaced):
         self._plays.append({
@@ -496,11 +509,11 @@ class GameNotation:
             "played_card": card.to_json(),
             "old_stack": [card.to_json() for card in old_stack],
             "new_stack": [card.to_json() for card in new_stack],
-            "stack_replaced": stack_replaced #Boolean
+            "stack_replaced": stack_replaced,  # Boolean
         })
 
     def to_json(self):
-        return self._plays #returns a List of Json Dictionaries
+        return self._plays  # returns a List of Json Dictionaries
 
 
 class PlayerAlreadyPlayedError(Exception):
