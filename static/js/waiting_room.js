@@ -18,7 +18,7 @@ function setupPage() {
 
         if (result) {
             elStartButton.disabled = true;
-            startGame(gameID);
+            activateStartGameLogic(gameID);
         };
     });
 }
@@ -36,7 +36,7 @@ async function getGameInfo(gameID, playerID) {
     console.log("Game State is", gameState);
     if (gameState !== "waiting") {
         clearInterval(periodicTimerID); // Stops periodic fetching of game state
-        location.assign(`/game/${gameID}/${playerID}`); // TODO: Make sure still accurate after serverside implementation
+        location.assign(`/game/${gameID}/${playerID}`);
         return;
     };
 
@@ -104,8 +104,7 @@ function generateTable(players) {
     elTablePara.appendChild(elTbl);
 };
 
-async function startGame(gameID) {
-
+async function activateStartGameLogic(gameID) {
     const response = await fetch(`/api/game/${gameID}/start`, {
         method: 'POST',
         headers: {

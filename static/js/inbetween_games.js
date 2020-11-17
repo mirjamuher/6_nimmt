@@ -1,21 +1,21 @@
-const gameID = document.body.getAttribute("data-game-id");
-const playerID = document.body.getAttribute("data-player-id")
-const elStartButton = document.querySelector("#startButton");
-const elEndGameButton = document.querySelector("#endGameButton");
-const elWaitingInfo = document.querySelector("#waitingInfo");
+// Global Variables (don't set them here, but in function setupPage)
+let gameID, playerID, elStartButton, elEndGameButton, elWaitingInfo;
+let periodicTimerID = 0;
 
 async function setupPage() {
+    gameID = document.body.getAttribute("data-game-id");
+    playerID = document.body.getAttribute("data-player-id")
+    elStartButton = document.querySelector("#startButton");
+    elEndGameButton = document.querySelector("#endGameButton");
+    elWaitingInfo = document.querySelector("#waitingInfo");
+
     const playerNumber = await getPlayerNumber();
-    const elAddingPoints = document.querySelectorAll(".addingPoints");
-    const elPlayerPoints = document.querySelectorAll(".playerPoints");
+    const elAddingPointsList = document.querySelectorAll(".addingPoints");
+    const elPlayerPointsList = document.querySelectorAll(".playerPoints");
 
-    console.log(playerNumber);
-    console.log(elStartButton);
-    console.log(elEndGameButton);
-    console.log(elWaitingInfo);
-
+    // PLayer 1 sees a button to start/end game, everyone else waits
     if (playerNumber === 1) {
-        elStartButton.addEventListener("click", startNextGame);
+        elStartButton.addEventListener("click", questionStartNextGame);
         elEndGameButton.addEventListener("click", endGameQuestion);
         elStartButton.classList.remove("hidden");
         elEndGameButton.classList.remove("hidden");
@@ -25,26 +25,59 @@ async function setupPage() {
         console.log("I have entered the not Player Number 1 loop");
     }
 
+    // Regular polling to see if next round is entered
+    periodicTimerID = setInterval(isNextGameReady, 1*1000);
+
+    // Animation for round points merging with existing points
     setTimeout(async function() {
-        for (const element of elAddingPoints) {
+        for (const element of elAddingPointsList) {
             element.classList.add("hidden");
         }
-        for (const element of elPlayerPoints) {
+        for (const element of elPlayerPointsList) {
             element.textContent = await getPlayerPoints();
         }
     }, 1*1000)
 }
 
-function startNextGame() {
-    // TODO: Reroute back to Game_Room
+function questionStartNextGame() {
+    // Confirms, then changes game_status, making everyone reroute
     const result = confirm("Is everyone ready to start the next round?");
 
     if (result) {
         elStartButton.disabled = true;
         elEndGameButton.disabled = true;
-        startGame(gameID);
+        activateStartGameLogic();
     };
 }
+
+async function activateStartGameLogic() {
+    await fetch(`/api/game/${gameID}/start`, {
+        method: 'POST',
+        headers: {
+            'Content-Type' : 'application/json'
+        }
+    });
+
+    if (!response.ok) {
+        alert("Invalid game id. Did server crash?");
+    }
+}
+
+async function isNextGameReady() {
+    const response = await fetch(`/api/game/${gameID}`);
+    if (!response.ok) {
+        alert("API didn't work. Is game ID correct?")
+    }
+
+    const responseJson = await response.json();
+    const gameState = responseJson["state"];
+
+    if (gameState !== 'Between Games') {
+        clearInterval(periodicTimerID);
+        location.assign(`/game/${gameID}/${playerID}`);
+    }
+}
+
 
 function endGameQuestion() {
     // TODO: End the game and remove from GameManager
@@ -53,7 +86,7 @@ function endGameQuestion() {
     if (result) {
         elStartButton.disabled = true;
         elEndGameButton.disabled = true;
-        endGame(gameID);
+        endGame();
     };
 }
 
@@ -73,8 +106,6 @@ async function getPlayerNumber() {
     return playerNumber;
 }
 
-document.addEventListener("DOMContentLoaded", setupPage);
-
 async function getPlayerPoints() {
     // returns the total points of players
     const response = await fetch(`/api/game/${gameID}/player/${playerID}`);
@@ -86,3 +117,5 @@ async function getPlayerPoints() {
     const playerPoints = responseJson["total_points"];
     return playerPoints;
 }
+
+document.addEventListener("DOMContentLoaded", setupPage);
