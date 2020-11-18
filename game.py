@@ -469,7 +469,7 @@ class Game:
 
         # If one player has reached 100 points, the game is done
         if any(points >= self.get_point_goal() for _, points in point_list):
-            self.end_of_game(point_list)
+            self.end_of_game()
         """
         Client has to set this in motion
         else:
@@ -482,9 +482,10 @@ class Game:
         for player in self._player_objects:
             player.clean_hand()
 
-    def end_of_game(self, point_list: List[Tuple[Player, int]]):
+    def end_of_game(self):
         # TODO: Announce winner, confetti, all that jazz
         self._state = "End of Game"
+
 
 
 class GameNotation:

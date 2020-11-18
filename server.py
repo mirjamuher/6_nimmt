@@ -69,6 +69,19 @@ def inbetween_games(game_id: int, player_id: int):
 
     return render_template('skeleton/inbetween_games.html', game=game, player=player)
 
+# End Game Room
+@app.route('/end_of_game/<int:game_id>/<int:player_id>')
+def end_of_game(game_id: int, player_id: int):
+    # Validation Process
+    game = game_manager.get_game(game_id)
+    if not game:
+        return "Game Not Found", 404
+
+    player = game.get_players().get(player_id)
+    if not player:
+        return "Player Not Found", 404
+
+    return render_template('skeleton/end_of_game.html', game=game, player=player)
 
 """
 API VIEWS - speak json
@@ -153,6 +166,19 @@ def start_game(game_id: int):
     # Return Information
     return jsonify(game.to_json())
 
+# Moves game state from "Between Games" to "End of Game"
+@app.route('/api/game/<int:game_id>/end', methods=["POST"])
+def end_game(game_id: int):
+    # Validation Process
+    game = game_manager.get_game(game_id)
+    if not game:
+        return jsonify({"error":"Invalid Room Number"}), 404
+
+    # Activating game.end_of_game()
+    game.end_of_game()
+
+    # Return Information
+    return jsonify(game.to_json())
 
 @app.route('/api/game/<int:game_id>', methods=["GET"])
 def get_game_information(game_id: int):

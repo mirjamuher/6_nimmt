@@ -60,34 +60,59 @@ async function activateStartGameLogic() {
 
     if (!response.ok) {
         alert("Invalid game id. Did server crash?");
+        return;
     }
 }
 
 async function isNextGameReady() {
     const response = await fetch(`/api/game/${gameID}`);
     if (!response.ok) {
-        alert("API didn't work. Is game ID correct?")
+        alert("API didn't work. Is game ID correct?");
+        return;
     }
 
     const responseJson = await response.json();
     const gameState = responseJson["state"];
 
-    if (gameState !== 'Between Games') {
+    if (gameState === "End of Game") {
+        clearInterval(periodicTimerID);
+        location.assign(`/end_of_game/${gameID}/${playerID}`);
+    } else if (gameState !== 'Between Games') {
         clearInterval(periodicTimerID);
         location.assign(`/game/${gameID}/${playerID}`);
     }
 }
 
-
-function endGameQuestion() {
+async function endGameQuestion() {
     // TODO: End the game and remove from GameManager
     const result = confirm("Are you sure you want to end the game for everyone?");
 
     if (result) {
         elStartButton.disabled = true;
         elEndGameButton.disabled = true;
-        endGame();
+        await endGame();
+        return;
     };
+}
+
+async function endGame() {
+    const response = await fetch(`/api/game/${gameID}/end`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    });
+
+    if (!response.ok) {
+        alert("API didn't work. Is the Game ID correct?");
+        return;
+    }
+
+    const responseJson = await response.json();
+    if (responseJson["state"] !== "End of Game") {
+        alert("Game has not been properly ended!");
+        return;
+    }
 }
 
 async function getPlayerNumber() {

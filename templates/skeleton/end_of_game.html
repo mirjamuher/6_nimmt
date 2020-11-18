@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <!-- CSS -->
+        <link rel="stylesheet" href="/static/css/end_of_game.css">
+        <title>Test Waiting Room</title>
+    </head>
+
+    <body data-game-id="{{ game.get_id() }}" data-player-id="{{ player.id() }}">
+        <h1>
+            Great Game {{ player.name() }}!
+        </h1>
+
+        <section>
+            <h3> And the winner is: </h3>
+            <p id="pointTable">
+                {% for player in game.get_player_list() %}
+                    <div class="player">
+                        <img class="playerAvatar" src="{{ player.avatar() }}" alt="{{ player.name() }}'s avatar" width="64" height="64">
+                        <div class="playerInfo">
+                            <div class="playerName"> {{ player.name() }} </div> <br>
+                            <div class="playerPoints"> {{ player.total_points() }}</div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </p>
+        </section>
+
+        <!-- JavaScript -->
+        <script src="/static/js/end_of_game.js"></script>
+    </body>
+</html>
