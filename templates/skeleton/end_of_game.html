@@ -13,7 +13,7 @@
         </h1>
 
         <section>
-            <h3> And the winner is: </h3>
+            <h3> And the winner is: <span id="winnerName"> </span> with <span id="winnerPoints"> </span> Points!</h3>
             <p id="pointTable">
                 {% for player in game.get_player_list() %}
                     <div class="player">

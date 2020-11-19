@@ -13,6 +13,8 @@ let periodicTimerID = 0;
 let GAME_ID = -1;
 let PLAYER_ID = -1;
 
+let roundNumber = -1;
+
 
 // Game
 
@@ -150,6 +152,9 @@ async function submitConfirmCardForm(event) {
 
     globalState = GameState.WAITING_FOR_EVERYONE_TO_CONFIRM;
 
+    // Ups roundNumber by one to ensure we grad the right roundNotation
+    roundNumber += 1;
+
     // Poll every n seconds to see if other players have played
     periodicTimerID = setInterval(function() {getRoundNotation()}, 5*1000);
 }
@@ -168,7 +173,7 @@ async function getRoundNotation() {
         })
     */
 
-    const response = await fetch(`/api/game/${GAME_ID}/roundstate`);
+    const response = await fetch(`/api/game/${GAME_ID}/roundstate/${roundNumber}`);
     if (!response.ok) {
         alert("API roundstate didn't work. Is Game ID correct?");
     }
@@ -285,11 +290,12 @@ async function updatePointsAndStacks() {
 
     if (serverState === "Between Games") {
         location.assign(`/inbetween_rounds/${GAME_ID}/${PLAYER_ID}`);
+    } else if (serverState === "End of Game") {
+        location.assign(`/end_of_game/${GAME_ID}/${PLAYER_ID}`);
     } else {
         // Now players can play again.
         globalState = GameState.WAITING_TO_CHOOSE_CARD;
     }
-
 }
 
 document.addEventListener("DOMContentLoaded", setupPage);

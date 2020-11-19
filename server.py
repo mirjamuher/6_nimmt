@@ -83,11 +83,10 @@ def end_of_game(game_id: int, player_id: int):
 
     return render_template('skeleton/end_of_game.html', game=game, player=player)
 
+
 """
 API VIEWS - speak json
 """
-
-
 # When the player clicks "Create Room" they call the api/game and then the returned game_id
 # is used to route them to /waiting_room/<game_id>
 @app.route('/api/game', methods=["POST"])
@@ -230,11 +229,6 @@ def get_player_information(game_id: int, player_id: int):
     return jsonify(player.to_json())
 
 
-"""
-API Views for game_room
-"""
-
-
 @app.route('/api/game/<int:game_id>/player/<int:player_id>/card_selected', methods=["PUT"])
 def player_chooses_card(game_id: int, player_id: int):
     """
@@ -273,8 +267,8 @@ def player_chooses_card(game_id: int, player_id: int):
     return jsonify({}), 201
 
 
-@app.route('/api/game/<int:game_id>/roundstate', methods=["GET"])
-def get_round_notation(game_id: int):
+@app.route('/api/game/<int:game_id>/roundstate/<int:round_number>', methods=["GET"])
+def get_round_notation(game_id: int, round_number: int):
     """
     ZF: Players poll for round_state. If 'Between Rounds', update client with new stack info
     Response:{
@@ -294,18 +288,21 @@ def get_round_notation(game_id: int):
     if not game:
         return jsonify({"error":"Room Not Found"}), 404
 
-    # Checking Gamestate
-    if game.get_state() in ("Between Rounds", "Between Games"):
-        data = game.get_last_notation()
-        return jsonify({
-            "everyone_played": True,
-            "data": data.to_json(),
-        })
-    else:
+    try:
+        # If not everyone has played yet, this round notation will not yet exist
+        current_round_notation = game.get_notation_round(round_number)
+    except IndexError:
         return jsonify({
             "everyone_played": False,
             "data": None,
         })
+
+    # If this round notation exists, everyone has played. Return round notation.
+    return jsonify({
+        "everyone_played": True,
+        "data": current_round_notation.to_json(),
+    })
+
 
 
 """

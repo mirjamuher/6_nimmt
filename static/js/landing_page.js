@@ -33,6 +33,8 @@ async function joinGame(formData) {
         data[pair[0]] = pair[1];
     }
 
+    const roomNumber = data["room_number"];
+
     const response = await fetch(`/api/game/${roomNumber}/player`, {
         method: 'POST',
         headers: {

@@ -266,8 +266,8 @@ class Game:
         player_points = [(p, p.total_points()) for p in self._player_objects]
         return sorted(player_points, key = lambda pair: (pair[1], pair[0].no()))
 
-    def get_last_notation(self):
-        return self._round_notations[-1]
+    def get_notation_round(self, round_number: int):
+        return self._round_notations[round_number]
 
     def add_player(self, player_name: str, *, player_id: Optional[int] = None) -> Player:
         # Need to make each player, including p1 enter their name and thus call this API
@@ -460,14 +460,13 @@ class Game:
         crnt_player.eat_points(points)
 
     def between_games(self):
-        # TODO: Set up for starting player to chose how many points to play to. Default: 100
         self._state = "Between Games"
         for player in self._player_objects:
             player.merge_points()
         point_list = self.get_total_points()
         self.clean_slate()
 
-        # If one player has reached 100 points, the game is done
+        # If one player has reached the set points, the game is done
         if any(points >= self.get_point_goal() for _, points in point_list):
             self.end_of_game()
         """
