@@ -220,8 +220,9 @@ class Game:
         self._game_id = game_id
         self._player_objects: List[Player] = []  # [ Player, ...]
         self._players = {}  # {player id : Player, ...}
+        self._max_players = 10  # For now max players
         self._all_avatars = ['/' + path for path in glob.glob("static/images/test_avatars/*")]
-        self._point_goal = 0
+        self._point_goal = 84  # Can be overwritten
         self._round_notations = []
 
         self._stacks = [[], [], [], []]  # [ Card ]
@@ -248,10 +249,15 @@ class Game:
     def get_players(self):
         return self._players
 
+    def get_max_players(self):
+        return self._max_players
+
     def to_json(self):
         return {
             "id": self._game_id,
             "players": [player.to_json() for player in self._player_objects],
+            "n_players": self.get_nplayers(),
+            "max_players": self._max_players,
             "state": self._state,
             "stacks": [[card.to_json() for card in stack] for stack in self._stacks],
         }

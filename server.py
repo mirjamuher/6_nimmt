@@ -91,11 +91,11 @@ API VIEWS - speak json
 # is used to route them to /waiting_room/<game_id>
 @app.route('/api/game', methods=["POST"])
 def create_game():
-    # TODO: Javascript: sends name of p1
     """
     Request:
     {
         "p1_name": player name string,
+        "end_points": str of points to play to
     }
 
     Response:
@@ -110,6 +110,11 @@ def create_game():
     if not p1_name or not isinstance(p1_name, str):
         return jsonify({"error":"Invalid player name"}), 400
 
+    point_goal = payload.get("end_points")
+    if not point_goal or not isinstance(point_goal, str):
+        return jsonify({"error":"Invalid Point Goal / End Points"}), 400
+
+
     # Create Game & Player
     game = game_manager.create_game()
     player = game.add_player(p1_name)
@@ -119,6 +124,8 @@ def create_game():
         "player_id":player_id,
     })
 
+    # Add the point goal
+    game.set_point_goal(point_goal)
 
 @app.route('/api/game/<int:game_id>/player', methods=["POST"])
 def join_game(game_id: int):
@@ -130,7 +137,7 @@ def join_game(game_id: int):
 
     Response:
     {
-        "player_id": the integer ID of the player
+        "player_id": the integer ID of the player,
     }
     """
     # Validation Process
@@ -143,11 +150,17 @@ def join_game(game_id: int):
     if not player_name or not isinstance(player_name, str):
         return jsonify({"error":"Invalid player name"}), 401
 
+    # Check if max number of players (10) has already been reached
+    max_players = game.get_max_players()
+    n_players = game.get_nplayers()
+    if n_players == max_players:
+        return jsonify({"error": "The max number of players for this room has already been reached"}), 400
+
     # Add player & get information
     player = game.add_player(player_name)
     player_id = player.id()
 
-    return jsonify({"player_id":player_id})
+    return jsonify({"player_id": player_id})
 
 
 # Moves game state from "waiting" to "dealing", thus starting the game for everyone
@@ -187,6 +200,8 @@ def get_game_information(game_id: int):
     {
         "id": game id,
         "players": [player data as per API get_player_information],
+        "n_players": number of players in the game,
+        "max_players": max amount of players (set to 10),
         "state": game state string,
         "stacks": [[Card, Optional[Card],...][-"-][-"-][-"-]],
     }

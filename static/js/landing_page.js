@@ -20,10 +20,16 @@ async function startNewGame(formData) {
         const gameId = jsonData['game_id'];
         const playerId = jsonData['player_id'];
         location.assign(`/waiting_room/${gameId}/${playerId}`);
+        return;
     } else if (response.status === 401) {
         console.log("Invalid Playername");
         alert("invalid playername. Please try again.");
     }
+
+    const elStartFormBtn = document.querySelector("#startGameForm input[type='submit']");
+    const elBackButton1 = document.querySelector(".backButton1");
+    elStartFormBtn.disbaled = false;
+    elBackButton1.disabled = false;
 };
 
 async function joinGame(formData) {
@@ -43,19 +49,30 @@ async function joinGame(formData) {
         body: JSON.stringify(data),
     });
 
-    if (response.ok) {
-        const jsonData = await response.json();
-        console.log(jsonData);
+    const jsonData = await response.json();
+    console.log(jsonData);
 
+    if (response.ok) {
         const playerId = jsonData['player_id'];
         location.assign(`/waiting_room/${roomNumber}/${playerId}`);
+        return;
     } else if (response.status === 404) {
-        console.log("Room number doesn't exist");
+        console.log(jsonData["error"]);
         alert("This room number does not exist. Please try again.")
     } else if (response.status === 401) {
-        console.log("Invalid Playername");
+        console.log(jsonData["error"]);
         alert("invalid playername. Please try again.");
+    } else if (response.status = 400) {
+        console.log(jsonData["error"]);
+        alert(jsonData["error"]);
     };
+    const elJoinGameBtn = document.querySelector("#joinGameForm input[type='submit']");
+    const elJoinGameForm = document.querySelector("#joinGameForm");
+    const elBackButton2 = document.querySelector(".backButton2");
+
+    elJoinGameForm.disabled = false;
+    elJoinGameBtn.disabled = false;
+    elBackButton2.disabled = false;
 };
 
 
@@ -64,9 +81,11 @@ function setupPage() {
     const elStartButton = document.querySelector("#startButton");
     const elJoinButton = document.querySelector("#joinButton");
     const elStartForm = document.querySelector("#startGameForm");
+    const elStartFormBtn = document.querySelector("#startGameForm input[type='submit']");
     const elBackButton1 = document.querySelector(".backButton1");
     const elBackButton2 = document.querySelector(".backButton2");
-    const elJoinGameForm = document.querySelector("#joinGameForm")
+    const elJoinGameForm = document.querySelector("#joinGameForm");
+    const elJoinGameBtn = document.querySelector("#joinGameForm input[type='submit']");
 
     elStartButton.addEventListener("click", function(event) {
         elStartForm.classList.remove("hidden");
@@ -77,7 +96,8 @@ function setupPage() {
     elStartForm.addEventListener("submit", function(event) {
         event.preventDefault();
         const data = new FormData(event.target);
-        document.querySelector("#startGameForm input[type='submit']").disabled = true;
+        elBackButton1.disabled = true;
+        elStartFormBtn.disabled = true;
         startNewGame(data);
     });
 
@@ -101,7 +121,9 @@ function setupPage() {
 
     elJoinGameForm.addEventListener("submit", function(event) {
         event.preventDefault();
-        document.querySelector("#joinGameForm input[type='submit']").disabled = true;
+        elJoinGameBtn.disabled = true;
+        elJoinGameForm.disabled = true;
+        elBackButton2.disabled = true;
         const formData = new FormData(event.target);
         joinGame(formData);
     });
