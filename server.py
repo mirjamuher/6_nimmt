@@ -322,6 +322,7 @@ def get_round_notation(game_id: int, round_number: int):
 
 """
 TEST GAME
+http://127.0.0.1:5000/game/123456/1
 """
 # Setup Game
 import random  # noQA: E402
@@ -345,7 +346,7 @@ test_tim._total_points = 15
 test_elijah._total_points = 5
 
 # Move Game to Endstage
-for i in range(9):
+for i in range(7):
     TEST_GAME.select_card(1, miri_hand.pop())
     TEST_GAME.select_card(2, tim_hand.pop())
     TEST_GAME.select_card(3, elijah_hand.pop())

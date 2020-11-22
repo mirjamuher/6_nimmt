@@ -308,6 +308,7 @@ class Game:
         Creates & shuffles deck and deals cards to all players as well as to stacks
         """
         self._state = "dealing"
+        self.clean_slate()
         deck = self.create_deck()
         self.deal_cards(deck)
 
@@ -470,7 +471,6 @@ class Game:
         for player in self._player_objects:
             player.merge_points()
         point_list = self.get_total_points()
-        self.clean_slate()
 
         # If one player has reached the set points, the game is done
         if any(points >= self.get_point_goal() for _, points in point_list):

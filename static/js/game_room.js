@@ -86,7 +86,7 @@ async function initialPopulateStacks() {
 
 function chooseCard(event) {
     // Allows player to chose a Card
-    const elCard = event.target;
+    const elCard = event.currentTarget;
     const elConfirmCardForm = document.querySelector("#confirmCardForm");
 
     if (globalState === GameState.WAITING_TO_CHOOSE_CARD) {
@@ -245,6 +245,7 @@ async function updatePointsAndStacks() {
     const table = document.querySelector('#stacks table');
 
     // Pulls out each card per stack and adds it to the stack table on page; TODO: animation
+    console.log("Stack Data", stackData);
     for (let col=0; col<stackData.length; col++) {
         let currentStack = stackData[col];
 
@@ -286,14 +287,22 @@ async function updatePointsAndStacks() {
         }
     }
 
+    // gets current serverState and redirects accordingly
+    // TODO: temporary fix is 5 sec delay. When animation added, redirect after animation done
     const serverState = responseJson["state"];
+    console.log(new Date(), "State Data", serverState);
 
     if (serverState === "Between Games") {
-        location.assign(`/inbetween_rounds/${GAME_ID}/${PLAYER_ID}`);
+        console.log(new Date(), "Server State is Between Games. 5 second countdown should start")
+        setTimeout(() => location.assign(`/inbetween_rounds/${GAME_ID}/${PLAYER_ID}`), 5*1000);
+        return;
     } else if (serverState === "End of Game") {
-        location.assign(`/end_of_game/${GAME_ID}/${PLAYER_ID}`);
+        console.log(new Date(), "Server State is End of Game. 5 second countdown should start")
+        setTimeout(() => location.assign(`/end_of_game/${GAME_ID}/${PLAYER_ID}`), 5*1000);
+        return;
     } else {
-        // Now players can play again.
+        // If game continues, players can play again thanks to GameState
+        console.log("Server State indicates game is still going. Reactivating buttons")
         globalState = GameState.WAITING_TO_CHOOSE_CARD;
     }
 }
