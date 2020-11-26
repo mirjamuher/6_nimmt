@@ -193,8 +193,10 @@ class Player:
         self._current_points += points
 
     def merge_points(self) -> None:
+        print(f"Entered merge points for {self}.")
         self._total_points += self._current_points
         self._points_of_last_round = self._current_points
+        print(f"Current points of {self._current_points} being merged. Now {self._total_points}.")
         self._current_points = 0
 
 

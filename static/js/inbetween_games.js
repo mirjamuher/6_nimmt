@@ -33,8 +33,12 @@ async function setupPage() {
         for (const element of elAddingPointsList) {
             element.classList.add("hidden");
         }
-        for (const element of elPlayerPointsList) {
-            element.textContent = await getPlayerPoints();
+
+        console.log("elPlayerPointsList is", elPlayerPointsList);
+
+        for (let i = 0; i < elPlayerPointsList.length; i++) {
+            elPlayerPointsList[i].textContent = await getPlayerPoints(i);
+            console.log("Updated", elPlayerPointsList[i]);
         }
     }, 1*1000)
 }
@@ -131,15 +135,21 @@ async function getPlayerNumber() {
     return playerNumber;
 }
 
-async function getPlayerPoints() {
+async function getPlayerPoints(i) {
     // returns the total points of players
-    const response = await fetch(`/api/game/${gameID}/player/${playerID}`);
+    const response = await fetch(`/api/game/${gameID}`);
     if (!response.ok) {
-        alert("API didn't work. Game or Player ID not correct");
+        alert("API didn't work. Game ID not correct");
         return;
     }
+
     const responseJson = await response.json();
-    const playerPoints = responseJson["total_points"];
+    console.log("responseJson is", responseJson);
+    const playerList = responseJson["players"]
+    console.log("playerList is", playerList);
+    console.log("playerNumber is", i);
+    const playerPoints = playerList[i]["total_points"];
+    console.log("Entered getPlayerPoints. Total points are", playerPoints)
     return playerPoints;
 }
 
