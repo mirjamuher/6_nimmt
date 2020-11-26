@@ -277,6 +277,9 @@ class Game:
     def get_notation_round(self, round_number: int):
         return self._round_notations[round_number]
 
+    def has_notation_round(self, round_number: int):
+        return len(self._round_notations) > round_number
+
     def add_player(self, player_name: str, *, player_id: Optional[int] = None) -> Player:
         # Need to make each player, including p1 enter their name and thus call this API
         if player_id is None:

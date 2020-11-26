@@ -303,14 +303,13 @@ def get_round_notation(game_id: int, round_number: int):
     if not game:
         return jsonify({"error":"Room Not Found"}), 404
 
-    try:
-        # If not everyone has played yet, this round notation will not yet exist
-        current_round_notation = game.get_notation_round(round_number)
-    except IndexError:
+    if not game.has_notation_round(round_number):
         return jsonify({
             "everyone_played": False,
             "data": None,
         })
+
+    current_round_notation = game.get_notation_round(round_number)
 
     # If this round notation exists, everyone has played. Return round notation.
     return jsonify({

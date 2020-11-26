@@ -13,7 +13,7 @@ let periodicTimerID = 0;
 let GAME_ID = -1;
 let PLAYER_ID = -1;
 
-let roundNumber = -1;
+let roundNumber = 8;
 
 
 // Game
