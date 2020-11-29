@@ -236,6 +236,9 @@ class Game:
     def get_state(self) -> str:
         return self._state
 
+    def get_round_no(self) -> int:
+        return len(self._round_notations)
+
     def get_nplayers(self) -> int:
         return len(self._player_objects)
 

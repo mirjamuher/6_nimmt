@@ -13,12 +13,13 @@ let periodicTimerID = 0;
 let GAME_ID = -1;
 let PLAYER_ID = -1;
 
-let roundNumber = 8;
+let roundNumber = document.body.getAttribute("data-round-no") - 1;
 
 
 // Game
 
 function setupPage() {
+    console.log("Round Number", roundNumber)
     GAME_ID = document.body.getAttribute("data-game-id");
     PLAYER_ID = document.body.getAttribute("data-player-id");
     const elConfirmCardForm = document.querySelector("#confirmCardForm");

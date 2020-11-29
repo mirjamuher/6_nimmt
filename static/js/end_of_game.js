@@ -21,6 +21,11 @@ async function setupPage() {
     }
     elWinnerName.textContent = winningPlayer;
     elWinnerPoints.textContent = winningPlayerPoints;
+
+    const redirectBtn = document.querySelector("#landingPageRedirectBtn");
+    redirectBtn.addEventListener("click", function() {
+        location.assign('/');
+    });
 }
 
 async function getPlayerList() {

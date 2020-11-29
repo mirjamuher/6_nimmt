@@ -327,7 +327,7 @@ http://127.0.0.1:5000/game/123456/1
 import random  # noQA: E402
 random.seed(0)
 TEST_GAME = game_manager.create_game(game_id=123456)
-TEST_GAME.set_point_goal(100)
+TEST_GAME.set_point_goal(5)
 test_miri = TEST_GAME.add_player("Miri", player_id=1)
 test_tim = TEST_GAME.add_player("Tim", player_id=2)
 test_elijah = TEST_GAME.add_player("Elijah", player_id=3)
