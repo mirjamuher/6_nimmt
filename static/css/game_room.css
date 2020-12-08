@@ -19,6 +19,8 @@
     border-radius: 10px;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.3);
     text-align: center;
+    background-image: url('/static/images/card_avatar/colorful_background.png');
+    background-size: cover;
 }
 
 .card:hover {
@@ -36,10 +38,14 @@
     display: inline-block;
 }
 
+/*
 img.ochsen {
     background-repeat: no-repeat;
-    object-position: top;
+    background-position: center;
+    width: 100px;
+    height: 150px;
 }
+*/
 
 .chosenCard {
     border: 5px solid rgb(255, 253, 137);
