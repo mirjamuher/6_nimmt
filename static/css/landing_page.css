@@ -58,6 +58,10 @@ h3 {
     margin: 10px;
 }
 
+.btn:hover {
+    background-color: rgba(230, 57, 70, 0.7);
+}
+
 .backbtn {
     font-size: 12px;
     color: var(--primary-txt-color);

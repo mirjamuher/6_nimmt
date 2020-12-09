@@ -223,7 +223,7 @@ class Game:
         self._player_objects: List[Player] = []  # [ Player, ...]
         self._players = {}  # {player id : Player, ...}
         self._max_players = 10  # For now max players
-        self._all_avatars = ['/' + path for path in glob.glob("static/images/test_avatars/*")]
+        self._all_avatars = ['/' + path for path in glob.glob("static/images/avatars/*")]
         self._point_goal = 84  # Can be overwritten
         self._round_notations = []
 
