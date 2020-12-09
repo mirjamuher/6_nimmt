@@ -74,12 +74,9 @@ h3 {
     margin: 0 auto;
 }
 
-td:not(.playerTD) {
-    background-color: rgba(235, 250, 255, 0.625);
-    background-image: url(/static/images/avatars/no_player.png);
-    background-repeat: no-repeat;
-    width: 120px;
-    height: 120px;
+td:not(.playerTD) .playerWrapper {
+    background-color: rgba(212, 218, 223, 0.7);
+    border-color: darkgrey;
 }
 
 .playerWrapper {

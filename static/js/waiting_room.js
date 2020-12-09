@@ -89,29 +89,33 @@ function generateTable(players) {
         const elRow = document.createElement("tr");
 
         for (let j=0; j<5; j++, playerIndex++) {
-            const player =  players[playerIndex];
+            const player = players[playerIndex];
             const elCell = document.createElement("td");
+
+            const elAvatar = document.createElement("img");
+            elAvatar.classList.add("playerAvatar"); // For CSS styling
+
+            const elName = document.createElement("span");
+            elName.classList.add("playerName"); // For CSS styling
+
             if (player !== undefined) {
                 elCell.classList.add("playerTD"); // For CSS :not styling
-
-                const playerName = player["player_name"];
-                const playerAvatar = player["avatar"];
-
-                const elAvatar = document.createElement("img");
-                elAvatar.src = playerAvatar;
-                elAvatar.classList.add("playerAvatar"); // For CSS styling
-
-                const elName = document.createElement("span");
-                elName.classList.add("playerName"); // For CSS styling
-                elName.textContent = playerName;
-
-                const elAvatarWrapper = document.createElement("div");
-                elAvatarWrapper.classList.add("playerWrapper");
-                elCell.appendChild(elAvatarWrapper);
-
-                elAvatarWrapper.appendChild(elAvatar);
-                elAvatarWrapper.appendChild(elName);
+                elAvatar.src = player["avatar"];
+                elName.textContent = player["player_name"];
+            } else {
+                elCell.classList.add("noPlayerTD");
+                elAvatar.src = '/static/images/no_player_avatar/no_player.png'
+                elName.innerHTML = "&nbsp;"
             }
+
+            const elAvatarWrapper = document.createElement("div");
+            elAvatarWrapper.classList.add("playerWrapper");
+
+            elCell.appendChild(elAvatarWrapper);
+
+            elAvatarWrapper.appendChild(elAvatar);
+            elAvatarWrapper.appendChild(elName);
+
             elRow.appendChild(elCell);
         }
         elTbl.appendChild(elRow);
