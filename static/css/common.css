@@ -1,0 +1,35 @@
+* {
+    box-sizing: border-box;
+    font-family: 'Quicksand', sans-serif;
+}
+
+header {
+    background-color: var(--header-bg-color);
+    font-size: 20px;
+    text-align: right;
+    color: var(--primary-txt-color);
+    padding: 20px;
+}
+
+header span {
+    padding: 40px;
+    font-family: 'Quicksand', sans-serif;
+}
+.playerWrapper {
+    border: 1px solid var(--tertiary-txt-color);
+    border-radius: 20px;
+    padding: 20px 50px;
+    margin: 20px 10px;
+}
+
+.playerAvatar {
+    width: 120px;
+    height: 120px;
+    display: block;
+}
+
+.playerName {
+    font-size: 25px;
+    display: block;
+    padding-top: 20px;
+}

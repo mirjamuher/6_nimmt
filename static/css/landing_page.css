@@ -17,19 +17,6 @@ body {
     background-color: var(--primary-bg-color);
 }
 
-header {
-    background-color: var(--header-bg-color);
-    font-size: 20px;
-    text-align: right;
-    color: var(--primary-txt-color);
-    padding: 20px;
-}
-
-header span {
-    padding: 40px;
-    font-family: 'Quicksand', sans-serif;
-}
-
 h1 {
     color: var(--primary-txt-color);
     font-family: 'Quicksand', sans-serif;

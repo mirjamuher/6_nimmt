@@ -1,9 +1,3 @@
-* {
-    box-sizing: border-box;
-    font-family: 'Quicksand', sans-serif;
-    font-weight: normal;
-}
-
 :root {
     --primary-bg-color: white;
     --secondary-bg-color: #a8dadc;
@@ -24,20 +18,6 @@ body {
     text-align: center;
     background-color: var(--primary-bg-color);
     color: var(--primary-txt-color);
-}
-
-header {
-    background-color: var(--header-bg-color);
-    font-size: 20px;
-    text-align: right;
-    padding: 20px;
-    width: 100%;
-}
-
-header span {
-    padding: 40px;
-    font-family: 'Quicksand', sans-serif;
-    color: var(--secondary-txt-color);
 }
 
 h1 {
