@@ -72,7 +72,7 @@ async function getGameInfo(gameID, playerID) {
     elPlayersLeftInfo.textContent = playersLeft;
     elPlayerLeftInfoParent.classList.remove("hidden");
 
-    periodicTimerID = setTimeout(function() {getGameInfo(gameID, playerID)}, 0);
+    periodicTimerID = setTimeout(function() {getGameInfo(gameID, playerID)}, 1000*3);
 }
 
 function generateTable(players) {
