@@ -13,20 +13,8 @@ async function setupPage() {
     const elAddingPointsList = document.querySelectorAll(".addingPoints");
     const elPlayerPointsList = document.querySelectorAll(".playerPoints");
 
-    // PLayer 1 sees a button to start/end game, everyone else waits
-    if (playerNumber === 1) {
-        elStartButton.addEventListener("click", questionStartNextGame);
-        elEndGameButton.addEventListener("click", endGameQuestion);
-        elStartButton.classList.remove("hidden");
-        elEndGameButton.classList.remove("hidden");
-        console.log("I have entered the if Player Number 1 loop");
-    } else {
-        elWaitingInfo.classList.remove("hidden");
-        console.log("I have entered the not Player Number 1 loop");
-    }
-
     // Regular polling to see if next round is entered
-    periodicTimerID = setInterval(isNextGameReady, 1*1000);
+    periodicTimerID = setInterval(isNextGameReady, 3*1000); //TODO: Implement "Please wait" animation
 
     // Animation for round points merging with existing points
     setTimeout(async function() {

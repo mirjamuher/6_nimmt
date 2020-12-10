@@ -1,27 +1,100 @@
-*{box-sizing: border-box;}
+/* Base Setup */
+
+:root {
+    --primary-bg-color: white;
+    --secondary-bg-color: #a8dadc;
+    --tertiary-bg-color: #457b9d;
+    --header-bg-color: #1d3557;
+    --btn-color: #e63946;
+    --primary-txt-color: #457b9d;
+    --secondary-txt-color: #f1faee;
+    --tertiary-txt-color: #1d3557;
+    --emphasis-txt-color: #e63946;
+    --border-color: #1d3557;
+}
+
+body {
+    color: var(--primary-txt-color);
+    background-color: white;
+}
 
 .hidden {
     display: none;
 }
 
-.playerAvatar {
-    height: 150px;
-    width: 150px;
+/* Top Part */
+
+#textBox {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    width: 100%;
 }
 
-.player, .playerAvatar, .playerInfo{
+h1 {
+    margin-top: 60px;
+    display: block;
+    letter-spacing: 0.1em;
+    font-size: 40px;
+}
+
+h2 {
+    margin: 30px auto;
+    margin-bottom: 50px;
+    line-height: 1.5em;
+    font-weight: lighter;
+}
+
+.emphasis {
+    color: var(--emphasis-txt-color);
+}
+
+h3 {
+
+}
+
+/* Point Table (Flex Box) */
+#pointTable {
+    width: 70%;
+    margin: 0 auto;
+    font-size: 30px;
+}
+
+#pointTable .playerName {
+    font-size: inherit;
+    padding: 0;
+    margin: 0;
+}
+
+#pointTable tr {
     display: inline-block;
-    vertical-align: top;
-    margin: 20px;
+    width: 100%;
+    height: 100px;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    border-collapse: collapse;
 }
 
-.playerPoints {
-    font-size: 25px;
+td {
+    flex: 1;
+    justify-content: space-around;
+    padding-left: 30px;
 }
 
-.playerName {
-    font-size: 25px;
-    font-weight: bold;
+.playerAvatar {
+    height: 90px;
+    width: 90px;
+    flex: 1 200px;
+}
+
+td.nameTD {
+    flex: 5;
+}
+
+td.pointTD {
+    text-align: center;
 }
 
 .addingPoints {
@@ -33,6 +106,27 @@
     animation-name: scale;
     animation-timing-function: cubic-bezier(.71,.55,.62,1.57);
 }
+
+/* Buttons */
+#btnSection {
+    display: flex;
+    flex-wrap: row wrap;
+    justify-content: center;
+}
+
+#btnSection div {
+    flex: 1 auto;
+}
+
+.rightWrapper {
+    tex
+}
+
+#btnSection .btn{
+    margin-top: 50px;
+}
+
+/* Animation */
 
 @keyframes scale {
     from {
