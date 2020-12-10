@@ -4,17 +4,26 @@
 }
 
 header {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    padding: 25px;
     background-color: var(--header-bg-color);
-    font-size: 20px;
-    text-align: right;
     color: var(--primary-txt-color);
-    padding: 20px;
+    font-size: 20px;
 }
 
 header span {
-    padding: 40px;
-    font-family: 'Quicksand', sans-serif;
+    flex: 1 20px;
+    justify-content: space-between;
+    font-size: 22px;
+    color: #f1faee;
 }
+
+header span:first-child {
+    flex: 20 10px;
+}
+
 .playerWrapper {
     border: 1px solid var(--tertiary-txt-color);
     border-radius: 20px;

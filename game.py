@@ -3,7 +3,7 @@ Step 0: Setting it up
 """
 import random
 import glob
-from typing import List, Dict, Optional, Union, Tuple
+from typing import List, Dict, Optional, Union, Tuple, Any
 
 
 BASE_DECK = {
@@ -248,16 +248,19 @@ class Game:
     def get_stacks(self) -> List[Card]:
         return self._stacks
 
-    def get_player_list(self):
+    def get_player_list(self) -> List[Player]:
         return self._player_objects
 
-    def get_players(self):
+    def get_player_list_by_points(self) -> List[Player]:
+        return sorted(self._player_objects, key=lambda player: player.total_points(), reverse=True)
+
+    def get_players(self) -> Dict[int, Player]:
         return self._players
 
-    def get_max_players(self):
+    def get_max_players(self) -> int:
         return self._max_players
 
-    def to_json(self):
+    def to_json(self) -> Dict[str, Any]:
         return {
             "id": self._game_id,
             "players": [player.to_json() for player in self._player_objects],

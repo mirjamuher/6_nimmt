@@ -16,23 +16,30 @@
     </head>
 
     <body data-game-id="{{ game.get_id() }}" data-player-id="{{ player.id() }}">
-        <h1>
-            Great Game {{ player.name() }}!
-        </h1>
+        <header>
+            <span>Back to Home</span>
+            <span>Rules</span>
+            <span>About</span>
+        </header>
+
+        <section id="winnerCelebration">
+        <h3> And the winner is...</h3>
+        <h1> <span id="winnerName"> </span> </h1>
+        </section>
 
         <section>
-            <h3> And the winner is: <span id="winnerName"> </span> with <span id="winnerPoints"> </span> Points!</h3>
-            <p id="pointTable">
+            <table id="pointTable">
                 {% for player in game.get_player_list() %}
+                    <tr></tr>
                     <div class="player">
-                        <img class="playerAvatar" src="{{ player.avatar() }}" alt="{{ player.name() }}'s avatar" width="64" height="64">
+                        <img class="playerAvatar" src="{{ player.avatar() }}" alt="{{ player.name() }}'s avatar">
                         <div class="playerInfo">
                             <div class="playerName"> {{ player.name() }} </div> <br>
                             <div class="playerPoints"> {{ player.total_points() }}</div>
                         </div>
                     </div>
                 {% endfor %}
-            </p>
+            </table>
             <p>
                 <button id="landingPageRedirectBtn">Click here to get back to the main page!</button>
             </p>

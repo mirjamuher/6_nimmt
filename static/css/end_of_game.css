@@ -1,9 +1,33 @@
 :root {
-    --primary-bg-color: #457b9d;
+    --primary-bg-color: white;
     --secondary-bg-color: #a8dadc;
+    --tertiary-bg-color: #457b9d;
     --header-bg-color: #1d3557;
     --btn-color: #e63946;
-    --primary-txt-color: #f1faee;
-    --secondary-txt-color: #1d3557;
+    --primary-txt-color: #457b9d;
+    --secondary-txt-color: #f1faee;
+    --tertiary-txt-color: #1d3557;
+    --emphasis-txt-color: #e63946;
 }
+
+body {
+    background-color: var(--primary-bg-color);
+    color: var(--primary-txt-color);
+}
+
+#winnerCelebration {
+    text-align: center;
+}
+#winnerCelebration > h3 {
+    font-size: 30px;
+    margin-top: 50px;
+}
+
+#winnerCelebration > h1 {
+    font-size: 60px;
+    margin-top: 30px;
+    font-weight: bold;
+    color: var(--emphasis-txt-color);
+}
+
 
