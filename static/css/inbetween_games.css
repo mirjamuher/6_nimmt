@@ -26,23 +26,24 @@ body {
 
 #textBox {
     display: flex;
-    flex-flow: row wrap;
+    flex-flow: column wrap;
     justify-content: center;
+    align-items: center;
     width: 100%;
+    margin-bottom: 30px;
 }
 
 h1 {
-    margin-top: 60px;
-    display: block;
     letter-spacing: 0.1em;
     font-size: 40px;
+    padding-top: 30px;
 }
 
 h2 {
-    margin: 30px auto;
-    margin-bottom: 50px;
+    padding: 0;
     line-height: 1.5em;
     font-weight: lighter;
+    text-align: center;
 }
 
 .emphasis {
@@ -109,21 +110,11 @@ td.pointTD {
 
 /* Buttons */
 #btnSection {
+    margin-top: 50px;
     display: flex;
     flex-wrap: row wrap;
-    justify-content: center;
-}
-
-#btnSection div {
-    flex: 1 auto;
-}
-
-.rightWrapper {
-    tex
-}
-
-#btnSection .btn{
-    margin-top: 50px;
+    justify-content: space-around;
+    align-items: center;
 }
 
 /* Animation */

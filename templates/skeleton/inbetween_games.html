@@ -45,13 +45,8 @@ Inbetween Games
 
     <section id="btnSection">
         {% if player.no() == 1 %}
-            <div id="leftwrapper">
                 <button id="startButton" class="btn">Start the next round!</button> <!-- have JavaScript ask for a popup are you sure here-->
-            </div>
-
-            <div id="rightwrapper">
                 <button id="endGameButton" class="btn">End the game for everyone.</button>
-            </div>
         {% else %}
             <div id="waitingInfo">Waiting for {{ game.get_player_list()[0].name() }} to start the next round</div>
         {% endif %}
