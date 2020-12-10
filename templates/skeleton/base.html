@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- CSS -->
+        <link rel="stylesheet" href="/static/css/normalize.css">
+        <link rel="stylesheet" href="/static/css/common.css">
+        {% block extra_css %}{% endblock %}
+
+        <title>{% block page_title %}Pied Piper{% endblock %}</title>
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700&display=swap" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap" rel="stylesheet">
+    </head>
+
+    <body data-game-id="{{ game.get_id() }}" data-player-id="{{ player.id() }}">
+        <header>
+            <span>{% block nav_heaving %}&nbsp;{% endblock %}</span>
+            <span>Rules</span>
+            <span>About</span>
+        </header>
+
+        {% block content %}{% endblock %}
+    </body>
+</html>
