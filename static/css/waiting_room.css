@@ -8,6 +8,7 @@
     --secondary-txt-color: #f1faee;
     --tertiary-txt-color: #1d3557;
     --emphasis-txt-color: #e63946;
+    --border-color: #1d3557;
 }
 
 .hidden {
@@ -60,7 +61,7 @@ td:not(.playerTD) .playerWrapper {
 }
 
 .playerWrapper {
-    border: 1px solid var(--tertiary-txt-color);
+    border: 1px solid var(--border-color);
     border-radius: 20px;
     padding: 20px 50px;
     margin: 20px 10px;
@@ -76,20 +77,4 @@ td:not(.playerTD) .playerWrapper {
     font-size: 25px;
     display: block;
     padding-top: 20px;
-}
-
-.btn {
-    border-radius: 20px;
-    display: inline-block;
-    padding: 15px;
-    font-size: 15pt;
-    color: var(--secondary-txt-color);
-    font-family: 'Quicksand', sans-serif;
-    background-color: var(--btn-color);
-    margin-top: 30px;
-    margin: 10px;
-}
-
-.btn:hover {
-    background-color: rgba(230, 57, 70, 0.7);
 }

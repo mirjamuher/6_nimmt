@@ -6,7 +6,8 @@
         <link rel="stylesheet" href="/static/css/normalize.css">
         <link rel="stylesheet" href="/static/css/common.css">
         <link rel="stylesheet" href="/static/css/end_of_game.css">
-        <title>Test Waiting Room</title>
+
+        <title>End Game Celebration</title>
         <link rel="preconnect" href="https://fonts.gstatic.com">
         <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
         <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -16,36 +17,45 @@
     </head>
 
     <body data-game-id="{{ game.get_id() }}" data-player-id="{{ player.id() }}">
+        <!-- Header -->
         <header>
-            <span>Back to Home</span>
-            <span>Rules</span>
-            <span>About</span>
+            <span>Back to Home</span> <!-- TODO: Link -->
+            <span>Rules</span> <!-- TODO: Write & Link -->
+            <span>About</span> <!-- TODO: Write & Link -->
         </header>
 
+        <!-- Winner Window -->
         <section id="winnerCelebration">
         <h3> And the winner is...</h3>
         <h1> <span id="winnerName"> </span> </h1>
         </section>
 
+        <!-- Player Table sorted by ascending points -->
         <section>
             <table id="pointTable">
-                {% for player in game.get_player_list() %}
-                    <tr></tr>
-                    <div class="player">
-                        <img class="playerAvatar" src="{{ player.avatar() }}" alt="{{ player.name() }}'s avatar">
-                        <div class="playerInfo">
-                            <div class="playerName"> {{ player.name() }} </div> <br>
-                            <div class="playerPoints"> {{ player.total_points() }}</div>
-                        </div>
-                    </div>
+                {% for player in game.get_player_list_by_points() %}
+                    <tr>
+                        <td class="avatarTD">
+                            <img class="playerAvatar" src="{{ player.avatar() }}" alt="{{ player.name() }}'s avatar">
+                        </td>
+                        <td class="nameTD">
+                            <span class="playerName"> {{ player.name() }} </span>
+                        </td>
+                        <td class="pointTD">
+                            <span class="playerPoints"> {{ player.total_points() }}</span>
+                        </td>
+                    </tr>
                 {% endfor %}
             </table>
+
+            <!-- Button to Homescreen -->
             <p>
-                <button id="landingPageRedirectBtn">Click here to get back to the main page!</button>
+                <button class="btn" id="landingPageRedirectBtn">Another Game!</button>
             </p>
         </section>
 
         <!-- JavaScript -->
-        <script src="/static/js/end_of_game.js"></script>
+        <script src="/static/js/confetti.min.js"></script>
+        <script src="/static/js/end_of_game.js"></script> <!--Give credit: https://www.cssscript.com/confetti-falling-animation/-->
     </body>
 </html>

@@ -20,7 +20,9 @@ async function setupPage() {
         }
     }
     elWinnerName.textContent = winningPlayer;
-    elWinnerPoints.textContent = winningPlayerPoints;
+
+    // Confetti!
+    confetti.start(3*1000);
 
     const redirectBtn = document.querySelector("#landingPageRedirectBtn");
     redirectBtn.addEventListener("click", function() {

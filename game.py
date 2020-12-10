@@ -252,7 +252,7 @@ class Game:
         return self._player_objects
 
     def get_player_list_by_points(self) -> List[Player]:
-        return sorted(self._player_objects, key=lambda player: player.total_points(), reverse=True)
+        return sorted(self._player_objects, key=lambda player: player.total_points())
 
     def get_players(self) -> Dict[int, Player]:
         return self._players
