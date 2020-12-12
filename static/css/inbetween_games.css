@@ -98,16 +98,6 @@ td.pointTD {
     text-align: center;
 }
 
-.addingPoints {
-    font-size: 35px;
-    color: darkred;
-    transform-origin: 50% 100%;
-
-    animation-duration: 1s;
-    animation-name: scale;
-    animation-timing-function: cubic-bezier(.71,.55,.62,1.57);
-}
-
 /* Buttons */
 #btnSection {
     margin-top: 50px;
@@ -118,14 +108,22 @@ td.pointTD {
 }
 
 /* Animation */
+.addingPoints {
+    color: darkred;
+    transform-origin: 50% 100%;
+
+    animation-duration: 3s;
+    animation-name: scale;
+    animation-timing-function: cubic-bezier(.71,.55,.62,1.57);
+}
 
 @keyframes scale {
-    from {
+    0% {
         opacity: 0;
-        transform: scale(.9, .9);
+        transform: scale(.5);
     }
-    to {
+    100% {
         opacity: 1;
-        transform: scale(1, 1);
+        transform: scale(2);
     }
 }

@@ -28,7 +28,11 @@ async function setupPage() {
             elPlayerPointsList[i].textContent = await getPlayerPoints(i);
             console.log("Updated", elPlayerPointsList[i]);
         }
-    }, 1*1000)
+    }, 3*1000)
+
+    // Make Buttons responsive
+    elEndGameButton.addEventListener("click", endGameQuestion);
+    elStartButton.addEventListener("click", questionStartNextGame);
 }
 
 function questionStartNextGame() {
