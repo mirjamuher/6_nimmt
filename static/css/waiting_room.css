@@ -1,3 +1,80 @@
+:root {
+    --primary-bg-color: white;
+    --secondary-bg-color: #a8dadc;
+    --tertiary-bg-color: #457b9d;
+    --header-bg-color: #1d3557;
+    --btn-color: #e63946;
+    --primary-txt-color: #457b9d;
+    --secondary-txt-color: #f1faee;
+    --tertiary-txt-color: #1d3557;
+    --emphasis-txt-color: #e63946;
+    --border-color: #1d3557;
+}
+
 .hidden {
     display: none;
+}
+
+body {
+    text-align: center;
+    background-color: var(--primary-bg-color);
+    color: var(--primary-txt-color);
+}
+
+h1 {
+    margin-top: 80px;
+    margin-bottom: 10px;
+    font-size: 50px;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+}
+
+h2 {
+    line-height: 1.5;
+    font-weight: normal;
+}
+
+h2 span {
+    color: var(--emphasis-txt-color);
+}
+
+#playerSection {
+    margin-top: 50px;
+}
+
+h3 {
+    text-align: center;
+    font-weight: bold;
+}
+
+#remainingPlayers {
+    color: var(--emphasis-txt-color);
+}
+
+#playerTableEl {
+    margin: 0 auto;
+}
+
+td:not(.playerTD) .playerWrapper {
+    background-color: rgba(212, 218, 223, 0.7);
+    border-color: darkgrey;
+}
+
+.playerWrapper {
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 20px 50px;
+    margin: 20px 10px;
+}
+
+.playerAvatar {
+    width: 120px;
+    height: 120px;
+    display: block;
+}
+
+.playerName {
+    font-size: 25px;
+    display: block;
+    padding-top: 20px;
 }

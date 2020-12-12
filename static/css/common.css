@@ -1,0 +1,60 @@
+* {
+    box-sizing: border-box;
+    font-family: 'Quicksand', sans-serif;
+}
+
+header {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    padding: 25px;
+    background-color: var(--header-bg-color);
+    color: var(--primary-txt-color);
+    font-size: 20px;
+}
+
+header span {
+    flex: 1 20px;
+    justify-content: space-between;
+    font-size: 22px;
+    color: #f1faee;
+}
+
+header span:first-child {
+    flex: 20 10px;
+}
+
+.playerWrapper {
+    border: 1px solid var(--tertiary-txt-color);
+    border-radius: 20px;
+    padding: 20px 50px;
+    margin: 20px 10px;
+}
+
+.playerAvatar {
+    width: 120px;
+    height: 120px;
+    display: block;
+}
+
+.playerName {
+    font-size: 25px;
+    display: block;
+    padding-top: 20px;
+}
+
+.btn {
+    border-radius: 20px;
+    display: inline-block;
+    padding: 15px;
+    font-size: 15pt;
+    color: var(--secondary-txt-color);
+    font-family: 'Quicksand', sans-serif;
+    background-color: var(--btn-color);
+    margin-top: 30px;
+    margin: 10px;
+}
+
+.btn:hover {
+    background-color: rgba(230, 57, 70, 0.7);
+}

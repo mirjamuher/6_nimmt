@@ -72,41 +72,50 @@ async function getGameInfo(gameID, playerID) {
     elPlayersLeftInfo.textContent = playersLeft;
     elPlayerLeftInfoParent.classList.remove("hidden");
 
-    periodicTimerID = setTimeout(function() {getGameInfo(gameID, playerID)}, 0);
+    periodicTimerID = setTimeout(function() {getGameInfo(gameID, playerID)}, 1000*3);
 }
 
 function generateTable(players) {
     const numberOfPlayers = players.length
 
-    let elTablePara = document.querySelector("#playerTable");
+    const elTablePara = document.querySelector("#playerTable");
     elTablePara.innerHTML = '';
 
-    let elTbl= document.createElement("table");
+    const elTbl= document.createElement("table");
+    elTbl.id = "playerTableEl";
 
     let playerIndex = 0;
-    for (let i=0; i!==Math.ceil(numberOfPlayers/2); i++) {
+    for (let i=0; i<2; i++) {
         const elRow = document.createElement("tr");
 
-        for (let j=0; j<2; j++, playerIndex++) {
-            const player =  players[playerIndex];
+        for (let j=0; j<5; j++, playerIndex++) {
+            const player = players[playerIndex];
             const elCell = document.createElement("td");
+
+            const elAvatar = document.createElement("img");
+            elAvatar.classList.add("playerAvatar"); // For CSS styling
+
+            const elName = document.createElement("span");
+            elName.classList.add("playerName"); // For CSS styling
+
             if (player !== undefined) {
-                const playerName = player["player_name"];
-                const playerAvatar = player["avatar"];
-
-                const elAvatar = document.createElement("img");
-                elAvatar.src = playerAvatar;
-                elAvatar.width = "64";  // TODO: Temporary hack. Fix in CSS
-                elAvatar.height = "64"; // TODO: Temporary hack. Fix in CSS
-                elAvatar.classList.add("playerAvatar"); // For CSS styling
-
-                const elName = document.createElement("span");
-                elName.classList.add("playerName"); // For CSS styling
-                elName.textContent = playerName;
-
-                elCell.appendChild(elAvatar);
-                elCell.appendChild(elName);
+                elCell.classList.add("playerTD"); // For CSS :not styling
+                elAvatar.src = player["avatar"];
+                elName.textContent = player["player_name"];
+            } else {
+                elCell.classList.add("noPlayerTD");
+                elAvatar.src = '/static/images/no_player_avatar/no_player.png'
+                elName.innerHTML = "&nbsp;"
             }
+
+            const elAvatarWrapper = document.createElement("div");
+            elAvatarWrapper.classList.add("playerWrapper");
+
+            elCell.appendChild(elAvatarWrapper);
+
+            elAvatarWrapper.appendChild(elAvatar);
+            elAvatarWrapper.appendChild(elName);
+
             elRow.appendChild(elCell);
         }
         elTbl.appendChild(elRow);

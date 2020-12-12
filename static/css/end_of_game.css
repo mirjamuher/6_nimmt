@@ -1,0 +1,85 @@
+:root {
+    --primary-bg-color: white;
+    --secondary-bg-color: #a8dadc;
+    --tertiary-bg-color: #457b9d;
+    --header-bg-color: #1d3557;
+    --btn-color: #e63946;
+    --primary-txt-color: #457b9d;
+    --secondary-txt-color: #f1faee;
+    --tertiary-txt-color: #1d3557;
+    --emphasis-txt-color: #e63946;
+    --border-color: #1d3557;
+}
+
+body {
+    background-color: var(--primary-bg-color);
+    color: var(--primary-txt-color);
+}
+
+/* Winner Window*/
+#winnerCelebration {
+    text-align: center;
+}
+#winnerCelebration > h3 {
+    font-size: 30px;
+    margin-top: 50px;
+}
+
+#winnerCelebration > h1 {
+    font-size: 60px;
+    margin-top: 30px;
+    font-weight: bold;
+    color: var(--emphasis-txt-color);
+}
+
+/* Point Table (Flex Box) */
+#pointTable {
+    width: 70%;
+    margin: 0 auto;
+    font-size: 30px;
+}
+
+#pointTable .playerName {
+    font-size: inherit;
+    padding: 0;
+    margin: 0;
+}
+
+#pointTable tr {
+    display: inline-block;
+    width: 100%;
+    height: 100px;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    border-collapse: collapse;
+}
+
+td {
+    flex: 1;
+    justify-content: space-around;
+    padding-left: 30px;
+}
+
+.playerAvatar {
+    height: 90px;
+    width: 90px;
+    flex: 1 200px;
+}
+
+td.nameTD {
+    flex: 5;
+}
+
+td.pointTD {
+    text-align: center;
+}
+
+/* Button */
+
+#landingPageRedirectBtn {
+    display: block;
+    margin: 50px auto;
+    font-size: 20px;
+}

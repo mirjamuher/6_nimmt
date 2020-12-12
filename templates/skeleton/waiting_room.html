@@ -1,26 +1,30 @@
-<!DOCTYPE html>
+{% extends "skeleton/base.html" %}
 
-<html lang="en">
-    <head>
-        <!-- CSS -->
-        <link rel="stylesheet" href="/static/css/waiting_room.css">
-        <title>Test Waiting Room</title>
-    </head>
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/waiting_room.css">
+{% endblock %}
 
-    <body data-game-id="{{ game.get_id() }}" data-player-id="{{ player.id() }}">
-        <h1> Welcome {{ player.name() }}! <br> Your friends can join this game by entering room {{ game.get_id() }}. <br> You can start the game whenever you are ready. </h1>
-        <section>
-            <h2> These friends are already logged in: </h2>
-            <p id=playerTable></p>
-        </section>
-        <section>
-            <p id='remainingPlayersParent' class="hidden">Up to <span id="remainingPlayers"></span> friends can still join.</p>
-        </section>
+{% block page_title %}
+Waiting Room
+{% endblock %}
 
-        <button id="startButton">Start Game!</button> <!-- have JavaScript ask for a popup are you sure here-->
+{% block content %}
+    <h1> Welcome {{ player.name() }}! </h1> <br>
+    <h2>Your friends can join this game by entering room <span>{{ game.get_id() }}</span>. <br>
+        You can start the game whenever you are ready.
+    </h2>
 
+    <section id="playerSection">
+        <h3> These friends are already logged in: </h3>
+        <p id=playerTable></p>
+    </section>
 
-        <!-- JavaScript -->
-        <script src="/static/js/waiting_room.js"></script>
-    </body>
-</html>
+    <section>
+        <p id='remainingPlayersParent' class="hidden">Up to <span id="remainingPlayers"></span> friends can still join.</p>
+    </section>
+
+    <button class="btn" id="startButton">Start Game!</button> <!-- have JavaScript ask for a popup are you sure here-->
+
+    <!-- JavaScript -->
+    <script src="/static/js/waiting_room.js"></script>
+{% endblock %}

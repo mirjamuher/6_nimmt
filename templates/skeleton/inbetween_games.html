@@ -1,48 +1,56 @@
-<!DOCTYPE html>
+{% extends "skeleton/base.html" %}
 
-<html lang="en">
-    <head>
-        <!-- CSS -->
-        <link rel="stylesheet" href="/static/css/inbetween_games.css">
-        <title>Test Waiting Room</title>
-    </head>
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/inbetween_games.css">
+{% endblock %}
 
-    <body data-game-id="{{ game.get_id() }}" data-player-id="{{ player.id() }}">
+{% block page_title %}
+Inbetween Games
+{% endblock %}
+
+{% block content %}
+    <section id="textBox">
         <h1>
-            Great Game {{ player.name() }}!
+            Great Game, {{ player.name() }}!
         </h1>
         <h2>
-            You can keep playing until one of you reaches {{ game.get_point_goal() }} points.<br> <!-- TODO: Implement point choosing mechanic -->
-            {% if player.no == 1 %}
+            You can keep playing until one of you reaches <span class="emphasis">{{ game.get_point_goal() }} points</span>.<br> <!-- TODO: Implement point choosing mechanic -->
+            {% if player.no() == 1 %}
                 Click the button below when you are ready to start the next game.
             {% else %}
-                Player One can start the next round when everyone is ready.
+                <span class="emphasis">Player One</span> can start the next round when everyone is ready.
             {% endif %}
         </h2>
-        <section>
-            <h3> These are everyone's points: </h3>
-            <p id="pointTable">
-                {% for player in game.get_player_list() %}
-                    <div class="player">
-                        <img class="playerAvatar" src="{{ player.avatar() }}" alt="{{ player.name() }}'s avatar" width="64" height="64">
-                        <div class="playerInfo">
-                            <div class="playerName"> {{ player.name() }} </div> <br>
-                            <div class="playerPoints"> {{ player.total_points() - player.points_of_last_round() }}
-                                <span class="addingPoints"> +{{ player.points_of_last_round() }} </span>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            </p>
-            <!-- Extra: Can I transfer prev t.points, crnt t.points and gained points and animate? -->
-        </section>
-        <section>
-            <div id="waitingInfo" class="hidden">Waiting for {{ game.get_player_list()[0].name() }} to start the next round</div>
-            <button id="startButton" class="hidden">Start the next round!</button> <!-- have JavaScript ask for a popup are you sure here-->
-            <br>
-            <button id="endGameButton" class="hidden">End the game for everyone</button>
-        </section>
-        <!-- JavaScript -->
-        <script src="/static/js/inbetween_games.js"></script>
-    </body>
-</html>
+    </section>
+    <section>
+        <table id="pointTable">
+            {% for player in game.get_player_list_by_points() %}
+                <tr>
+                    <td class="avatarTD">
+                        <img class="playerAvatar" src="{{ player.avatar() }}" alt="{{ player.name() }}'s avatar">
+                    </td>
+                    <td class="nameTD">
+                        <span class="playerName"> {{ player.name() }} </span>
+                    </td>
+                    <td class="pointTD">
+                        <span class="addingPoints"> {{ player.points_of_last_round() }}+ </span>
+                        <span class="playerPoints"> {{ player.total_points() - player.points_of_last_round() }} </span>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <!-- Extra: Can I transfer prev t.points, crnt t.points and gained points and animate? -->
+    </section>
+
+    <section id="btnSection">
+        {% if player.no() == 1 %}
+                <button id="startButton" class="btn">Start the next round!</button> <!-- have JavaScript ask for a popup are you sure here-->
+                <button id="endGameButton" class="btn">End the game for everyone.</button>
+        {% else %}
+            <div id="waitingInfo">Waiting for {{ game.get_player_list()[0].name() }} to start the next round</div>
+        {% endif %}
+    </section>
+    <!-- JavaScript -->
+    <script src="/static/js/inbetween_games.js"></script>
+{% endblock %}

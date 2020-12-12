@@ -3,40 +3,66 @@
 <html lang="en">
   <head>
     <!-- CSS -->
+    <link rel="stylesheet" href="/static/css/normalize.css">
+    <link rel="stylesheet" href="/static/css/common.css">
     <link rel="stylesheet" href="/static/css/landing_page.css">
     <title>Test Landing Page</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap" rel="stylesheet">
   </head>
 
   <body>
       <header>
-          <h1>Hornochsen - Six Takes</h1>
+        <span>&nbsp;</span>
+        <span>Rules</span>
+        <span>About</span> <!--Give credit to: https://www.iconfinder.com/iconsets/cat-power AND https://www.iconfinder.com/iconsets/animals-95-->
       </header>
 
       <section>
-          <button id="startButton">Start a new game</button>
+        <h1>Pied Piper</h1>
+        <h3>but this time, don't end up with all the rats</h3>
+      </section>
+
+      <section>
+          <button class="btn" id="startButton">Start a new game</button>
           <form id="startGameForm" class="hidden">
               <label>
-                  Enter your playername to create a room <br>
+                <span class="txt">
+                  Enter your playername:
+                </span>
                   <input id="p1Name" name="p1_name" type="text"> <br>
+                  <span class="txt">
                   How many points do you wish to play to?
+                </span>
                   <input id="endPoints" name="end_points" type="number" min="10" max="200" value="84">
-                  <input type="submit" value="Start Game!">
+                  <input class="btn submitbtn" type="submit" value="Start Game!">
               </label>
-            </form>
-            <button class="backButton1 hidden">Back</button>
-          <button id="joinButton">Join an existing game</button>
+            </form> <br>
+
+            <button class="btn backbtn backButton1 hidden"> &larr; Back</button>
+
+          <button class="btn" id="joinButton">Join an existing game</button>
           <form id="joinGameForm" class="hidden">
               <label>
-                  Enter your player name<br>
+                <span class="txt">
+                  Enter your player name:
+                </span>
                   <input type="text" id="playerName" name="player_name">
-              </label>
+              </label> <br>
               <label>
-                Enter the room number you want to join <br>
+                <span class="txt">
+                Enter the number of the room you want to join:
+                </span>
                 <input type="number" id="roomNumber" name="room_number">
             </label>
-            <input type="submit" value="Join Game!">
-        </form>
-        <button class="backButton2 hidden">Back</button>
+            <input class="btn submitbtn" type="submit" value="Join Game!">
+        </form> <br>
+
+        <button class="btn backbtn backButton2 hidden"> &larr; Back</button>
       </section>
 
     <!-- JavaScript -->

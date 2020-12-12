@@ -91,6 +91,7 @@ function setupPage() {
         elStartForm.classList.remove("hidden");
         elBackButton1.classList.remove("hidden");
         elJoinButton.classList.add("hidden");
+        elStartButton.classList.add("hidden");
     });
 
     elStartForm.addEventListener("submit", function(event) {
@@ -104,18 +105,21 @@ function setupPage() {
     elBackButton1.addEventListener("click", function(event) {
         elStartForm.classList.add("hidden");
         elJoinButton.classList.remove("hidden");
+        elStartButton.classList.remove("hidden");
         elBackButton1.classList.add("hidden");
     });
 
     elJoinButton.addEventListener("click", function(event) {
         elJoinGameForm.classList.remove("hidden");
         elStartButton.classList.add("hidden");
+        elJoinButton.classList.add("hidden");
         elBackButton2.classList.remove("hidden");
     });
 
     elBackButton2.addEventListener("click", function(event) {
         elJoinGameForm.classList.add("hidden");
         elStartButton.classList.remove("hidden");
+        elJoinButton.classList.remove("hidden");
         elBackButton2.classList.add("hidden");
     });
 
