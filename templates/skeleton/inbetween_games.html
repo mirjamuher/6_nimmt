@@ -25,7 +25,7 @@ Inbetween Games
     <section>
         <table id="pointTable">
             {% for player in game.get_player_list_by_points() %}
-                <tr>
+                <tr class="pointTableRow" data-player-in-tr-points="{{ player.total_points() }}">
                     <td class="avatarTD">
                         <img class="playerAvatar" src="{{ player.avatar() }}" alt="{{ player.name() }}'s avatar">
                     </td>

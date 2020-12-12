@@ -18,21 +18,27 @@ async function setupPage() {
 
     // Animation for round points merging with existing points
     setTimeout(async function() {
-        for (const element of elAddingPointsList) {
-            element.classList.add("hidden");
-        }
+        // call data-player-in-tr-ID and get right player points
 
-        console.log("elPlayerPointsList is", elPlayerPointsList);
+        const elPointTableRowList = document.querySelectorAll(".pointTableRow") // pulls out all the rows in list
 
-        for (let i = 0; i < elPlayerPointsList.length; i++) {
-            elPlayerPointsList[i].textContent = await getPlayerPoints(i);
-            console.log("Updated", elPlayerPointsList[i]);
+        for (const elRow of elPointTableRowList) {
+            const currentPlayerTotalPoints = elRow.getAttribute("data-player-in-tr-points");
+            const elAddingPoints = elRow.querySelector(".addingPoints");
+            const elPlayerPoints = elRow.querySelector(".playerPoints");
+
+            elAddingPoints.classList.add("hidden") // hides the added points span
+            elPlayerPoints.textContent = currentPlayerTotalPoints; // updates to total Points
         }
     }, 3*1000)
 
     // Make Buttons responsive
-    elEndGameButton.addEventListener("click", endGameQuestion);
-    elStartButton.addEventListener("click", questionStartNextGame);
+    if (elEndGameButton) {
+        elEndGameButton.addEventListener("click", endGameQuestion);
+    }
+    if (elStartButton) {
+        elStartButton.addEventListener("click", questionStartNextGame);
+    }
 }
 
 function questionStartNextGame() {
@@ -125,24 +131,6 @@ async function getPlayerNumber() {
     const playerNumber = responseJson["player_no"];
     console.log("This is playerNumber in getPlayerNumber", playerNumber)
     return playerNumber;
-}
-
-async function getPlayerPoints(i) {
-    // returns the total points of players
-    const response = await fetch(`/api/game/${gameID}`);
-    if (!response.ok) {
-        alert("API didn't work. Game ID not correct");
-        return;
-    }
-
-    const responseJson = await response.json();
-    console.log("responseJson is", responseJson);
-    const playerList = responseJson["players"]
-    console.log("playerList is", playerList);
-    console.log("playerNumber is", i);
-    const playerPoints = playerList[i]["total_points"];
-    console.log("Entered getPlayerPoints. Total points are", playerPoints)
-    return playerPoints;
 }
 
 document.addEventListener("DOMContentLoaded", setupPage);
