@@ -1,13 +1,16 @@
-<!DOCTYPE html>
+{% extends "skeleton/base.html" %}
 
-<html lang="en">
-  <head>
-    <!-- CSS -->
-    <link rel="stylesheet" href="/static/css/game_room.css">
-    <title>Test Game Room</title>
-  </head>
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/game_room.css">
+{% endblock %}
 
-  <body data-game-id="{{ game.get_id() }}" data-player-id="{{ player.id() }}" data-round-no="{{ game.get_round_no() }}">
+{% block page_title %}Pied Piper Game Room{% endblock %}
+
+{% block extra_body_tags %} data-round-no="{{ game.get_round_no() }}" {%  endblock %}
+
+{% block standard_header %}{% endblock %}
+
+{% block content %}
 
     <!-- Point Table -->
     <section id="playerOverview">
@@ -79,5 +82,4 @@
 
     <!-- JavaScript -->
     <script src="/static/js/game_room.js"></script>
-</body>
-</html>
+{% endblock %}

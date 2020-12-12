@@ -15,12 +15,14 @@
         <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap" rel="stylesheet">
     </head>
 
-    <body data-game-id="{{ game.get_id() }}" data-player-id="{{ player.id() }}">
+    <body data-game-id="{{ game.get_id() }}" data-player-id="{{ player.id() }}" {% block extra_body_tags %}{% endblock %}>
+        {% block standard_header %}
         <header>
             <span>{% block nav_heaving %}&nbsp;{% endblock %}</span>
             <span>Rules</span>
             <span>About</span>
         </header>
+        {% endblock %}
 
         {% block content %}{% endblock %}
     </body>
