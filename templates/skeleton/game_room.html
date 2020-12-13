@@ -16,11 +16,15 @@
     <section id="playerOverview">
         {% for player in game.get_player_list() %}
             <span class="player" data-player-id="{{ player.id() }}">
-                <img src="{{ player.avatar() }}">
-                <span class="name">{{ player.name() }} </span>
-                <span class = "currentPoints"> 0 </span>
-                <br>
-                <span class = "totalPoints"> {{ player.total_points() }} </span>
+                <img class="avatar" src="{{ player.avatar() }}">
+                <span class="playerInfo">
+                    <span class="name">{{ player.name() }} </span>
+                    <span class="pointWrapper">
+                        <span class = "currentPoints"> 0</span>
+                        <span>+</span>
+                        <span class = "totalPoints"> {{ player.total_points() }} </span>
+                    </span>
+                </span>
             </span>
         {% endfor %}
     </section>
