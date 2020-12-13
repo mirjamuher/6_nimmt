@@ -9,6 +9,8 @@
 
   <body data-game-id="{{ game.get_id() }}" data-player-id="{{ player.id() }}" data-round-no="{{ game.get_round_no() }}">
 
+    <my-element>
+
     <!-- Point Table -->
     <section id="playerOverview">
         <table>
@@ -52,6 +54,7 @@
     <section id="hand">
         <div id="handCards">
         {% for card in player.hand() %}
+             <!-- <my-card cardNumber="{{ card.value() }}"> -->
             <div class="card" data-card-value="{{ card.value() }}">
                 {% if card.ochsen() == 1 %}
                 <img class='ochsen' src='/static/images/card_avatar/Rattsie Card Background.png' alt='one rat'>
@@ -78,6 +81,8 @@
     </section>
 
     <!-- JavaScript -->
-    <script src="/static/js/game_room.js"></script>
+    <script src="/static/js/vendor/lit-element.js" type="module"></script>
+    <script src="/static/js/card.js" type="module"></script>
+    <script src="/static/js/game_room.js" type="module"></script>
 </body>
 </html>
