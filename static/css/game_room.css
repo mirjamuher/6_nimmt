@@ -1,14 +1,65 @@
 *{box-sizing: border-box;}
 
-#playerOverview, #stacks, #hand {
+/* Basics */
+
+#playerOverview, #stacks, #hand {  /* Necesasry? Check after webcomponent implementation  */
     padding: 20px 0;
+}
+
+:root {
+    --primary-bg-color: white;
+    --secondary-bg-color: #a8dadc;
+    --tertiary-bg-color: #457b9d;
+    --header-bg-color: #1d3557;
+    --btn-color: #e63946;
+    --primary-txt-color: #457b9d;
+    --secondary-txt-color: #f1faee;
+    --tertiary-txt-color: #1d3557;
+    --emphasis-txt-color: #e63946;
+    --border-color: #1d3557;
 }
 
 .hidden {
     display: none !important;
 }
 
-/* TODO: Give the Card a nice background color that mixes with the rest of the theme */
+/* #playerOverview Design (not using common.css) */
+#playerOverview {
+    height: 150px;
+    width: 100%;
+    background-color: var(--header-bg-color);
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    align-items: center;
+    color: var(--secondary-txt-color);
+} /*PROBLEM: Doesn't grow when overflow happens*/
+
+.player {
+    width: 200px;
+    height: 100px;
+    margin: auto 20px;
+    padding: 15px;
+    flex: 0 0 auto;
+    border: 1px solid var(--secondary-bg-color);
+    border-radius: 20px;
+}
+
+.player > img {
+    height: 75px;
+    width: 75px;
+}
+
+.name {
+    font-size: 20px;
+    display: inline-block;
+    vertical-align: top;
+    padding-left: 20px;
+}
+/*PROBLEM: What to do with the points?*/
+
+
+/* TODO: Restyle when webcomponents are done */
 .card {
     border: 2px solid black;
     background: white;

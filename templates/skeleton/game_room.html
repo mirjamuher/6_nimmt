@@ -14,28 +14,15 @@
 
     <!-- Point Table -->
     <section id="playerOverview">
-        <table>
-            <tr>
-            {% for player in game.get_player_list()[0:5] %}
-                <td data-player-id="{{ player.id() }}">
-                    <img src="{{ player.avatar() }}" height=64 width=64>
-                    <span class = "currentPoints"> 0 </span>
-                    <br> {{ player.name() }} <span class = "totalPoints"> {{ player.total_points() }} </span>
-                </td>
-            {% endfor %}
-            </tr>
-            {% if game.get_player_list()|length > 5 %}
-                <tr>
-                {% for player in game.get_player_list()[5:] %}
-                    <td data-player-id="{{ player.id() }}">
-                        <img src="{{ player.avatar() }}" height=64 width=64>
-                        <span class = "currentPoints"> 0 </span>
-                        <br> {{ player.name() }} <span class = "totalPoints"> {{ player.total_points() }} </span>
-                    </td>
-                {% endfor %}
-                </tr>
-            {% endif %}
-        </table>
+        {% for player in game.get_player_list() %}
+            <span class="player" data-player-id="{{ player.id() }}">
+                <img src="{{ player.avatar() }}">
+                <span class="name">{{ player.name() }} </span>
+                <span class = "currentPoints"> 0 </span>
+                <br>
+                <span class = "totalPoints"> {{ player.total_points() }} </span>
+            </span>
+        {% endfor %}
     </section>
 
     <!-- Stacks -->
@@ -73,7 +60,7 @@
         </div>
         <form id="confirmCardForm" class="hidden">
             Do you want to confirm card <span id=chosenCardValue> </span>?
-            <input type="submit" value="Yes">
+            <input type="submit" value="Yes" class="btn">
         </form>
         <div id="waitingForOthers" class="hidden">
             Waiting for other players to choose their card
