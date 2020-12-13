@@ -1,5 +1,5 @@
-import { html, css } from './vendor/lit-html.js';
-import { LitElement } from './vendor/lit-element.js';
+import { html } from './vendor/lit-html.js';
+import { LitElement, css } from './vendor/lit-element.js';
 
 // Setting Colors
 const primaryBgColor = css `white`;
@@ -23,6 +23,7 @@ const baseDeck = new Map([
 
 // Set up invertedBaseDeck with cardValue - ochsen pairs
 let invertedBaseDeck = new Map()
+invertedBaseDeck.set(-1, -1); // Sets a -1 value for the initialising of the webcomponent constructor
 for (let n=1; n<105; n++) {
     invertedBaseDeck.set(n, 1); // Sets up dict with numbers 1-104 associate with ochsen 1
 }
@@ -35,8 +36,17 @@ for (let [ochsen, valueList] of baseDeck.entries()) {
 class MyCard extends LitElement {
     static get properties() {
         return {
-            cardNumber: {type: Number}, //Fed in through html jinja2 --> affects styling
+            cardValue: {type: Number}, //Fed in through html jinja2 --> affects styling
         }
+    }
+
+    constructor() {
+        super();
+        this.cardValue = -1;
+    }
+
+    ochsen() {
+        return invertedBaseDeck.get(this.cardValue);
     }
 
     static get styles() {
@@ -44,22 +54,38 @@ class MyCard extends LitElement {
         :host {
             display: inline-block;
         }
-        div {
+        .card {
             border: 2px solid black;
-            background: ${tertiaryBgColor};
+            background-color: white;
             margin: 15px 5px;
             width: 100px;
             height: 150px;
             border-radius: 10px;
             box-shadow: 0 4px 8px 0 rgba(0,0,0,0.3);
             text-align: center;
-        }`
-    }
+        }
+        ._1 {
+            background-color: green;
+        }
+        ._2 {
+            background-color: blue;
+        }
+        ._3 {
+            background-color: yellow;
+        }
+        ._5 {
+            background-color: purple;
+        }
+        ._7 {
+            background-color: red;
+        }
+    `}
+
     render() {
         return html`
-        <div class="card">
-            <span class="hornochsen"></span>
-            <span class="pointValue"></span>
+        <div class="card _${this.ochsen()}">
+            <span class="hornochsen">${this.ochsen()}</span>
+            <span class="pointValue" id="_${this.cardValue}">${this.cardValue}</span>
         </div>
         `;
   }

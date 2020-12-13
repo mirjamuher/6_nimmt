@@ -26,7 +26,7 @@ function setupPage() {
 
     initialPopulateStacks();
 
-    for (const elCard of document.querySelectorAll(".card")) {
+    for (const elCard of document.querySelectorAll("my-card")) {
         elCard.addEventListener("click", chooseCard); // Shows chosen card and lets player confirm action
     }
 
@@ -115,7 +115,7 @@ function chooseCard(event) {
     globalState = GameState.WAITING_TO_CONFIRM_CARD;
 
     // Update chosenCardValue in confirmCardForm
-    const elChosenCardValue = elCard.getAttribute("data-card-value");
+    const elChosenCardValue = elCard.cardValue;
     document.querySelector("#chosenCardValue").textContent = elChosenCardValue;
 }
 
