@@ -239,7 +239,7 @@ async function updatePointsAndStacks() {
         const PLAYER_ID = player["player_id"];
         const crntPoints = player["current_points"];
 
-        document.querySelector(`td[data-player-id='${PLAYER_ID}'] .currentPoints`).textContent = crntPoints;
+        document.querySelector(`span[data-player-id='${PLAYER_ID}'] .currentPoints`).textContent = crntPoints;
     }
 
     const stackData = responseJson["stacks"];

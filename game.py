@@ -117,6 +117,7 @@ class Player:
         self._no = no
         self._points_of_last_round = 0
         self._current_points = 0
+        self._last_eaten_points = 0
         self._total_points = 0
         self._avatar = avatar
         self._hand = []
@@ -139,6 +140,15 @@ class Player:
 
     def total_points(self) -> int:
         return self._total_points
+
+    def set_last_eaten_points(self, points: int):
+        self._last_eaten_points = points
+
+    def last_eaten_points(self) -> str:
+        if self._last_eaten_points == 0:
+            return ""
+        else:
+            return f'+{self._last_eaten_points}'
 
     def hand(self) -> List[Card]:
         return sorted(self._hand)
@@ -190,6 +200,7 @@ class Player:
         self._selected_card = None
 
     def eat_points(self, points: int) -> None:
+        self.set_last_eaten_points(points)
         self._current_points += points
 
     def merge_points(self) -> None:
@@ -398,6 +409,10 @@ class Game:
         # Create and populate GameNotation for this round
         round_notation = GameNotation(self, len(self._round_notations) + 1, sorted(self.get_selected_cards()))
         self._round_notations.append(round_notation)
+
+        # Reset player.last_eaten_points() to 0 for CSS animation
+        for player in self._player_objects:
+            player.set_last_eaten_points(0)
 
         for card in slct_card_stack:
             # Testing

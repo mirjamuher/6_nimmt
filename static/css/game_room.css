@@ -71,12 +71,18 @@
     font-size: 20px;
     padding-left: 10px;
     padding-top: 15px;
+    position: relative;
 }
 
-.currentPoints {
-}
-
-.totalPoints {
+.eatenPoints {
+    position: absolute;
+    right: 0;
+    bottom: 10px;
+    color: var(--emphasis-txt-color);
+    display: inline-block;
+    margin: 0 0.5rem;
+    font-weight: bold;
+    animation: fadeOutUp; /* referring directly to the animation's @keyframe declaration */
 }
 
 /*PROBLEM: What to do with the points?*/
@@ -131,3 +137,44 @@ img.ochsen {
 #handCards.lockedIn .card:hover {
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 }
+
+/* ANIMATION KEYFRAMES */
+/*https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.css
+@charset "UTF-8";/*!
+ * animate.css - https://animate.style/
+ * Version - 4.1.1
+ * Licensed under the MIT license - http://opensource.org/licenses/MIT
+ *
+ * Copyright (c) 2020 Animate.css
+ */
+
+:root {
+  --animate-duration: 5s;
+  --animate-delay: 3s;
+  --animate-repeat: 1;
+}
+.animate__animated {
+  -webkit-animation-duration: var(--animate-duration);
+  animation-duration: var(--animate-duration);
+  -webkit-animation-duration: var(--animate-duration);
+  animation-duration: var(--animate-duration);
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+@keyframes fadeOutUp {
+    from {
+      opacity: 1;
+    }
+
+    to {
+      opacity: 0;
+      -webkit-transform: translate3d(0, -100%, 0);
+      transform: translate3d(0, -100%, 0);
+    }
+  }
+
+  .animate__fadeOutUp {
+    -webkit-animation-name: fadeOutUp;
+    animation-name: fadeOutUp;
+  }
