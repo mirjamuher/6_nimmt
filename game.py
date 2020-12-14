@@ -163,6 +163,7 @@ class Player:
             "player_no": self._no,
             "current_points": self._current_points,
             "total_points": self._total_points,
+            "last_eaten_points": self.last_eaten_points(),
             "avatar": self._avatar,
         }
 
