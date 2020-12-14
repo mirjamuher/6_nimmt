@@ -41,12 +41,8 @@
     margin: 10px;
     padding: 15px;
     flex: 0 0 auto;
-    border-left: 1px solid var(--secondary-bg-color);
+    border-left: 1px solid var(--secondary-txt-color);
     display: flex;
-}
-
-#playerOverview .player:first-child {
-    border: none;
 }
 
 .playerInfo {
