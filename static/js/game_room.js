@@ -17,7 +17,6 @@ let roundNumber = document.body.getAttribute("data-round-no") - 1;
 
 
 // Game
-
 function setupPage() {
     console.log("Round Number", roundNumber)
     GAME_ID = document.body.getAttribute("data-game-id");
@@ -35,9 +34,7 @@ function setupPage() {
     globalState = GameState.WAITING_TO_CHOOSE_CARD;
 };
 
-
 // Function Collection
-
 async function initialPopulateStacks() {
     /*
     Response:
@@ -210,6 +207,7 @@ async function updatePointsAndStacks() {
             "player_no": int of player number
             "current_points" : self._current_points,
             "total_points": int of player points
+            "last_eaten_points": str of last eaten points or empty
             "avatar": filename of player avatar
         }]
     */
@@ -234,12 +232,18 @@ async function updatePointsAndStacks() {
     // Stops polling
     clearInterval(periodicTimerID);
 
-    // Updates Player Points; TODO: Add Animation of points going up
+    // Updates Player Points; link to animation
     for (const player of responseJson["players"]) {
         const PLAYER_ID = player["player_id"];
         const crntPoints = player["current_points"];
+        const lastEatenPoints = player["last_eaten_points"];
+        const crntPlayer = document.querySelector(`span[data-player-id='${PLAYER_ID}']`);
 
-        document.querySelector(`td[data-player-id='${PLAYER_ID}'] .currentPoints`).textContent = crntPoints;
+        crntPlayer.querySelector(`.currentPoints`).textContent = crntPoints;
+
+        if (lastEatenPoints != "") {
+            animatePoints(crntPlayer, lastEatenPoints);
+        }
     }
 
     const stackData = responseJson["stacks"];
@@ -306,6 +310,23 @@ async function updatePointsAndStacks() {
         console.log("Server State indicates game is still going. Reactivating buttons")
         globalState = GameState.WAITING_TO_CHOOSE_CARD;
     }
+}
+
+function animatePoints(crntPlayer, lastEatenPoints) {
+    // Creates Element with animation CSS classes on it
+    const elEatenPointsSpan = document.createElement("span");
+    elEatenPointsSpan.classList.add("eatenPoints");
+    elEatenPointsSpan.classList.add("animate__animated");
+    elEatenPointsSpan.classList.add("animate__fadeOutUp");
+
+    // Fills it with player.last_eaten_points()
+    elEatenPointsSpan.textContent = `    ${lastEatenPoints}`;
+
+    // attaches it
+    crntPlayer.querySelector(`.pointWrapper`).appendChild(elEatenPointsSpan);
+
+    // removes it after its been done
+    setTimeout(function() {crntPlayer.querySelector(`.pointWrapper`).removeChild(elEatenPointsSpan)}, 3*1000);
 }
 
 document.addEventListener("DOMContentLoaded", setupPage);

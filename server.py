@@ -228,6 +228,7 @@ def get_player_information(game_id: int, player_id: int):
         "player_no": int of player number
         "current_points" : self._current_points,
         "total_points": int of player points
+        "last_eaten_points": str of last eaten points or empty
         "avatar": filename of player avatar
     }
     """
@@ -345,7 +346,7 @@ test_tim._total_points = 15
 test_elijah._total_points = 5
 
 # Move Game to Endstage
-for i in range(9):
+for i in range(5):
     TEST_GAME.select_card(1, miri_hand.pop())
     TEST_GAME.select_card(2, tim_hand.pop())
     TEST_GAME.select_card(3, elijah_hand.pop())

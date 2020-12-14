@@ -1,38 +1,32 @@
-<!DOCTYPE html>
+{% extends "skeleton/base.html" %}
 
-<html lang="en">
-  <head>
-    <!-- CSS -->
-    <link rel="stylesheet" href="/static/css/game_room.css">
-    <title>Test Game Room</title>
-  </head>
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/game_room.css">
+{% endblock %}
 
-  <body data-game-id="{{ game.get_id() }}" data-player-id="{{ player.id() }}" data-round-no="{{ game.get_round_no() }}">
+{% block page_title %}Pied Piper Game Room{% endblock %}
+
+{% block extra_body_tags %} data-round-no="{{ game.get_round_no() }}" {%  endblock %}
+
+{% block standard_header %}{% endblock %}
+
+{% block content %}
 
     <!-- Point Table -->
     <section id="playerOverview">
-        <table>
-            <tr>
-            {% for player in game.get_player_list()[0:5] %}
-                <td data-player-id="{{ player.id() }}">
-                    <img src="{{ player.avatar() }}" height=64 width=64>
-                    <span class = "currentPoints"> 0 </span>
-                    <br> {{ player.name() }} <span class = "totalPoints"> {{ player.total_points() }} </span>
-                </td>
-            {% endfor %}
-            </tr>
-            {% if game.get_player_list()|length > 5 %}
-                <tr>
-                {% for player in game.get_player_list()[5:] %}
-                    <td data-player-id="{{ player.id() }}">
-                        <img src="{{ player.avatar() }}" height=64 width=64>
-                        <span class = "currentPoints"> 0 </span>
-                        <br> {{ player.name() }} <span class = "totalPoints"> {{ player.total_points() }} </span>
-                    </td>
-                {% endfor %}
-                </tr>
-            {% endif %}
-        </table>
+        {% for player in game.get_player_list() %}
+            <span class="player" data-player-id="{{ player.id() }}">
+                <img class="avatar" src="{{ player.avatar() }}">
+                <span class="playerInfo">
+                    <span class="name">{{ player.name() }} </span>
+                    <span class="pointWrapper">
+                        <span class = "totalPoints"> {{ player.total_points() }} </span>
+                        <span>+</span>
+                        <span class = "currentPoints"> {{ player.current_points() }} </span>
+                    </span>
+                </span>
+            </span>
+        {% endfor %}
     </section>
 
     <!-- Stacks -->
@@ -57,7 +51,7 @@
         </div>
         <form id="confirmCardForm" class="hidden">
             Do you want to confirm card <span id=chosenCardValue> </span>?
-            <input type="submit" value="Yes">
+            <input type="submit" value="Yes" class="btn">
         </form>
         <div id="waitingForOthers" class="hidden">
             Waiting for other players to choose their card
@@ -68,5 +62,4 @@
     <script src="/static/js/vendor/lit-element.js" type="module"></script>
     <script src="/static/js/card.js" type="module"></script>
     <script src="/static/js/game_room.js" type="module"></script>
-</body>
-</html>
+{% endblock %}
