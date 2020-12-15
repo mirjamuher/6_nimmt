@@ -33,6 +33,7 @@ for (let [ochsen, valueList] of baseDeck.entries()) {
     }
 }
 
+// Creating the MyCard Element
 class MyCard extends LitElement {
     static get properties() {
         return {
@@ -54,6 +55,7 @@ class MyCard extends LitElement {
         :host {
             display: inline-block;
         }
+
         .card {
             border: 2px solid black;
             background-color: white;
@@ -64,6 +66,15 @@ class MyCard extends LitElement {
             box-shadow: 0 4px 8px 0 rgba(0,0,0,0.3);
             text-align: center;
         }
+
+        .card:hover {
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+        }
+
+        .card.noHover:hover{
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        }
+
         ._1 {
             background-color: green;
         }

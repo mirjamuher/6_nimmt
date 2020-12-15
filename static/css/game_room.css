@@ -138,6 +138,22 @@ img.ochsen {
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 }
 
+/* PLAYER HAND */
+#hand {
+    background-color: var(--btn-color);
+    width: 100%;
+}
+
+#handTxt {
+    color: var(--secondary-txt-color);
+    font-size: 20px;
+    font-weight: lighter;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    display: block;
+    margin-left: 20px;
+}
+
 /* ANIMATION KEYFRAMES */
 /*https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.css
 @charset "UTF-8";/*!
