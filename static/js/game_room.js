@@ -23,7 +23,7 @@ function setupPage() {
     PLAYER_ID = document.body.getAttribute("data-player-id");
     const elConfirmCardForm = document.querySelector("#confirmCardForm");
 
-    initialPopulateStacks();
+    updatePointsAndStacks(); // populates stacks
 
     for (const elCard of document.querySelectorAll("my-card")) {
         elCard.addEventListener("click", chooseCard); // Shows chosen card and lets player confirm action
@@ -145,7 +145,7 @@ async function submitConfirmCardForm(event) {
     elHandCardsDiv.classList.add("lockedIn");
 
     // Add "waiting for other players" div
-    elWaitingDiv = document.querySelector("#waitingForOthers");
+    const elWaitingDiv = document.querySelector("#waitingForOthers");
     elWaitingDiv.classList.remove("hidden");
 
     globalState = GameState.WAITING_FOR_EVERYONE_TO_CONFIRM;
@@ -220,17 +220,22 @@ async function updatePointsAndStacks() {
 
     const responseJson = await response.json();
 
-    // Removes "Waiting for others" Div
-    elWaitingDiv = document.querySelector("#waitingForOthers");
-    elWaitingDiv.classList.add("hidden");
+    // Removes "Waiting for others" Div (first time none)
+    const elWaitingDiv = document.querySelector("#waitingForOthers");
+    if (elWaitingDiv) {
+        elWaitingDiv.classList.add("hidden");
+    }
 
-    // Remove Chosen Card
-    elChosenCard = document.querySelector(".chosenCard");
-    elChosenCard.classList.remove("chosenCard");
-    elChosenCard.classList.add("hidden");
+    // Remove Chosen Card (first time none)
+    const elChosenCard = document.querySelector(".chosenCard");
+    if (elChosenCard) {
+        elChosenCard.classList.remove("chosenCard");
+        elChosenCard.classList.add("hidden");
+    }
 
     // Stops polling
     clearInterval(periodicTimerID);
+    periodicTimerID = 0; // for Interval means "no ID"
 
     // Updates Player Points; link to animation
     for (const player of responseJson["players"]) {
