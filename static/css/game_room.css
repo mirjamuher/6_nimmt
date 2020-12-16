@@ -154,6 +154,13 @@ img.ochsen {
     margin-left: 20px;
 }
 
+#handCards {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+}
+
+
 /* ANIMATION KEYFRAMES */
 /*https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.css
 @charset "UTF-8";/*!

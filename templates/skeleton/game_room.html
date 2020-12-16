@@ -47,7 +47,7 @@
         <span id="handTxt">Your Hand</span>
         <div id="handCards">
         {% for card in player.hand() %}
-            <my-card cardValue="{{ card.value() }}"></my-card>
+            <my-card cardValue="{{ card.value() }}"></my-card> <!-- also comes with class "card _ochsen" -->
         {% endfor %}
         </div>
         <form id="confirmCardForm" class="hidden">

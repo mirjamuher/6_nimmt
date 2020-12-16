@@ -76,19 +76,24 @@ class MyCard extends LitElement {
         }
 
         ._1 {
-            background-color: green;
+            background-image: url('/static/images/cards/1.png');
+            background-size: cover;
         }
         ._2 {
-            background-color: blue;
+            background-image: url('/static/images/cards/2.png');
+            background-size: cover;
         }
         ._3 {
-            background-color: yellow;
+            background-image: url('/static/images/cards/3.png');
+            background-size: cover;
         }
         ._5 {
-            background-color: purple;
+            background-image: url('/static/images/cards/5.png');
+            background-size: cover;
         }
         ._7 {
-            background-color: red;
+            background-image: url('/static/images/cards/7.png');
+            background-size: cover;
         }
     `}
 
