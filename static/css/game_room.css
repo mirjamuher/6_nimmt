@@ -1,14 +1,12 @@
-*{box-sizing: border-box;}
-
 /* Basics */
 
 #playerOverview, #stacks, #hand {  /* Necesasry? Check after webcomponent implementation  */
-    padding: 20px 0;
+    padding: 10px 0;
 }
 
 :root {
     --primary-bg-color: white;
-    --secondary-bg-color: #a8dadc;
+    --secondary-bg-color: #750D37;
     --tertiary-bg-color: #457b9d;
     --header-bg-color: #1d3557;
     --btn-color: #e63946;
@@ -23,26 +21,41 @@
     display: none !important;
 }
 
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}
+
+html {
+    height: 100%;
+}
+
 /* #playerOverview Design (not using common.css) */
 #playerOverview {
     width: 100%;
     padding: 10px;
     background-color: var(--header-bg-color);
+    flex: 1;
     display: flex;
     flex-flow: row wrap;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
     color: var(--secondary-txt-color);
 } /*PROBLEM: Doesn't grow when overflow happens*/
 
 .player {
-    width: 200px;
-    height: 100px;
-    margin: 10px;
-    padding: 15px;
+    width: 180px;
+    height: 80px;
+    margin: 10px 10px;
+    padding: 5px 15px;
     flex: 0 0 auto;
     border-left: 1px solid var(--secondary-txt-color);
     display: flex;
+}
+
+.player:last-child {
+    border-right: 1px solid var(--secondary-txt-color);
 }
 
 .playerInfo {
@@ -85,47 +98,53 @@
     animation: fadeOutUp; /* referring directly to the animation's @keyframe declaration */
 }
 
-/*PROBLEM: What to do with the points?*/
+/* TABLE DESIGN */
 
-
-/* TODO: Restyle when webcomponents are done */
-.card {
-    border: 2px solid black;
-    background: white;
-    display: inline-block;
-    margin: 15px 5px;
-    width: 100px;
-    height: 150px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.3);
-    text-align: center;
-    background-image: url('/static/images/card_avatar/colorful_background.png');
-    background-size: cover;
+#stacks {
+    flex: 10;
 }
 
-.card:hover {
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+#tableTxt {
+    color: var(--emphasis-txt-color);
+    font-size: 20px;
+    font-weight: lighter;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    display: block;
+    margin-left: 20px;
 }
 
-.card.noHover:hover{
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+#stacks table {
+    margin: 0 auto;
+    /* margin-top: -1.5em; */
+    justify-self: center;
 }
 
-.cardValue {
-    font-size: 50px;
-    padding: 5px;
-    color: orange;
-    display: inline-block;
+/* PLAYER HAND */
+
+#hand {
+    background-color: var(--secondary-bg-color);
+    width: 100%;
+    flex: 1;
 }
 
-/*
-img.ochsen {
-    background-repeat: no-repeat;
-    background-position: center;
-    width: 100px;
-    height: 150px;
+#handTxt {
+    color: var(--secondary-txt-color);
+    height: 20px;
+    font-size: 20px;
+    font-weight: lighter;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    display: block;
+    margin-left: 20px;
 }
-*/
+
+#handCards {
+    margin-top: -1.5em;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+}
 
 .chosenCard {
     border: 5px solid rgb(255, 253, 137);
@@ -137,6 +156,7 @@ img.ochsen {
 #handCards.lockedIn .card:hover {
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 }
+
 
 /* ANIMATION KEYFRAMES */
 /*https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.css

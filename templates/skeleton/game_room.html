@@ -31,10 +31,11 @@
 
     <!-- Stacks -->
     <section id="stacks">
+        <span id="tableTxt">The Table</span>
         <table>
-            {% for i in range(6) %}
+            {% for i in range(4) %}
                 <tr>
-                    {% for j in range(4) %}
+                    {% for j in range(5) %}
                     <td> </td>
                     {% endfor %}
                 </tr>
@@ -44,22 +45,10 @@
 
     <!-- Player's Hand -->
     <section id="hand">
+        <span id="handTxt">Your Hand</span>
         <div id="handCards">
         {% for card in player.hand() %}
-            <div class="card" data-card-value="{{ card.value() }}">
-                {% if card.ochsen() == 1 %}
-                <img class='ochsen' src='/static/images/card_avatar/Rattsie Card Background.png' alt='one rat'>
-                {% elif card.ochsen() == 2 %}
-                <img class='ochsen' src='/static/images/card_avatar/two_rats.png' alt='two rats'>
-                {% elif card.ochsen() == 3 %}
-                <img class='ochsen' src='/static/images/card_avatar/three_rats.png' alt='three rats'>
-                {% elif card.ochsen() == 5 %}
-                <img class='ochsen' src='/static/images/card_avatar/five_rats.png' alt='five rats'>
-                {% elif card.ochsen() == 7 %}
-                <img class='ochsen' src='/static/images/card_avatar/seven_rats.png' alt='seven rats'>
-                {% endif %}
-                <span class="cardValue"> {{ card.value() }} </span> <br>
-            </div>
+            <my-card cardValue="{{ card.value() }}" location='hand'></my-card> <!-- also comes with class "card _ochsen" -->
         {% endfor %}
         </div>
         <form id="confirmCardForm" class="hidden">
@@ -72,5 +61,7 @@
     </section>
 
     <!-- JavaScript -->
-    <script src="/static/js/game_room.js"></script>
+    <script src="/static/js/vendor/lit-element.js" type="module"></script>
+    <script src="/static/js/card.js" type="module"></script>
+    <script src="/static/js/game_room.js" type="module"></script>
 {% endblock %}
