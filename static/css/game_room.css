@@ -85,57 +85,20 @@
     animation: fadeOutUp; /* referring directly to the animation's @keyframe declaration */
 }
 
-/*PROBLEM: What to do with the points?*/
+/* TABLE DESIGN */
 
-
-/* TODO: Restyle when webcomponents are done */
-.card {
-    border: 2px solid black;
-    background: white;
-    display: inline-block;
-    margin: 15px 5px;
-    width: 100px;
-    height: 150px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.3);
-    text-align: center;
-    background-image: url('/static/images/card_avatar/colorful_background.png');
-    background-size: cover;
+#tableTxt {
+    color: var(--emphasis-txt-color);
+    font-size: 20px;
+    font-weight: lighter;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    display: block;
+    margin-left: 20px;
 }
 
-.card:hover {
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-}
-
-.card.noHover:hover{
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-}
-
-.cardValue {
-    font-size: 50px;
-    padding: 5px;
-    color: orange;
-    display: inline-block;
-}
-
-/*
-img.ochsen {
-    background-repeat: no-repeat;
-    background-position: center;
-    width: 100px;
-    height: 150px;
-}
-*/
-
-.chosenCard {
-    border: 5px solid rgb(255, 253, 137);
-}
-
-#handCards.lockedIn .chosenCard {
-    border: 5px solid grey;
-}
-#handCards.lockedIn .card:hover {
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+#stacks table {
+    margin: 10px auto;
 }
 
 /* PLAYER HAND */
@@ -158,6 +121,17 @@ img.ochsen {
     display: flex;
     flex-flow: row wrap;
     justify-content: center;
+}
+
+.chosenCard {
+    border: 5px solid rgb(255, 253, 137);
+}
+
+#handCards.lockedIn .chosenCard {
+    border: 5px solid grey;
+}
+#handCards.lockedIn .card:hover {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 }
 
 

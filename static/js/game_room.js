@@ -15,7 +15,6 @@ let PLAYER_ID = -1;
 
 let roundNumber = document.body.getAttribute("data-round-no") - 1;
 
-
 // Game
 function setupPage() {
     console.log("Round Number", roundNumber)
@@ -235,7 +234,7 @@ async function updatePointsAndStacks() {
 
     // Stops polling
     clearInterval(periodicTimerID);
-    periodicTimerID = 0; // for Interval means "no ID"
+    periodicTimerID = 0; // for Interval, means "no ID"
 
     // Updates Player Points; link to animation
     for (const player of responseJson["players"]) {
@@ -256,42 +255,26 @@ async function updatePointsAndStacks() {
 
     // Pulls out each card per stack and adds it to the stack table on page; TODO: animation
     console.log("Stack Data", stackData);
-    for (let col=0; col<stackData.length; col++) {
-        let currentStack = stackData[col];
 
-        //for (let row=0; row<currentStack.length; row++) { Trying something new
-        for (let row=0; row<6; row++) {
-            let currentCard = currentStack[row];
+    // Pulls out each stackData entry (=stack) as beginning of row
+    for (let row=0; row<stackData.length; row++) {
+        const currentStack = stackData[row];
 
-            // if this card doesn't exist, overwrite cell with empty
-            if (!currentCard) {
-                table.querySelector(`tr:nth-child(${row+1}) td:nth-child(${col+1})`).innerHTML = '';
-                continue;
+        // Pulls out each entry in stack and makes it a column in row
+        for (let col=0; col<5; col++) {
+            const currentCard = currentStack[col];
+
+            // if this card does exist, overwrite cell with actual card
+            let cardValue = -1;
+            if (currentCard) {
+                cardValue = currentCard["value"];
             }
-
-            const cardValue = currentCard["value"];
-            const ochsen = currentCard["ochsen"];
             const elCurrentCell = table.querySelector(`tr:nth-child(${row+1}) td:nth-child(${col+1})`)
 
-            // Create Element Div, nestle in it new created Elements span with value and ochsen
-            const elNewCard = document.createElement("div");
-            elNewCard.classList.add("card");
-            elNewCard.classList.add("noHover");
-
-            const elCardValue = document.createElement("span");
-            elCardValue.classList.add("cardValue");
-            elCardValue.textContent = cardValue;
-
-            const elBr = document.createElement("br");
-            elCardValue.appendChild(elBr);
-
-            const elCardOchsen = document.createElement("span");
-            elCardOchsen.classList.add("cardOchsen");
-            elCardOchsen.textContent = ochsen;
-
-            elNewCard.appendChild(elCardValue);
-            elNewCard.appendChild(elCardOchsen);
-
+            // Fit my-card into the right cell
+            const elNewCard = document.createElement("my-card");
+            elNewCard.cardValue = cardValue;
+            elNewCard.location = 'table';
             elCurrentCell.innerHTML = "";
             elCurrentCell.appendChild(elNewCard);
         }

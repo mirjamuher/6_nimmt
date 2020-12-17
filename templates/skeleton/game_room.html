@@ -31,10 +31,11 @@
 
     <!-- Stacks -->
     <section id="stacks">
+        <span id="tableTxt">The Table</span>
         <table>
-            {% for i in range(6) %}
+            {% for i in range(4) %}
                 <tr>
-                    {% for j in range(4) %}
+                    {% for j in range(5) %}
                     <td> </td>
                     {% endfor %}
                 </tr>
@@ -47,7 +48,7 @@
         <span id="handTxt">Your Hand</span>
         <div id="handCards">
         {% for card in player.hand() %}
-            <my-card cardValue="{{ card.value() }}"></my-card> <!-- also comes with class "card _ochsen" -->
+            <my-card cardValue="{{ card.value() }}" location='hand'></my-card> <!-- also comes with class "card _ochsen" -->
         {% endfor %}
         </div>
         <form id="confirmCardForm" class="hidden">
