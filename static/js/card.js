@@ -62,9 +62,9 @@ class MyCard extends LitElement {
         }
 
         .hand {
-            width: 120px;
-            height: 180px;
-            margin: 15px 5px;
+            width: 100px;
+            height: 150px;
+            margin: 5px 10px;
         }
 
         .table {

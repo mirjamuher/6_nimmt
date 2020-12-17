@@ -1,14 +1,12 @@
-*{box-sizing: border-box;}
-
 /* Basics */
 
 #playerOverview, #stacks, #hand {  /* Necesasry? Check after webcomponent implementation  */
-    padding: 20px 0;
+    padding: 10px 0;
 }
 
 :root {
     --primary-bg-color: white;
-    --secondary-bg-color: #a8dadc;
+    --secondary-bg-color: #750D37;
     --tertiary-bg-color: #457b9d;
     --header-bg-color: #1d3557;
     --btn-color: #e63946;
@@ -23,26 +21,41 @@
     display: none !important;
 }
 
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}
+
+html {
+    height: 100%;
+}
+
 /* #playerOverview Design (not using common.css) */
 #playerOverview {
     width: 100%;
     padding: 10px;
     background-color: var(--header-bg-color);
+    flex: 1;
     display: flex;
     flex-flow: row wrap;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
     color: var(--secondary-txt-color);
 } /*PROBLEM: Doesn't grow when overflow happens*/
 
 .player {
-    width: 200px;
-    height: 100px;
-    margin: 10px;
-    padding: 15px;
+    width: 180px;
+    height: 80px;
+    margin: 10px 10px;
+    padding: 5px 15px;
     flex: 0 0 auto;
     border-left: 1px solid var(--secondary-txt-color);
     display: flex;
+}
+
+.player:last-child {
+    border-right: 1px solid var(--secondary-txt-color);
 }
 
 .playerInfo {
@@ -87,6 +100,10 @@
 
 /* TABLE DESIGN */
 
+#stacks {
+    flex: 10;
+}
+
 #tableTxt {
     color: var(--emphasis-txt-color);
     font-size: 20px;
@@ -98,17 +115,22 @@
 }
 
 #stacks table {
-    margin: 10px auto;
+    margin: 0 auto;
+    /* margin-top: -1.5em; */
+    justify-self: center;
 }
 
 /* PLAYER HAND */
+
 #hand {
-    background-color: var(--btn-color);
+    background-color: var(--secondary-bg-color);
     width: 100%;
+    flex: 1;
 }
 
 #handTxt {
     color: var(--secondary-txt-color);
+    height: 20px;
     font-size: 20px;
     font-weight: lighter;
     text-transform: uppercase;
@@ -118,6 +140,7 @@
 }
 
 #handCards {
+    margin-top: -1.5em;
     display: flex;
     flex-flow: row wrap;
     justify-content: center;
