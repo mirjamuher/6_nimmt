@@ -350,3 +350,6 @@ for i in range(5):
     TEST_GAME.select_card(1, miri_hand.pop())
     TEST_GAME.select_card(2, tim_hand.pop())
     TEST_GAME.select_card(3, elijah_hand.pop())
+
+if __name__ == '__main__':
+    app.run(threaded=True, port=5000)
