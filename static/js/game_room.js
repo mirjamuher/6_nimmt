@@ -113,6 +113,9 @@ function chooseCard(event) {
     // Update chosenCardValue in confirmCardForm
     const elChosenCardValue = elCard.cardValue;
     document.querySelector("#chosenCardValue").textContent = elChosenCardValue;
+
+    // Have the document focus on input field
+    document.getElementById("inputBtn").focus();
 }
 
 
