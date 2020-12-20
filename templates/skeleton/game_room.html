@@ -46,17 +46,18 @@
     <!-- Player's Hand -->
     <section id="hand">
         <span id="handTxt">Your Hand</span>
-        <div id="handCards">
-        {% for card in player.hand() %}
-            <my-card cardValue="{{ card.value() }}" location='hand'></my-card> <!-- also comes with class "card _ochsen" -->
-        {% endfor %}
-        </div>
+        <!-- V1: Confirm Card Form -->
         <form id="confirmCardForm" class="hidden">
             Do you want to confirm card <span id=chosenCardValue> </span>?
             <input type="submit" value="Yes" class="btn">
         </form>
         <div id="waitingForOthers" class="hidden">
             Waiting for other players to choose their card
+        </div>
+        <div id="handCards">
+        {% for card in player.hand() %}
+            <my-card cardValue="{{ card.value() }}" location='hand'></my-card> <!-- also comes with class "card _ochsen" -->
+        {% endfor %}
         </div>
     </section>
 
