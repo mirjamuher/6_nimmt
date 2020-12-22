@@ -98,7 +98,7 @@ html {
     animation: fadeOutUp; /* referring directly to the animation's @keyframe declaration */
 }
 
-/* TABLE DESIGN */
+/* STACK TABLE DESIGN */
 
 #stacks {
     flex: 10;
@@ -118,6 +118,11 @@ html {
     margin: 0 auto;
     /* margin-top: -1.5em; */
     justify-self: center;
+}
+
+.highlighted {
+    background-color: rgba(230, 57, 70, 0.5);
+    border: 1px solid #ffffb7;
 }
 
 /* PLAYER HAND */
