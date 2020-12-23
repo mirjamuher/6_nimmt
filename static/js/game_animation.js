@@ -12,6 +12,7 @@
 //                 "old_stack": [card JSON, card JSON, ...],
 //                 "new_stack": [card JSON, card JSON, ...],
 //                 "stack_replaced": stack_replaced #if False, then it was just appended
+//                 "is_lowest_card": True if card played lowest value on table
 //     })
 //     }
 //     """
@@ -41,23 +42,30 @@ function _animatePlay(data, index) {
     const oldStack = entry["old_stack"];
     const newStack = entry["new_stack"];
     const playedCard = entry["played_card"];
+    const isLowestCard = entry["is_lowest_card"];
     console.log("PLAYED CARD IS");
     console.log(playedCard);
     const stackReplaced = entry["stack_replaced"];
 
     // highlight stack (aka row full of td elements) we are working on
-    const elHighlightedStack = highlightCrntStack(crntStackIndex);
+    const elHighlightedStack = findCrntStack(crntStackIndex);
     console.log(elHighlightedStack);
     elHighlightedStack.classList.add("highlighted");
 
     // highlight current player
     elPlayer.classList.add("highlighted");
 
-    // Deal with stack, if it is being replaced
-    if (stackReplaced) {
+    // If Card is lowest card, shuffle stacks around
+    if (isLowestCard) {
+        console.log('isLowestCard');
+        stackExit(elHighlightedStack);
+        appendStackInFirstLine(elHighlightedStack);
+    } else if (stackReplaced) {
+        // Deal with stack, if it is being replaced
         console.log("Stack needs replacement animation")
         stackExit(elHighlightedStack);
     }
+
     // Add the new card by iterating through the stack
     setTimeout(function() {addNewCard(newStack, playedCard, elHighlightedStack)}, 1*1000);
 
@@ -73,10 +81,10 @@ function _animatePlay(data, index) {
     }
 }
 
-function highlightCrntStack(crntStackIndex) {
+function findCrntStack(crntStackIndex) {
     const elStacks = document.querySelectorAll("#stacks tr"); // returns [tr, tr, tr, tr]
     const elHighlightedStack = elStacks[crntStackIndex];
-    return elHighlightedStack;
+    return elHighlightedStack; // returns tr
 }
 
 function addNewCard(newStack, playedCard, elHighlightedStack) {
@@ -118,4 +126,18 @@ function stackExit(elHighlightedStack) {
     elHighlightedStack.addEventListener('animationend', () => {
         elHighlightedStack.classList.remove('animate__animated', 'animate__bounceOutLeft');
     });
+}
+
+function appendStackInFirstLine(firstStack) {
+    const elTable = document.querySelector('#stacks table');
+    for (let td of firstStack.querySelectorAll('td')) {
+        const elNewCard = document.createElement("my-card");
+        elNewCard.cardValue = -1;
+        elNewCard.location = 'table';
+        td.innerHTML = "";
+        td.appendChild(elNewCard);
+    }
+
+    firstStack.classList.add("highlighted");
+    elTable.insertBefore(firstStack, elTable.firstChild);
 }

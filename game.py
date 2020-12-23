@@ -441,7 +441,7 @@ class Game:
                 print('lowest card has been replaced. stacks are now', self._stacks)
 
                 # Add information to Round Notation for Json
-                round_notation.add_play(crnt_player, card, min_stack_index, min_stack, crnt_stack, True)  # player, card played, old stack, new stack, stack replaced Y/N
+                round_notation.add_play(crnt_player, card, min_stack_index, min_stack, crnt_stack, True, True)  # player, card played, old stack, new stack, stack replaced Y/N, lowest card Y/N
 
             else:
                 # Closest stack is identified and card appended to it
@@ -465,7 +465,7 @@ class Game:
                 self._stacks.insert(old_stack_index, crnt_stack)
 
                 # Add information to Round Notator for Json
-                round_notation.add_play(crnt_player, card, old_stack_index, old_stack, crnt_stack, stack_replaced)
+                round_notation.add_play(crnt_player, card, old_stack_index, old_stack, crnt_stack, stack_replaced, False)
 
             if self._stacks != sorted(self._stacks, key = lambda stack: stack[-1].value()):  # pragma: nocover
                 raise ValueError("Stacks are not correctly sorted anymore")
@@ -542,7 +542,7 @@ class GameNotation:
         self._played_cards = selected_cards  # List[Cards] for a check
         self._plays = []  # List(Dictionary(JSON of all moves made by a player this round))
 
-    def add_play(self, player, card, old_stack_index, old_stack, new_stack, stack_replaced):
+    def add_play(self, player, card, old_stack_index, old_stack, new_stack, stack_replaced, is_lowest_card):
         self._plays.append({
             "round_number": self._round,
             "player": player.to_json(),
@@ -551,6 +551,7 @@ class GameNotation:
             "old_stack": [card.to_json() for card in old_stack],
             "new_stack": [card.to_json() for card in new_stack],
             "stack_replaced": stack_replaced,  # Boolean
+            "is_lowest_card": is_lowest_card #Boolean
         })
 
     def to_json(self):
