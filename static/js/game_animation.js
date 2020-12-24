@@ -61,15 +61,20 @@ function _animatePlay(data, index) {
         stackExit(elHighlightedStack);
         // call appendStackInFirstLine after stackExit completed
         setTimeout(function() {appendStackInFirstLine(elHighlightedStack)}, 2*1000);
+        const unhighlightMS = 0;
+        setTimeout(function() {addNewCard(newStack, playedCard, crntStackIndex, elPlayer, unhighlightMS)}, 2.5*1000);
         crntStackIndex = 0;
     } else if (stackReplaced) {
         // Deal with stack, if it is being replaced
         console.log("Stack needs replacement animation")
         stackExit(elHighlightedStack);
+        cleanStackRow(elHighlightedStack);
+        const unhighlightMS = 1*1000;
+        setTimeout(function() {addNewCard(newStack, playedCard, crntStackIndex, elPlayer, unhighlightMS)}, 2*1000);
+    } else {
+        const unhighlightMS = 1*1000;
+        setTimeout(function() {addNewCard(newStack, playedCard, crntStackIndex, elPlayer, unhighlightMS)}, 2*1000);
     }
-
-    // Add the new card by iterating through the stack
-    setTimeout(function() {addNewCard(newStack, playedCard, crntStackIndex, elPlayer)}, 2.5*1000);
 
     // If there is more data to go, call this function again with index incremented by 1
     if (index+1 < data.length) {
@@ -83,7 +88,7 @@ function findCrntStack(crntStackIndex) {
     return elHighlightedStack; // returns tr
 }
 
-function addNewCard(newStack, playedCard, crntStackIndex, elPlayer) {
+function addNewCard(newStack, playedCard, crntStackIndex, elPlayer, unhighlightMS) {
     const elHighlightedStack = findCrntStack(crntStackIndex);
     console.log("We are now in addNewCard. The Stack we are working on is:");
     console.log(elHighlightedStack);
@@ -106,6 +111,7 @@ function addNewCard(newStack, playedCard, crntStackIndex, elPlayer) {
         elCurrentCell.innerHTML = "";
         elCurrentCell.appendChild(elNewCard);
 
+        /* In case I want fancy new card animation:
         if (currentCardValue === playedCard["value"]) {
             elNewCard.classList.add("newCardAnimation"); //TODO: Add fading out animation in css
         }
@@ -114,13 +120,14 @@ function addNewCard(newStack, playedCard, crntStackIndex, elPlayer) {
         setTimeout(function() {
             elNewCard.classList.remove("newCardAnimation");
         }, TIMER_MS);
+        */
     }
 
     // end of loop cleanup, happens after a certain timeout
-    //setTimeout(function() {
-    elHighlightedStack.classList.remove("highlighted");
-    elPlayer.classList.remove("highlighted");
-    //}, TIMER_MS);
+    setTimeout(function() {
+        elHighlightedStack.classList.remove("highlighted");
+        elPlayer.classList.remove("highlighted");
+    }, unhighlightMS);
 }
 
 function stackExit(elHighlightedStack) {
@@ -136,14 +143,18 @@ function stackExit(elHighlightedStack) {
 
 function appendStackInFirstLine(firstStack) {
     const elTable = document.querySelector('#stacks table');
-    for (let td of firstStack.querySelectorAll('td')) {
+    cleanStackRow(firstStack)
+    firstStack.classList.remove('animate__animated', 'animate__bounceOutLeft');
+    elTable.insertBefore(firstStack, elTable.firstChild);
+    firstStack.classList.add("highlighted");
+}
+
+function cleanStackRow(stack) {
+    for (let td of stack.querySelectorAll('td')) {
         const elNewCard = document.createElement("my-card");
         elNewCard.cardValue = -1;
         elNewCard.location = 'table';
         td.innerHTML = "";
         td.appendChild(elNewCard);
     }
-    firstStack.classList.remove('animate__animated', 'animate__bounceOutLeft');
-    elTable.insertBefore(firstStack, elTable.firstChild);
-    firstStack.classList.add("highlighted");
 }
