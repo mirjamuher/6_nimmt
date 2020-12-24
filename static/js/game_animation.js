@@ -38,7 +38,7 @@ function _animatePlay(data, index) {
     const entry = data[index];
     const playerID = entry["player"]["player_id"]; // int of player ID
     const elPlayer = document.querySelector(`#playerOverview [data-player-id="${playerID}"]`);
-    const crntStackIndex = entry["old_stack_index"];
+    let crntStackIndex = entry["old_stack_index"];
     const oldStack = entry["old_stack"];
     const newStack = entry["new_stack"];
     const playedCard = entry["played_card"];
@@ -59,7 +59,9 @@ function _animatePlay(data, index) {
     if (isLowestCard) {
         console.log('isLowestCard');
         stackExit(elHighlightedStack);
-        appendStackInFirstLine(elHighlightedStack);
+        // call appendStackInFirstLine after stackExit completed
+        setTimeout(function() {appendStackInFirstLine(elHighlightedStack)}, 2*1000);
+        crntStackIndex = 0;
     } else if (stackReplaced) {
         // Deal with stack, if it is being replaced
         console.log("Stack needs replacement animation")
@@ -67,13 +69,7 @@ function _animatePlay(data, index) {
     }
 
     // Add the new card by iterating through the stack
-    setTimeout(function() {addNewCard(newStack, playedCard, elHighlightedStack)}, 1*1000);
-
-    // end of loop cleanup, happens after a certain timeout
-    setTimeout(function() {
-        elHighlightedStack.classList.remove("highlighted")
-        elPlayer.classList.remove("highlighted");
-    }, TIMER_MS);
+    setTimeout(function() {addNewCard(newStack, playedCard, crntStackIndex, elPlayer)}, 2.5*1000);
 
     // If there is more data to go, call this function again with index incremented by 1
     if (index+1 < data.length) {
@@ -87,8 +83,12 @@ function findCrntStack(crntStackIndex) {
     return elHighlightedStack; // returns tr
 }
 
-function addNewCard(newStack, playedCard, elHighlightedStack) {
+function addNewCard(newStack, playedCard, crntStackIndex, elPlayer) {
+    const elHighlightedStack = findCrntStack(crntStackIndex);
+    console.log("We are now in addNewCard. The Stack we are working on is:");
+    console.log(elHighlightedStack);
     // Pulls out each card in newStack and makes it a column in this row
+
     for (let col=0; col<5; col++) {
         const currentCard = newStack[col];
         const elCurrentCell = elHighlightedStack.querySelector(`td:nth-child(${col+1})`);
@@ -115,6 +115,12 @@ function addNewCard(newStack, playedCard, elHighlightedStack) {
             elNewCard.classList.remove("newCardAnimation");
         }, TIMER_MS);
     }
+
+    // end of loop cleanup, happens after a certain timeout
+    //setTimeout(function() {
+    elHighlightedStack.classList.remove("highlighted");
+    elPlayer.classList.remove("highlighted");
+    //}, TIMER_MS);
 }
 
 function stackExit(elHighlightedStack) {
@@ -137,7 +143,7 @@ function appendStackInFirstLine(firstStack) {
         td.innerHTML = "";
         td.appendChild(elNewCard);
     }
-
-    firstStack.classList.add("highlighted");
+    firstStack.classList.remove('animate__animated', 'animate__bounceOutLeft');
     elTable.insertBefore(firstStack, elTable.firstChild);
+    firstStack.classList.add("highlighted");
 }
