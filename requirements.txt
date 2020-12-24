@@ -1,6 +1,2 @@
 flask
-flake8
-flake8-commas
-mypy
-pytest
-pytest-cov
+gunicorn
