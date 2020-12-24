@@ -293,9 +293,11 @@ def get_round_notation(game_id: int, round_number: int):
                 "round_number": self._round,
                 "player": player JSON,
                 "played_card": card JSON,
+                "old_stack_index": int of stack being worked on
                 "old_stack": [card JSON, card JSON, ...],
                 "new_stack": [card JSON, card JSON, ...],
                 "stack_replaced": stack_replaced #if False, then it was just appended
+                "is_lowest_card": True if card played lowest value on table
     })
     }
     """

@@ -1,6 +1,10 @@
+/* TODO:
+- Add newCardAnimation class animation (see game_animation.js)
+*/
+
 /* Basics */
 
-#playerOverview, #stacks, #hand {  /* Necesasry? Check after webcomponent implementation  */
+#playerOverview, #stacks, #hand {
     padding: 10px 0;
 }
 
@@ -98,7 +102,7 @@ html {
     animation: fadeOutUp; /* referring directly to the animation's @keyframe declaration */
 }
 
-/* TABLE DESIGN */
+/* STACK TABLE DESIGN */
 
 #stacks {
     flex: 10;
@@ -118,6 +122,11 @@ html {
     margin: 0 auto;
     /* margin-top: -1.5em; */
     justify-self: center;
+}
+
+.highlighted {
+    background-color: rgba(230, 57, 70, 0.5);
+    border: 1px solid #ffffb7;
 }
 
 /* PLAYER HAND */
@@ -216,4 +225,36 @@ html {
   .animate__fadeOutUp {
     -webkit-animation-name: fadeOutUp;
     animation-name: fadeOutUp;
+  }
+
+  @-webkit-keyframes bounceOutLeft {
+    20% {
+      opacity: 1;
+      -webkit-transform: translate3d(20px, 0, 0) scaleX(0.9);
+      transform: translate3d(20px, 0, 0) scaleX(0.9);
+    }
+
+    to {
+      opacity: 0;
+      -webkit-transform: translate3d(-2000px, 0, 0) scaleX(2);
+      transform: translate3d(-2000px, 0, 0) scaleX(2);
+    }
+  }
+  @keyframes bounceOutLeft {
+    20% {
+      opacity: 1;
+      -webkit-transform: translate3d(20px, 0, 0) scaleX(0.9);
+      transform: translate3d(20px, 0, 0) scaleX(0.9);
+    }
+
+    to {
+      opacity: 0;
+      -webkit-transform: translate3d(-2000px, 0, 0) scaleX(2);
+      transform: translate3d(-2000px, 0, 0) scaleX(2);
+    }
+  }
+  .animate__bounceOutLeft {
+    -webkit-animation-name: bounceOutLeft;
+    animation-name: bounceOutLeft;
+    --animate-duration: 2s;
   }

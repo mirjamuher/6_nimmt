@@ -1,4 +1,6 @@
 // Global State & Variables
+import { animatePlay } from "./game_animation.js";
+
 const GameState = {
     GAME_SETUP: 1,
     WAITING_TO_CHOOSE_CARD: 2,
@@ -22,6 +24,8 @@ function setupPage() {
     PLAYER_ID = document.body.getAttribute("data-player-id");
     const elConfirmCardForm = document.querySelector("#confirmCardForm");
 
+    initialStackPopulation();
+
     updatePointsAndStacks(); // populates stacks
 
     for (const elCard of document.querySelectorAll("my-card")) {
@@ -34,50 +38,42 @@ function setupPage() {
 };
 
 // Function Collection
-async function initialPopulateStacks() {
-    /*
-    Response:
-    {
-        "id": game id,
-        "players": [player data as per API get_player_information],
-        "state": game state string,
-        "stacks": [[Card, Optional[Card],...][-"-][-"-][-"-]],
-    }
-    # Card: {"value": cardvalue, "ochsen": ochsen}
-    */
-
+async function initialStackPopulation() {
     const response = await fetch(`/api/game/${GAME_ID}`);
     if (!response.ok) {
         alert("API didn't work. Does Game ID exist?");
         return;
     }
-
     const responseJson = await response.json();
+
     const stackData = responseJson["stacks"];
-    const elTable = document.querySelector('#stacks table');
+    const table = document.querySelector('#stacks table');
 
-    for (let col = 0; col<stackData.length; col++) {
-        const elCurrentCell = elTable.querySelector(`tr:nth-child(1) td:nth-child(${col+1})`)
-        const cardData = stackData[col][0];
+    // Pulls out each card per stack and adds it to the stack table on page; TODO: animation
+    console.log("Stack Data", stackData);
 
-        const elCard = document.createElement("div");
-        elCard.classList.add("card");
-        elCard.classList.add("noHover");
+    // Pulls out each stackData entry (=stack) as beginning of row
+    for (let row=0; row<stackData.length; row++) {
+        const currentStack = stackData[row];
 
-        const elCardValue = document.createElement("span");
-        elCardValue.classList.add("cardValue");
-        elCardValue.textContent = cardData["value"];
+        // Pulls out each entry in stack and makes it a column in row
+        for (let col=0; col<5; col++) {
+            const currentCard = currentStack[col];
 
-        const elOchsenValue = document.createElement("span");
-        elOchsenValue.classList.add("ochsenValue");
-        elOchsenValue.textContent = cardData["ochsen"];
+            // if this card does exist, overwrite cell with actual card
+            let cardValue = -1;
+            if (currentCard) {
+                cardValue = currentCard["value"];
+            }
+            const elCurrentCell = table.querySelector(`tr:nth-child(${row+1}) td:nth-child(${col+1})`)
 
-        elCard.appendChild(elCardValue);
-        const elBr = document.createElement("br");
-        elCard.appendChild(elBr);
-        elCard.appendChild(elOchsenValue);
-        elCurrentCell.appendChild(elCard);
-        //elRow.appendChild(elCurrentCell);
+            // Fit my-card into the right cell
+            const elNewCard = document.createElement("my-card");
+            elNewCard.cardValue = cardValue;
+            elNewCard.location = 'table';
+            elCurrentCell.innerHTML = "";
+            elCurrentCell.appendChild(elNewCard);
+        }
     }
 }
 
@@ -187,6 +183,10 @@ async function getRoundNotation() {
 
     globalState = GameState.DISPLAY_PLAYED_ROUND
     const data = responseJson["data"];
+    console.log("THIS IS THE GAMESTATE DATA");
+    console.log(data);
+    animatePlay(data);
+
     // TODO - use this to do animation. Maybe feed it to updatePointsandStacks?
 
     updatePointsAndStacks();
@@ -253,6 +253,7 @@ async function updatePointsAndStacks() {
         }
     }
 
+    /*
     const stackData = responseJson["stacks"];
     const table = document.querySelector('#stacks table');
 
@@ -281,7 +282,7 @@ async function updatePointsAndStacks() {
             elCurrentCell.innerHTML = "";
             elCurrentCell.appendChild(elNewCard);
         }
-    }
+    } */
 
     // gets current serverState and redirects accordingly
     // TODO: temporary fix is 5 sec delay. When animation added, redirect after animation done

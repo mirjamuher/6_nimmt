@@ -49,7 +49,7 @@
         <!-- V1: Confirm Card Form -->
         <form id="confirmCardForm" class="hidden">
             Do you want to confirm card <span id=chosenCardValue> </span>?
-            <input type="submit" onclick="focusMethod()" value="Yes" class="btn" id="inputBtn">
+            <input type="submit" value="Yes" class="btn" id="inputBtn">
         </form>
         <div id="waitingForOthers" class="hidden">
             Waiting for other players to choose their card
@@ -64,5 +64,6 @@
     <!-- JavaScript -->
     <script src="/static/js/vendor/lit-element.js" type="module"></script>
     <script src="/static/js/card.js" type="module"></script>
+    <script src="/static/js/game_animation.js" type="module"></script>
     <script src="/static/js/game_room.js" type="module"></script>
 {% endblock %}

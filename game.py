@@ -426,12 +426,14 @@ class Game:
                 # If the card is the lowest card, we first have to replace a stack with it
                 min_ochsen = float("inf")
                 min_stack = None
-                for stack in self.get_stacks():
+                min_stack_index = None
+                for index, stack in enumerate(self.get_stacks()):
                     ochsen = sum(card.ochsen() for card in stack)
                     if ochsen < min_ochsen:
                         min_ochsen = ochsen
                         min_stack = stack
-                print(f"Player should eat points of {min_stack} which is in reversed card deck {INVERTED_BASE_DECK[card.value()]} Player ate: {min_ochsen}")
+                        min_stack_index = index
+                print(f"Player should eat points of {min_stack} at {min_stack_index} which is in reversed card deck {INVERTED_BASE_DECK[card.value()]} Player ate: {min_ochsen}")
                 crnt_player.eat_points(min_ochsen)
                 self._stacks.remove(min_stack)
                 crnt_stack = [card]
@@ -439,7 +441,7 @@ class Game:
                 print('lowest card has been replaced. stacks are now', self._stacks)
 
                 # Add information to Round Notation for Json
-                round_notation.add_play(crnt_player, card, min_stack, crnt_stack, True)  # player, card played, old stack, new stack, stack replaced Y/N
+                round_notation.add_play(crnt_player, card, min_stack_index, min_stack, crnt_stack, True, True)  # player, card played, old stack, new stack, stack replaced Y/N, lowest card Y/N
 
             else:
                 # Closest stack is identified and card appended to it
@@ -463,7 +465,7 @@ class Game:
                 self._stacks.insert(old_stack_index, crnt_stack)
 
                 # Add information to Round Notator for Json
-                round_notation.add_play(crnt_player, card, old_stack, crnt_stack, stack_replaced)
+                round_notation.add_play(crnt_player, card, old_stack_index, old_stack, crnt_stack, stack_replaced, False)
 
             if self._stacks != sorted(self._stacks, key = lambda stack: stack[-1].value()):  # pragma: nocover
                 raise ValueError("Stacks are not correctly sorted anymore")
@@ -540,14 +542,16 @@ class GameNotation:
         self._played_cards = selected_cards  # List[Cards] for a check
         self._plays = []  # List(Dictionary(JSON of all moves made by a player this round))
 
-    def add_play(self, player, card, old_stack, new_stack, stack_replaced):
+    def add_play(self, player, card, old_stack_index, old_stack, new_stack, stack_replaced, is_lowest_card):
         self._plays.append({
             "round_number": self._round,
             "player": player.to_json(),
             "played_card": card.to_json(),
+            "old_stack_index": old_stack_index,
             "old_stack": [card.to_json() for card in old_stack],
             "new_stack": [card.to_json() for card in new_stack],
             "stack_replaced": stack_replaced,  # Boolean
+            "is_lowest_card": is_lowest_card #Boolean
         })
 
     def to_json(self):
