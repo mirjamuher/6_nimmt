@@ -45,6 +45,8 @@ async function initialStackPopulation() {
         return;
     }
     const responseJson = await response.json();
+    const x = initialStackPopulation;
+    x();
 
     const stackData = responseJson["stacks"];
     const table = document.querySelector('#stacks table');

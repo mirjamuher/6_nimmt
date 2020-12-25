@@ -46,7 +46,7 @@ def play_room(game_id: int, player_id: int):
     # Validating Process
     game = game_manager.get_game(game_id)
     if not game:
-        return "Game Not Found", 404
+        return "Game Not Found. Perhaps you were idle for too long?", 404
 
     player = game.get_players().get(player_id)
     if not player:
@@ -114,18 +114,18 @@ def create_game():
     if not point_goal or not isinstance(point_goal, str):
         return jsonify({"error":"Invalid Point Goal / End Points"}), 400
 
-
     # Create Game & Player
     game = game_manager.create_game()
     player = game.add_player(p1_name)
     player_id = player.id()
+
+    # Add the point goal
+    game.set_point_goal(point_goal)
+
     return jsonify({
         "game_id": game.get_id(),
         "player_id":player_id,
     })
-
-    # Add the point goal
-    game.set_point_goal(point_goal)
 
 @app.route('/api/game/<int:game_id>/player', methods=["POST"])
 def join_game(game_id: int):
