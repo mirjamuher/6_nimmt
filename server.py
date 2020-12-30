@@ -16,8 +16,6 @@ TODO:
 """
 HTML VIEWS - speak html
 """
-
-
 # Landing Page
 @app.route('/')
 def landing_page():
@@ -330,7 +328,7 @@ http://127.0.0.1:5000/game/123456/1
 import random  # noQA: E402
 random.seed(0)
 TEST_GAME = game_manager.create_game(game_id=123456)
-TEST_GAME.set_point_goal(100)
+TEST_GAME.set_point_goal(15)
 test_miri = TEST_GAME.add_player("Miri", player_id=1)
 test_tim = TEST_GAME.add_player("Tim", player_id=2)
 test_elijah = TEST_GAME.add_player("Elijah", player_id=3)
@@ -348,7 +346,7 @@ test_tim._total_points = 15
 test_elijah._total_points = 5
 
 # Move Game to Endstage
-for i in range(5):
+for i in range(9):
     TEST_GAME.select_card(1, miri_hand.pop())
     TEST_GAME.select_card(2, tim_hand.pop())
     TEST_GAME.select_card(3, elijah_hand.pop())

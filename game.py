@@ -205,10 +205,8 @@ class Player:
         self._current_points += points
 
     def merge_points(self) -> None:
-        print(f"Entered merge points for {self}.")
         self._total_points += self._current_points
         self._points_of_last_round = self._current_points
-        print(f"Current points of {self._current_points} being merged. Now {self._total_points}.")
         self._current_points = 0
 
 
@@ -319,7 +317,7 @@ class Game:
         return self._all_avatars.pop()
 
     def set_point_goal(self, point_goal: int) -> int:
-        self._point_goal = point_goal
+        self._point_goal = int(point_goal)
         return self._point_goal
 
     def get_point_goal(self) -> int:
@@ -416,10 +414,6 @@ class Game:
             player.set_last_eaten_points(0)
 
         for card in slct_card_stack:
-            # Testing
-            print('*' * 80)
-            print('Processing card', card)
-            print('_stacks is', self._stacks)
             crnt_player = card.player()
 
             if self.is_lowest_card(card):
@@ -433,12 +427,10 @@ class Game:
                         min_ochsen = ochsen
                         min_stack = stack
                         min_stack_index = index
-                print(f"Player should eat points of {min_stack} at {min_stack_index} which is in reversed card deck {INVERTED_BASE_DECK[card.value()]} Player ate: {min_ochsen}")
                 crnt_player.eat_points(min_ochsen)
                 self._stacks.remove(min_stack)
                 crnt_stack = [card]
                 self._stacks.insert(0, crnt_stack)
-                print('lowest card has been replaced. stacks are now', self._stacks)
 
                 # Add information to Round Notation for Json
                 round_notation.add_play(crnt_player, card, min_stack_index, min_stack, crnt_stack, True, True)  # player, card played, old stack, new stack, stack replaced Y/N, lowest card Y/N
@@ -448,17 +440,13 @@ class Game:
                 old_stack = self.find_closest_stack(card)
                 old_stack_index = self._stacks.index(old_stack)
                 crnt_stack = old_stack + [card]
-                print('added to stack index', old_stack_index, 'stacks are now', self._stacks)
                 stack_replaced = False
 
                 # If the stack now has 6 cards, player has to eat it
                 if len(crnt_stack) == 6:
-                    print('stack is too large. eating')
                     new_first_card = crnt_stack.pop()
                     self.eat_points(crnt_stack, crnt_player)
-                    print(f"Player should eat points of {crnt_stack} which is in reversed card deck {sum([INVERTED_BASE_DECK[card.value()] for card in crnt_stack])}")
                     crnt_stack = [new_first_card]
-                    print('stacks are now', self._stacks)
                     stack_replaced = True
 
                 self._stacks.remove(old_stack)
@@ -485,9 +473,7 @@ class Game:
 
     def find_closest_stack(self, card: Card) -> List[Card]:
         for stack in reversed(self._stacks):
-            print(f'{card} > {stack[-1]}')
             if card.value() > stack[-1].value():
-                print('returning', stack)
                 return stack
         raise ValueError(f"Card is lower than all stacks. This shouldn't happen. Card: {card}, Stacks: {self._stacks}")  # pragma: nocover
 
@@ -496,6 +482,7 @@ class Game:
         crnt_player.eat_points(points)
 
     def between_games(self):
+        self._state = "Between Games"
         for player in self._player_objects:
             player.merge_points()
         point_list = self.get_total_points()
@@ -504,7 +491,6 @@ class Game:
         if any(points >= self.get_point_goal() for _, points in point_list):
             self.end_of_game()
 
-        self._state = "Between Games"
         """
         Client has to set this in motion
         else:

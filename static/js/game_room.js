@@ -289,6 +289,8 @@ async function updatePointsAndStacks() {
     // TODO: temporary fix is 5 sec delay. When animation added, redirect after animation done
     const serverState = responseJson["state"];
     console.log(new Date(), "State Data", serverState);
+    console.log(new Date(), "Point Goal is");
+    console.log(document.body.getAttribute("data-point-goal"));
 
     if (serverState === "Between Games") {
         console.log(new Date(), "Server State is Between Games. 5 second countdown should start")

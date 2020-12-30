@@ -6,7 +6,7 @@
 
 {% block page_title %}Pied Piper Game Room{% endblock %}
 
-{% block extra_body_tags %} data-round-no="{{ game.get_round_no() }}" {%  endblock %}
+{% block extra_body_tags %} data-round-no="{{ game.get_round_no() }}" data-point-goal="{{ game.get_point_goal() }}" {%  endblock %}
 
 {% block standard_header %}{% endblock %}
 
