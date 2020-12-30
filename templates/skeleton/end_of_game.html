@@ -1,61 +1,45 @@
-<!DOCTYPE html>
+{% extends "skeleton/base.html" %}
 
-<html lang="en">
-    <head>
-        <!-- CSS -->
-        <link rel="stylesheet" href="/static/css/normalize.css">
-        <link rel="stylesheet" href="/static/css/common.css">
-        <link rel="stylesheet" href="/static/css/end_of_game.css">
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/end_of_game.css">
+{% endblock %}
 
-        <title>End Game Celebration</title>
-        <link rel="preconnect" href="https://fonts.gstatic.com">
-        <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
-        <link rel="preconnect" href="https://fonts.gstatic.com">
-        <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700&display=swap" rel="stylesheet">
-        <link rel="preconnect" href="https://fonts.gstatic.com">
-        <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap" rel="stylesheet">
-    </head>
+{% block page_title %}Pied Piper Game End{% endblock %}
 
-    <body data-game-id="{{ game.get_id() }}" data-player-id="{{ player.id() }}">
-        <!-- Header -->
-        <header>
-            <span>Back to Home</span> <!-- TODO: Link -->
-            <span>Rules</span> <!-- TODO: Write & Link -->
-            <span>About</span> <!-- TODO: Write & Link -->
-        </header>
+{% block content %}
 
-        <!-- Winner Window -->
-        <section id="winnerCelebration">
-        <h3> And the winner is...</h3>
-        <h1> <span id="winnerName"> </span> </h1>
-        </section>
+    <!-- Winner Window -->
+    <section id="winnerCelebration">
+    <h3> And the winner is...</h3>
+    <h1> <span id="winnerName"> </span> </h1>
+    </section>
 
-        <!-- Player Table sorted by ascending points -->
-        <section>
-            <table id="pointTable">
-                {% for player in game.get_player_list_by_points() %}
-                    <tr>
-                        <td class="avatarTD">
-                            <img class="playerAvatar" src="{{ player.avatar() }}" alt="{{ player.name() }}'s avatar">
-                        </td>
-                        <td class="nameTD">
-                            <span class="playerName"> {{ player.name() }} </span>
-                        </td>
-                        <td class="pointTD">
-                            <span class="playerPoints"> {{ player.total_points() }}</span>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </table>
+    <!-- Player Table sorted by ascending points -->
+    <section>
+        <table id="pointTable">
+            {% for player in game.get_player_list_by_points() %}
+                <tr>
+                    <td class="avatarTD">
+                        <img class="playerAvatar" src="{{ player.avatar() }}" alt="{{ player.name() }}'s avatar">
+                    </td>
+                    <td class="nameTD">
+                        <span class="playerName"> {{ player.name() }} </span>
+                    </td>
+                    <td class="pointTD">
+                        <span class="playerPoints"> {{ player.total_points() }}</span>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
 
-            <!-- Button to Homescreen -->
-            <p>
-                <button class="btn" id="landingPageRedirectBtn">Another Game!</button>
-            </p>
-        </section>
+        <!-- Button to Homescreen -->
+        <p>
+            <button class="btn" id="landingPageRedirectBtn">Another Game!</button>
+        </p>
+    </section>
 
-        <!-- JavaScript -->
-        <script src="/static/js/confetti.min.js"></script>
-        <script src="/static/js/end_of_game.js"></script> <!--Give credit: https://www.cssscript.com/confetti-falling-animation/-->
-    </body>
-</html>
+    <!-- JavaScript -->
+    <script src="/static/js/confetti.min.js"></script>
+    <script src="/static/js/end_of_game.js"></script> <!--Give credit: https://www.cssscript.com/confetti-falling-animation/-->
+
+{% endblock %}

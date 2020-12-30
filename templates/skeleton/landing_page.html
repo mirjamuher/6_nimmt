@@ -1,71 +1,58 @@
-<!DOCTYPE html>
+{% extends "skeleton/base.html" %}
 
-<html lang="en">
-  <head>
-    <!-- CSS -->
-    <link rel="stylesheet" href="/static/css/normalize.css">
-    <link rel="stylesheet" href="/static/css/common.css">
-    <link rel="stylesheet" href="/static/css/landing_page.css">
-    <title>Test Landing Page</title>
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap" rel="stylesheet">
-  </head>
+{% block extra_css %}
+<link rel="stylesheet" href="static/css/landing_page.css">
+{% endblock %}
 
-  <body>
-      <header>
-        <span>&nbsp;</span>
-        <span>Rules</span>
-        <span>About</span> <!--Give credit to: https://www.iconfinder.com/iconsets/cat-power AND https://www.iconfinder.com/iconsets/animals-95-->
-      </header>
+{% block page_title %}Pied Piper{% endblock %}
 
-      <section>
-        <h1>Pied Piper</h1>
-        <h3>but this time, don't end up with all the rats</h3>
-      </section>
+{% block basic_data %}{% endblock %}
 
-      <section>
-          <button class="btn" id="startButton">Start a new game</button>
-          <form id="startGameForm" class="hidden">
-              <label>
-                <span class="txt">
-                  Enter your playername:
-                </span>
-                  <input id="p1Name" name="p1_name" type="text"> <br>
-                  <span class="txt">
-                  How many points do you wish to play to?
-                </span>
-                  <input id="endPoints" name="end_points" type="number" min="10" max="200" value="84">
-                  <input class="btn submitbtn" type="submit" value="Start Game!">
-              </label>
-            </form> <br>
+{% block content %}
 
-            <button class="btn backbtn backButton1 hidden"> &larr; Back</button>
+  <section>
+    <h1>Pied Piper</h1>
+    <h3>but this time, don't end up with all the rats</h3>
+  </section>
 
-          <button class="btn" id="joinButton">Join an existing game</button>
-          <form id="joinGameForm" class="hidden">
-              <label>
-                <span class="txt">
-                  Enter your player name:
-                </span>
-                  <input type="text" id="playerName" name="player_name">
-              </label> <br>
-              <label>
-                <span class="txt">
-                Enter the number of the room you want to join:
-                </span>
-                <input type="number" id="roomNumber" name="room_number">
-            </label>
-            <input class="btn submitbtn" type="submit" value="Join Game!">
+  <section>
+      <button class="btn" id="startButton">Start a new game</button>
+      <form id="startGameForm" class="hidden">
+          <label>
+            <span class="txt">
+              Enter your playername:
+            </span>
+              <input id="p1Name" name="p1_name" type="text"> <br>
+              <span class="txt">
+              How many points do you wish to play to?
+            </span>
+              <input id="endPoints" name="end_points" type="number" min="10" max="200" value="84">
+              <input class="btn submitbtn" type="submit" value="Start Game!">
+          </label>
         </form> <br>
 
-        <button class="btn backbtn backButton2 hidden"> &larr; Back</button>
-      </section>
+        <button class="btn backbtn backButton1 hidden"> &larr; Back</button>
 
-    <!-- JavaScript -->
-    <script src="/static/js/landing_page.js"></script>
-</body>
-</html>
+      <button class="btn" id="joinButton">Join an existing game</button>
+      <form id="joinGameForm" class="hidden">
+          <label>
+            <span class="txt">
+              Enter your player name:
+            </span>
+              <input type="text" id="playerName" name="player_name">
+          </label> <br>
+          <label>
+            <span class="txt">
+            Enter the number of the room you want to join:
+            </span>
+            <input type="number" id="roomNumber" name="room_number">
+        </label>
+        <input class="btn submitbtn" type="submit" value="Join Game!">
+    </form> <br>
+
+    <button class="btn backbtn backButton2 hidden"> &larr; Back</button>
+  </section>
+
+<!-- JavaScript -->
+<script src="/static/js/landing_page.js"></script>
+{% endblock %}
