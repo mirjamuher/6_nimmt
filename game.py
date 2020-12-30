@@ -496,7 +496,6 @@ class Game:
         crnt_player.eat_points(points)
 
     def between_games(self):
-        self._state = "Between Games"
         for player in self._player_objects:
             player.merge_points()
         point_list = self.get_total_points()
@@ -504,6 +503,8 @@ class Game:
         # If one player has reached the set points, the game is done
         if any(points >= self.get_point_goal() for _, points in point_list):
             self.end_of_game()
+
+        self._state = "Between Games"
         """
         Client has to set this in motion
         else:

@@ -45,8 +45,6 @@ async function initialStackPopulation() {
         return;
     }
     const responseJson = await response.json();
-    const x = initialStackPopulation;
-    x();
 
     const stackData = responseJson["stacks"];
     const table = document.querySelector('#stacks table');
@@ -200,6 +198,8 @@ async function updatePointsAndStacks() {
     {
         "id": game id,
         "players": [player data as per API get_player_information],
+        "n_players": number of players in the game,
+        "max_players": max amount of players (set to 10),
         "state": game state string,
         "stacks": [[Card, Optional[Card],...][-"-][-"-][-"-]],
     }
@@ -230,7 +230,6 @@ async function updatePointsAndStacks() {
         elWaitingDiv.classList.add("hidden");
     }
 
-    // Remove Chosen Card (first time none)
     const elChosenCard = document.querySelector(".chosenCard");
     if (elChosenCard) {
         elChosenCard.classList.remove("chosenCard");
