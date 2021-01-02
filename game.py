@@ -207,6 +207,8 @@ class Player:
     def merge_points(self) -> None:
         self._total_points += self._current_points
         self._points_of_last_round = self._current_points
+
+    def reset_points(self) -> None:
         self._current_points = 0
 
 
@@ -332,6 +334,8 @@ class Game:
         self.clean_slate()
         deck = self.create_deck()
         self.deal_cards(deck)
+        for player in self._player_objects:
+            player.reset_points()
 
     def create_deck(self) -> List[Card]:
         """

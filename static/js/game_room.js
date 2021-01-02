@@ -193,6 +193,7 @@ async function getRoundNotation() {
 }
 
 async function updatePointsAndStacks() {
+    console.log("************************")
     /*
     Response:
     {
@@ -295,11 +296,9 @@ async function updatePointsAndStacks() {
     if (serverState === "Between Games") {
         console.log(new Date(), "Server State is Between Games. 5 second countdown should start")
         setTimeout(() => location.assign(`/inbetween_rounds/${GAME_ID}/${PLAYER_ID}`), 5*1000);
-        return;
     } else if (serverState === "End of Game") {
         console.log(new Date(), "Server State is End of Game. 5 second countdown should start")
         setTimeout(() => location.assign(`/end_of_game/${GAME_ID}/${PLAYER_ID}`), 5*1000);
-        return;
     } else {
         // If game continues, players can play again thanks to GameState
         console.log("Server State indicates game is still going. Reactivating buttons")
