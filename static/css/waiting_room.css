@@ -65,12 +65,13 @@ td:not(.playerTD) .playerWrapper {
     border-radius: 20px;
     padding: 20px 50px;
     margin: 20px 10px;
+    text-align: center;
 }
 
 .playerAvatar {
     width: 120px;
     height: 120px;
-    display: block;
+    display: inline-block;
 }
 
 .playerName {

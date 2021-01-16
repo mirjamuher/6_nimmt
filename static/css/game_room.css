@@ -49,9 +49,8 @@ html {
 } /*PROBLEM: Doesn't grow when overflow happens*/
 
 .player {
-    width: 180px;
     height: 80px;
-    margin: 10px 10px;
+    margin: 10px 5px;
     padding: 5px 15px;
     flex: 0 0 auto;
     border-left: 1px solid var(--secondary-txt-color);
@@ -64,8 +63,13 @@ html {
 
 .playerInfo {
     flex: 1 75px;
-    align-self: stretch;
+    align-self: center;
+    padding-left: 10px;
     height: 75px;
+}
+
+.player:last-child .playerInfo {
+    padding-right: 10px;
 }
 
 .avatar {
@@ -76,14 +80,13 @@ html {
 .name {
     font-size: 25px;
     display: block;
-    vertical-align: top;
     text-align: center;
 }
 
 .pointWrapper {
     display: flex;
     flex-flow: row wrap;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
     font-size: 20px;
     padding-left: 10px;
