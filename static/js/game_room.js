@@ -26,8 +26,6 @@ function setupPage() {
 
     initialStackPopulation();
 
-    updatePointsAndStacks(); // populates stacks
-
     for (const elCard of document.querySelectorAll("my-card")) {
         elCard.addEventListener("click", chooseCard); // Shows chosen card and lets player confirm action
     }
@@ -49,7 +47,7 @@ async function initialStackPopulation() {
     const stackData = responseJson["stacks"];
     const table = document.querySelector('#stacks table');
 
-    // Pulls out each card per stack and adds it to the stack table on page; TODO: animation
+    // Pulls out each card per stack and adds it to the stack table on page
     console.log("Stack Data", stackData);
 
     // Pulls out each stackData entry (=stack) as beginning of row
