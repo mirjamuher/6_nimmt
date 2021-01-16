@@ -147,12 +147,19 @@ html {
     font-weight: lighter;
     text-transform: uppercase;
     letter-spacing: 0.3em;
-    display: block;
+    display: inline;
+    margin-left: 20px;
+}
+
+#waitingForOthers {
+    display: inline;
+    color: var(--secondary-txt-color);
+    font-size: 15px;
+    font-weight: lighter;
     margin-left: 20px;
 }
 
 #handCards {
-    margin-top: -1.5em;
     display: flex;
     flex-flow: row wrap;
     justify-content: center;
