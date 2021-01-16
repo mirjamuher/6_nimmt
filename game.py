@@ -504,6 +504,7 @@ class Game:
 
     def clean_slate(self):
         self._stacks = [[], [], [], []]
+        self._round_notations = []
         for player in self._player_objects:
             player.clean_hand()
 

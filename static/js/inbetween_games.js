@@ -53,7 +53,7 @@ function questionStartNextGame() {
 }
 
 async function activateStartGameLogic() {
-    await fetch(`/api/game/${gameID}/start`, {
+    const response = await fetch(`/api/game/${gameID}/start`, {
         method: 'POST',
         headers: {
             'Content-Type' : 'application/json'

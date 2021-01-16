@@ -184,6 +184,8 @@ async function getRoundNotation() {
     console.log("THIS IS THE GAMESTATE DATA");
     console.log(data);
     animatePlay(data);
+    console.log("ROUND NUMBER IS");
+    console.log(roundNumber)
 
     // TODO - use this to do animation. Maybe feed it to updatePointsandStacks?
 
