@@ -22,6 +22,18 @@ def landing_page():
     return render_template('skeleton/landing_page.html')
 
 
+# Rules
+@app.route('/rules')
+def rules_page():
+    return render_template('skeleton/rules.html')
+
+
+# About
+@app.route('/about')
+def about_page():
+    return render_template('skeleton/about.html')
+
+
 # Waiting Room
 @app.route('/waiting_room/<int:game_id>/<int:player_id>')
 def waiting_room(game_id: int, player_id: int):

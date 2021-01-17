@@ -16,8 +16,12 @@ header {
 header span {
     flex: 1 20px;
     justify-content: space-between;
+}
+
+header span a {
     font-size: 22px;
     color: #f1faee;
+    text-decoration: none;
 }
 
 header span:first-child {
