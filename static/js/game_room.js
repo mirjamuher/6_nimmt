@@ -1,5 +1,5 @@
 // Global State & Variables
-import { animatePlay } from "./game_animation_V2.js";
+import { animatePlay } from "./game_animation.js";
 
 const GameState = {
     GAME_SETUP: 1,
