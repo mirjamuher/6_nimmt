@@ -23,8 +23,8 @@
         {% block standard_header %}
         <header>
             <span>{% block nav_heading %}<a>&nbsp;</a>{% endblock %}</span>
-            <span><a href="/rules" target="_blank" rel="noopener noreferrer">Rules</a></span>
-            <span><a href="/about" target="_blank" rel="noopener noreferrer">About</a></span>
+            <span><a href="{{ url_for('rules_page') }}" target="_blank">Rules</a></span>
+            <span><a href="{{ url_for('about_page') }}" target="_blank">About</a></span>
             <!--Give credit to: https://www.iconfinder.com/iconsets/cat-power AND https://www.iconfinder.com/iconsets/animals-95-->
         </header>
         {% endblock %}

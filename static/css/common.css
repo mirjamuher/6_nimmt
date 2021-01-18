@@ -24,6 +24,16 @@ header span a {
     text-decoration: none;
 }
 
+a:visited {
+    color: #f1faee;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #f1faee;
+    text-decoration: underline;
+}
+
 header span:first-child {
     flex: 20 10px;
 }

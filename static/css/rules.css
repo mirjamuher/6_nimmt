@@ -1,0 +1,12 @@
+:root {
+    --primary-bg-color: white;
+    --secondary-bg-color: #a8dadc;
+    --tertiary-bg-color: #457b9d;
+    --header-bg-color: #1d3557;
+    --btn-color: #e63946;
+    --primary-txt-color: #457b9d;
+    --secondary-txt-color: #f1faee;
+    --tertiary-txt-color: #1d3557;
+    --emphasis-txt-color: #e63946;
+    --border-color: #1d3557;
+}
