@@ -19,7 +19,8 @@ HTML VIEWS - speak html
 # Landing Page
 @app.route('/')
 def landing_page():
-    return render_template('skeleton/landing_page.html')
+    request_domain = request.url_root
+    return render_template('skeleton/landing_page.html', request_domain=request_domain)
 
 
 # Waiting Room

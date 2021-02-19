@@ -17,6 +17,8 @@
         <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap" rel="stylesheet">
         <link rel="preconnect" href="https://fonts.gstatic.com">
         <link href="https://fonts.googleapis.com/css2?family=Anton&family=Noto+Sans+SC:wght@700&family=Ramabhadra&family=Roboto:wght@300;500;900&family=Rubik:wght@400;500&display=swap" rel="stylesheet">
+
+        {% block extra_meta %}{% endblock %}
     </head>
 
     <body {% block basic_data %} data-game-id="{{ game.get_id() }}" data-player-id="{{ player.id() }}" {% block extra_body_tags %}{% endblock %}{% endblock %}>
